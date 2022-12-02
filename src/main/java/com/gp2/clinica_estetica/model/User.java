@@ -29,6 +29,10 @@ public class User implements Serializable {
     @OneToOne
     @JoinColumn(name="doctor_id") // nome para coluna foreign key no banco
     private Doctor doctor;
+    
+    @OneToOne
+    @JoinColumn(name="patient_id") // nome para coluna foreign key no banco
+    private Patient patient;
 
 
     public User() {
@@ -101,6 +105,20 @@ public class User implements Serializable {
      */
     public void setDoctor(Doctor doctor) {
         this.doctor = doctor;
+    }
+
+    /**
+     * @return the patient
+     */
+    public Patient getPatient() {
+        return patient;
+    }
+
+    /**
+     * @param patient the patient to set
+     */
+    public void setPatient(Patient patient) {
+        this.patient = patient;
     }
     
 }
