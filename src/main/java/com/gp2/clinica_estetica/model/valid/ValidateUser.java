@@ -18,7 +18,7 @@ public class ValidateUser {
         User user = new User();
         if (login.isEmpty())
             throw new UserException("Error - Campo vazio: 'login'.");
-        user.setLogin(password);
+        user.setLogin(login);
         
         if (password.isEmpty()) 
             throw new UserException("Error - Campo vazio: 'senha'.");                

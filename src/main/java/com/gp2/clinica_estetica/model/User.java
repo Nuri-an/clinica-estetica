@@ -10,6 +10,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 
 /**
  *
@@ -23,6 +25,14 @@ public class User implements Serializable {
     private Integer id;
     private String login;
     private String password;
+    
+    @OneToOne
+    @JoinColumn(name="doctor_id") // nome para coluna foreign key no banco
+    private Doctor doctor;
+    
+    @OneToOne
+    @JoinColumn(name="patient_id") // nome para coluna foreign key no banco
+    private Patient patient;
 
 
     public User() {
@@ -81,6 +91,34 @@ public class User implements Serializable {
      */
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    /**
+     * @return the doctor
+     */
+    public Doctor getDoctor() {
+        return doctor;
+    }
+
+    /**
+     * @param doctor the doctor to set
+     */
+    public void setDoctor(Doctor doctor) {
+        this.doctor = doctor;
+    }
+
+    /**
+     * @return the patient
+     */
+    public Patient getPatient() {
+        return patient;
+    }
+
+    /**
+     * @param patient the patient to set
+     */
+    public void setPatient(Patient patient) {
+        this.patient = patient;
     }
     
 }
