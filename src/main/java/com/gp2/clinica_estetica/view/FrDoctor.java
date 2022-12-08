@@ -5,6 +5,7 @@
  */
 package com.gp2.clinica_estetica.view;
 
+import com.gp2.clinica_estetica.model.User;
 import javax.swing.JFrame;
 
 /**
@@ -17,6 +18,14 @@ public class FrDoctor extends javax.swing.JFrame {
      * Creates new form FrMedico
      */
     public FrDoctor() {
+        initComponents();
+    }
+    
+    /**
+     * Creates new form FrMedico
+     * @param currentUser
+     */
+    public FrDoctor(User currentUser) {
         initComponents();
         this.setExtendedState(JFrame.MAXIMIZED_BOTH);
     }
