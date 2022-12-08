@@ -9,7 +9,6 @@ import com.gp2.clinica_estetica.model.User;
 import com.gp2.clinica_estetica.model.dao.UserDAO;
 import com.gp2.clinica_estetica.model.exceptions.UserException;
 import com.gp2.clinica_estetica.model.valid.ValidateUser;
-import javax.swing.JFrame;
 
 /**
  *
