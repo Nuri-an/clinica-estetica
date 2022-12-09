@@ -13,35 +13,42 @@ import com.gp2.clinica_estetica.model.exceptions.UserException;
  * @author nuria
  */
 public class ValidatePatient {
+    ValidateUtil validateUtil = new ValidateUtil();
 
-    public Patient completeRegisterValidate(String securityQuestion, String securityAnswer){
-        Patient patient = new Patient();        
-        if (securityQuestion.isEmpty()) 
-            throw new UserException("Error - Campo vazio: 'pergunta de segurança'.");                
+    public Patient completeRegisterValidate(String securityQuestion, String securityAnswer) {
+        Patient patient = new Patient();
+        if (securityQuestion.isEmpty())
+            throw new UserException("Error - Campo vazio: 'pergunta de segurança'.");
         patient.setSecurityQuestion(securityQuestion);
-        
-        if (securityAnswer.isEmpty()) 
-            throw new UserException("Error - Campo vazio: 'resposta de segurança'.");                
+
+        if (securityAnswer.isEmpty())
+            throw new UserException("Error - Campo vazio: 'resposta de segurança'.");
         patient.setSecurityAnswer(securityAnswer);
 
         return patient;
     }
 
-    public Patient basicRegisterValidate(String name, String CPF, String birthDate){
-        Patient patient = new Patient();        
-        if (name.isEmpty()) 
-            throw new UserException("Error - Campo vazio: 'nome'.");                
+    public Patient basicRegisterValidate(String name, String CPF, String birthDate) {
+        Patient patient = new Patient();
+        if (name.isEmpty())
+            throw new UserException("Error - Campo vazio: 'nome'.");
+        if (name.length() < 3)
+            throw new UserException("Error - Nome muito curto.");
         patient.setName(name);
-        
-        if (CPF.isEmpty()) 
-            throw new UserException("Error - Campo vazio: 'CPF'.");                
+
+        if (CPF.isEmpty())
+            throw new UserException("Error - Campo vazio: 'CPF'.");
+        if (!validateUtil.isCPF(CPF))
+            throw new UserException("Error - CPF inválido.");
         patient.setCPF(CPF);
-        
-        if (birthDate.isEmpty()) 
-            throw new UserException("Error - Campo vazio: 'data de nascimneto'.");                
+
+        if (birthDate.isEmpty())
+            throw new UserException("Error - Campo vazio: 'data de nascimneto'.");
+        if (!validateUtil.isDate(birthDate))
+            throw new UserException("Error - Data de nascimento inválida.");
         patient.setBirthDate(birthDate);
 
         return patient;
     }
-    
+
 }
