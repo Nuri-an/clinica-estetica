@@ -6,9 +6,8 @@
 package com.gp2.clinica_estetica.model.dao;
 
 import com.gp2.clinica_estetica.factory.Database;
-import com.gp2.clinica_estetica.model.Address;
 import com.gp2.clinica_estetica.model.Patient;
-import com.gp2.clinica_estetica.model.PhoneNumber;
+import com.gp2.clinica_estetica.model.People;
 import com.gp2.clinica_estetica.model.User;
 import com.gp2.clinica_estetica.model.exceptions.UserException;
 import java.util.List;
@@ -34,7 +33,7 @@ public class PatientDAO {
         try {
             sql = " SELECT "
                     + " p.id "
-                    + " FROM Patient p "
+                    + " FROM People p "
                     + " WHERE CPF LIKE :login ";
 
             qry = this.entityManager.createQuery(sql);
@@ -43,15 +42,15 @@ public class PatientDAO {
             List<Integer> lst = qry.getResultList();
 
             if (!lst.isEmpty()) {
-                User user = new User(login, password);
-                Patient patient = this.entityManager.find(Patient.class, lst.get(0));
-                patient.setUser(user);
-                patient.setSecurityQuestion(securityQuestion);
-                patient.setSecurityAnswer(securityAnswer);
-                user.setPatient(patient);
+                User user = new User(login, password, securityQuestion, securityAnswer);
+                People people = this.entityManager.find(People.class, lst.get(0));
+                people.setUser(user);
+                user.setPeople(people);
+                Patient patient = new Patient(people);
 
                 this.entityManager.getTransaction().begin();
                 this.entityManager.merge(patient);
+                this.entityManager.persist(patient);
                 this.entityManager.getTransaction().commit();
             } else {
                 throw new UserException("É preciso ser cliente para ter acesso às funções. "
@@ -61,17 +60,5 @@ public class PatientDAO {
         } catch (Exception e) {
             System.err.println(e.getMessage());
         }
-    }
-
-    public void basicRegister(String name, String CPF, String birthDate, String number, boolean isWhatsapp, String zipCode, String street, String neighborhood) {
-        PhoneNumber phoneNumber = new PhoneNumber(number, isWhatsapp);
-        Address address = new Address(zipCode, street, neighborhood);
-        Patient patient = new Patient(name, CPF, birthDate, phoneNumber, address);
-
-        this.entityManager.getTransaction().begin();
-        this.entityManager.persist(phoneNumber);
-        this.entityManager.persist(address);
-        this.entityManager.persist(patient);
-        this.entityManager.getTransaction().commit();
     }
 }
