@@ -26,71 +26,21 @@ public class Doctor extends DaoReports implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private String securityQuestion;
-    private String securityAnswer;
 
-    @OneToOne(mappedBy = "doctor", cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id") // nome para coluna foreign key no banco
-    private User user;
+    @OneToOne(mappedBy = "patient", cascade = CascadeType.ALL)
+    @JoinColumn(name = "people_id") // nome para coluna foreign key no banco
+    private People people;
 
     public Doctor() {
-        User user = new User();
-        this.user = user;
-        this.id = 0;
-        this.securityQuestion = "";
-        this.securityAnswer = "";
+        this.id = -1;
     }
 
-    public Doctor(User user, String securityQuestion, String securityAnswer) {
-        this.user = user;
-        this.securityQuestion = securityQuestion;
-        this.securityAnswer = securityAnswer;
+    public Doctor(People people) {
+        this.people = people;
     }
     
     public void generateAttendancePDF(JTable table, String type) {
         super.generateTablePDF("Relatorio.pdf", "Relatório de Atendimentos - " + type.toUpperCase(), table);
-    }
-
-    /**
-     * @return the securityQuestion
-     */
-    public String getSecurityQuestion() {
-        return securityQuestion;
-    }
-
-    /**
-     * @param securityQuestion the securityQuestion to set
-     */
-    public void setSecurityQuestion(String securityQuestion) {
-        this.securityQuestion = securityQuestion;
-    }
-
-    /**
-     * @return the securityAnswer
-     */
-    public String getSecurityAnswer() {
-        return securityAnswer;
-    }
-
-    /**
-     * @param securityAnswer the securityAnswer to set
-     */
-    public void setSecurityAnswer(String securityAnswer) {
-        this.securityAnswer = securityAnswer;
-    }
-
-    /**
-     * @return the user
-     */
-    public User getUser() {
-        return user;
-    }
-
-    /**
-     * @param user the user to set
-     */
-    public void setUser(User user) {
-        this.user = user;
     }
 
     /**
@@ -105,6 +55,20 @@ public class Doctor extends DaoReports implements Serializable {
      */
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    /**
+     * @return the people
+     */
+    public People getPeople() {
+        return people;
+    }
+
+    /**
+     * @param people the people to set
+     */
+    public void setPeople(People people) {
+        this.people = people;
     }
 
 }
