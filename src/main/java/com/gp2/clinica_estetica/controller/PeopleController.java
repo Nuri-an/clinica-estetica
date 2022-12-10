@@ -8,7 +8,7 @@ package com.gp2.clinica_estetica.controller;
 import com.gp2.clinica_estetica.model.dao.PeopleDAO;
 import com.gp2.clinica_estetica.model.exceptions.UserException;
 import com.gp2.clinica_estetica.model.valid.ValidateAddress;
-import com.gp2.clinica_estetica.model.valid.ValidatePatient;
+import com.gp2.clinica_estetica.model.valid.ValidatePeople;
 import com.gp2.clinica_estetica.model.valid.ValidatePhoneNumber;
 
 /**
@@ -30,8 +30,8 @@ public class PeopleController {
         ValidateAddress validAddress = new ValidateAddress();
         validAddress.addressValidate(zipCode, street, neighborhood);
 
-        ValidatePatient validPatient = new ValidatePatient();
-        validPatient.basicRegisterValidate(name, CPF, birthDate);
+        ValidatePeople validPeople = new ValidatePeople();
+        validPeople.basicRegisterValidate(name, CPF, birthDate);
 
         try {
             repositorio.basicRegister(name, CPF, birthDate, number, isWhatsapp, zipCode, street, neighborhood);
