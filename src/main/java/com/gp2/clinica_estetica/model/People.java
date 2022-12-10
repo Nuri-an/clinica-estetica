@@ -5,6 +5,7 @@
  */
 package com.gp2.clinica_estetica.model;
 
+import java.io.Serializable;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -19,7 +20,8 @@ import javax.persistence.OneToOne;
  * @author nuria
  */
 @Entity
-public class People {
+public class People implements Serializable {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -46,6 +48,10 @@ public class People {
     @OneToOne(mappedBy = "people", cascade = CascadeType.ALL)
     @JoinColumn(name = "patient_id") // nome para coluna foreign key no banco
     private Patient patient;
+
+    @OneToOne(mappedBy = "people", cascade = CascadeType.ALL)
+    @JoinColumn(name = "attendant_id") // nome para coluna foreign key no banco
+    private Attendant attendant;
     
     // initialize
     public People() {
@@ -222,5 +228,19 @@ public class People {
      */
     public void setPatient(Patient patient) {
         this.patient = patient;
+    }
+
+    /**
+     * @return the attendant
+     */
+    public Attendant getAttendant() {
+        return attendant;
+    }
+
+    /**
+     * @param attendant the attendant to set
+     */
+    public void setAttendant(Attendant attendant) {
+        this.attendant = attendant;
     }
 }
