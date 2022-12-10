@@ -5,6 +5,9 @@
  */
 package com.gp2.clinica_estetica.model;
 
+import com.gp2.clinica_estetica.model.dao.reports.DaoReports;
+import java.io.File;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.Entity;
@@ -19,7 +22,7 @@ import javax.persistence.OneToOne;
  * @author nuria
  */
 @Entity
-public class Contract implements Serializable {
+public class Contract extends DaoReports implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -52,6 +55,11 @@ public class Contract implements Serializable {
         this.date = date;
         this.signed = signed;
         this.file = file;
+    }
+    
+    @Override
+    public void saveFile(File source, File dest) throws IOException {
+        super.saveFile(source, dest);
     }
 
     /**

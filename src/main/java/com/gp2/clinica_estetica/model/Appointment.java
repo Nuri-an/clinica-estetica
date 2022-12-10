@@ -5,6 +5,9 @@
  */
 package com.gp2.clinica_estetica.model;
 
+import com.gp2.clinica_estetica.model.dao.reports.DaoReports;
+import java.io.File;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Entity;
@@ -19,7 +22,7 @@ import javax.persistence.OneToOne;
  * @author nuria
  */
 @Entity
-public class Appointment implements Serializable {
+public class Appointment extends DaoReports implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -50,6 +53,11 @@ public class Appointment implements Serializable {
         this.numberOfSessions = 0;
         this.currentSession = 0;
         this.budget = 0.0;
+    }
+    
+    @Override
+    public void saveFile(File source, File dest) throws IOException {
+        super.saveFile(source, dest);
     }
 
     /**
