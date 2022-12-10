@@ -6,6 +6,11 @@
 package com.gp2.clinica_estetica.model.dao;
 
 import com.gp2.clinica_estetica.factory.Database;
+import com.gp2.clinica_estetica.model.Address;
+import com.gp2.clinica_estetica.model.Doctor;
+import com.gp2.clinica_estetica.model.Patient;
+import com.gp2.clinica_estetica.model.People;
+import com.gp2.clinica_estetica.model.PhoneNumber;
 import com.gp2.clinica_estetica.model.User;
 import java.util.List;
 import javax.persistence.EntityManager;
@@ -51,38 +56,30 @@ public class UserDAO {
             return null;
         }
     }
-    
-    public void createAttendantSeed() {
-        try {
-            String attendantEmail = "atendente@clinica.com";
-            String attendantPassword = "Clinica@2022";
 
-            sql = " SELECT "
-                    + " u.login, "
-                    + " u.password "
-                    + " FROM User u "
-                    + " WHERE login LIKE :login "
-                    + " AND password LIKE :password ";
+    public void register(String name, String CPF, String birthDate, String number, boolean isWhatsapp, String zipCode, String street, String neighborhood, String login, String password, String securityQuestion, String securityAnswer, String type) {
+        PhoneNumber phoneNumber = new PhoneNumber(number, isWhatsapp);
+        Address address = new Address(zipCode, street, neighborhood);
+        User user = new User(login, password, securityQuestion, securityAnswer);
+        People people = new People(name, CPF, birthDate, phoneNumber, address, user);
 
-            qry = this.entityManager.createQuery(sql);
-            qry.setParameter("login", attendantEmail);
-            qry.setParameter("password", attendantPassword);
-
-            List lst = qry.getResultList();
-
-            if (lst.isEmpty()) {
-                User attendant = new User(attendantEmail, attendantPassword);
-
-                this.entityManager.getTransaction().begin();
-                this.entityManager.persist(attendant);
-                this.entityManager.getTransaction().commit();
-            }
-        } catch (Exception e) {
-            System.err.println("Seed Atendente: " + e.getMessage());
+        if (type.equals("Doctor")) {
+            Doctor doctor = new Doctor();
+            people.setDoctor(doctor);
+        } else if (type.equals("Patient")) {
+            Patient patient = new Patient();
+            people.setPatient(patient);
         }
+
+        this.entityManager.getTransaction().begin();
+        this.entityManager.persist(phoneNumber);
+        this.entityManager.persist(address);
+        this.entityManager.persist(people);
+        this.entityManager.getTransaction().commit();
     }
+    
 
     public void createSeeds() {
-        this.createAttendantSeed();
+        
     }
 }
