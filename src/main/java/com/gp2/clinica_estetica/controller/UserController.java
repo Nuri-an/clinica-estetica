@@ -23,7 +23,7 @@ public class UserController {
 
     public void onLogin(String login, String password) {
         ValidateUser valid = new ValidateUser();
-        valid.authValidate(login, password);
+        valid.loginValidate(login, password);
                 
         Object fecthUser = repositorio.login(login, password);
         if(fecthUser == null){
