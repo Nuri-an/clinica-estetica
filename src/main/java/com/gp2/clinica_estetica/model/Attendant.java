@@ -6,7 +6,6 @@
 package com.gp2.clinica_estetica.model;
 
 import java.io.Serializable;
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -25,7 +24,7 @@ public class Attendant implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     
-    @OneToOne(mappedBy = "attendant", cascade = CascadeType.ALL)
+    @OneToOne
     @JoinColumn(name = "people_id") // nome para coluna foreign key no banco
     private People people;
     

@@ -7,7 +7,6 @@ package com.gp2.clinica_estetica.model;
 
 import com.gp2.clinica_estetica.model.dao.reports.DaoReports;
 import java.io.Serializable;
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -27,7 +26,7 @@ public class Doctor extends DaoReports implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @OneToOne(mappedBy = "patient", cascade = CascadeType.ALL)
+    @OneToOne
     @JoinColumn(name = "people_id") // nome para coluna foreign key no banco
     private People people;
 

@@ -6,7 +6,6 @@
 package com.gp2.clinica_estetica.model;
 
 import java.io.Serializable;
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -29,8 +28,8 @@ public class User implements Serializable {
     private String securityQuestion;
     private String securityAnswer;
     
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
-    @JoinColumn(name="people_id") // nome para coluna foreign key no banco
+    @JoinColumn(name = "people_id") // nome para coluna foreign key no banco
+    @OneToOne
     private People people;
 
 
@@ -48,10 +47,13 @@ public class User implements Serializable {
         this.securityQuestion = securityQuestion;
         this.securityAnswer = securityAnswer;
     }
-    
-    public void onLogin(String login, String password) {
-        this.setLogin(login);
-        this.setPassword(password);
+
+    public User(String login, String password, String securityQuestion, String securityAnswer, People people) {
+        this.login = login;
+        this.password = password;
+        this.securityQuestion = securityQuestion;
+        this.securityAnswer = securityAnswer;
+        this.people = people;
     }
 
     /**

@@ -6,7 +6,6 @@
 package com.gp2.clinica_estetica.model;
 
 import java.io.Serializable;
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -37,19 +36,19 @@ public class People implements Serializable {
     @OneToOne
     private PhoneNumber phoneNumber;
 
-    @OneToOne(mappedBy = "people", cascade = CascadeType.ALL)
+    @OneToOne
     @JoinColumn(name = "user_id") // nome para coluna foreign key no banco
     private User user;
 
-    @OneToOne(mappedBy = "people", cascade = CascadeType.ALL)
+    @OneToOne
     @JoinColumn(name = "doctor_id") // nome para coluna foreign key no banco
     private Doctor doctor;
 
-    @OneToOne(mappedBy = "people", cascade = CascadeType.ALL)
+    @OneToOne
     @JoinColumn(name = "patient_id") // nome para coluna foreign key no banco
     private Patient patient;
 
-    @OneToOne(mappedBy = "people", cascade = CascadeType.ALL)
+    @OneToOne
     @JoinColumn(name = "attendant_id") // nome para coluna foreign key no banco
     private Attendant attendant;
     
@@ -63,23 +62,13 @@ public class People implements Serializable {
         this.user = new User();
     }
     
-    // pattern constructor without user
+    // pattern constructor for register
     public People(String name, String CPF, String birthDate, PhoneNumber phoneNumber, Address address) {
         this.name = name;
         this.CPF = CPF;
         this.birthDate = birthDate;
         this.phoneNumber = phoneNumber;
         this.address = address;
-    }
-    
-    // constructor for register
-    public People(String name, String CPF, String birthDate, PhoneNumber phoneNumber, Address address, User user) {
-        this.name = name;
-        this.CPF = CPF;
-        this.birthDate = birthDate;
-        this.phoneNumber = phoneNumber;
-        this.address = address;
-        this.user = user;
     }
     
     // constructor for new patient doctor

@@ -26,7 +26,7 @@ public class Patient extends DaoReports implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @OneToOne(mappedBy = "patient", cascade = CascadeType.ALL)
+    @OneToOne
     @JoinColumn(name = "people_id") // nome para coluna foreign key no banco
     private People people;
     
