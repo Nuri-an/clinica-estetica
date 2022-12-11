@@ -18,7 +18,11 @@ public class ValidatePeople {
             throw new UserException("Error - Campo vazio: 'nome'.");  
         
         if (CPF.isEmpty()) 
-            throw new UserException("Error - Campo vazio: 'CPF'."); 
+            throw new UserException("Error - Campo vazio: 'CPF'.");   
+        
+        ValidatePF validCPF = new ValidatePF();
+        if(!validCPF.verifyCPF(CPF))
+          throw new UserException("Error - CPF inválido!");
         
         if (birthDate.isEmpty()) 
             throw new UserException("Error - Campo vazio: 'data de nascimneto'.");      

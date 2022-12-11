@@ -14,6 +14,14 @@ import com.gp2.clinica_estetica.model.exceptions.UserException;
  */
 public class ValidateUser {
     
+    public static boolean isValidPassword(String password) {
+        String regexExp = "^(?=.*[0-9])"
+                       + ".{8,}$";
+  
+        return password.matches(regexExp);
+    }
+
+    
     public User loginValidate(String login, String password){
         User user = new User();
         if (login.isEmpty())
@@ -26,7 +34,7 @@ public class ValidateUser {
         
         if (password.isEmpty()) 
             throw new UserException("Error - Campo vazio: 'senha'.");  
-        if (password.length() < 6 || password.matches("\\d+")) 
+        if (!isValidPassword(password)) 
             throw new UserException("Error - Senha inválida.");  
             
         user.setPassword(password);
@@ -35,21 +43,17 @@ public class ValidateUser {
     }
     
     public void registerValidate(String login, String password, String securityQuestion, String securityAnswer){
-        User user = new User();
         if (login.isEmpty())
             throw new UserException("Error - Campo vazio: 'login'.");
         
         ValidatePF validCPF = new ValidatePF();
         if(!validCPF.verifyCPF(login))
           throw new UserException("Error - CPF para login inválido!");
-        user.setLogin(login);
         
         if (password.isEmpty()) 
             throw new UserException("Error - Campo vazio: 'senha'.");  
-        if (password.length() < 6) 
-            throw new UserException("Error - Senha muito pequena.");  
-        if (password.matches("\\d+")) 
-            throw new UserException("Error - Informe ao menos 1 número para a senha.");   
+        if (!isValidPassword(password)) 
+            throw new UserException("Error - Informe ao menos 1 número para a senha e o menos 8 caracteres.");   
         
         if (securityQuestion.isEmpty()) 
             throw new UserException("Error - Campo vazio: 'pergunta de segurança'.");   
