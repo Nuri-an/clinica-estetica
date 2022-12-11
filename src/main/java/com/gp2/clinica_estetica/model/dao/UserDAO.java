@@ -31,20 +31,19 @@ public class UserDAO {
         entityManager = Database.getInstance().getEntityManager();
     }
 
-    public Object login(String login, String password) {
+    public User login(String login, String password) {
         try {
             sql = " SELECT "
-                    + " u.login, "
-                    + " u.password "
+                    + " u "
                     + " FROM User u "
                     + " WHERE login LIKE :login "
                     + " AND password LIKE :password ";
 
-            qry = this.entityManager.createQuery(sql);
+            qry = this.entityManager.createQuery(sql, User.class);
             qry.setParameter("login", login);
             qry.setParameter("password", password);
 
-            List lst = qry.getResultList();
+            List<User> lst = qry.getResultList();
 
             if (lst.isEmpty()) {
                 return null;

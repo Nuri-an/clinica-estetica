@@ -5,6 +5,7 @@
  */
 package com.gp2.clinica_estetica.controller;
 
+import com.gp2.clinica_estetica.model.User;
 import com.gp2.clinica_estetica.model.dao.UserDAO;
 import com.gp2.clinica_estetica.model.exceptions.UserException;
 import com.gp2.clinica_estetica.model.valid.ValidateUser;
@@ -15,24 +16,25 @@ import com.gp2.clinica_estetica.model.valid.ValidateUser;
  */
 public class UserController {
 
-    private UserDAO repositorio;
+  private UserDAO repositorio;
 
-    public UserController() {
-        repositorio = new UserDAO();
+  public UserController() {
+    repositorio = new UserDAO();
+  }
+
+  public User onLogin(String login, String password) {
+    ValidateUser valid = new ValidateUser();
+    valid.loginValidate(login, password);
+
+    User fecthUser = repositorio.login(login, password);
+    if (fecthUser == null) {
+      throw new UserException("Error - Nenhum usuário com este 'login'.");
     }
 
-    public void onLogin(String login, String password) {
-        ValidateUser valid = new ValidateUser();
-        valid.loginValidate(login, password);
-                
-        Object fecthUser = repositorio.login(login, password);
-        if(fecthUser == null){
-            throw new UserException("Error - Nenhum usuário com este 'login'.");
-        }
-    }
-    
-    public void onCreateSeeds() {
-        repositorio.createSeeds();
-    }
-    
+    return fecthUser;
+  }
+
+  public void onCreateSeeds() {
+    repositorio.createSeeds();
+  }
 }
