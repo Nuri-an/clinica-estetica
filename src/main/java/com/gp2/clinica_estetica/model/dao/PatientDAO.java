@@ -32,21 +32,21 @@ public class PatientDAO {
     public void completeRegister(String login, String password, String securityQuestion, String securityAnswer) {
         try {
             sql = " SELECT "
-                    + " p.id "
+                    + " p "
                     + " FROM People p "
                     + " WHERE CPF LIKE :login ";
 
-            qry = this.entityManager.createQuery(sql);
+            qry = this.entityManager.createQuery(sql, People.class);
             qry.setParameter("login", login);
 
-            List<Integer> lst = qry.getResultList();
+            List<People> lst = qry.getResultList();
 
             if (!lst.isEmpty()) {
-                User user = new User(login, password, securityQuestion, securityAnswer);
-                People people = this.entityManager.find(People.class, lst.get(0));
+                People people = lst.get(0);
+                User user = new User(login, password, securityQuestion, securityAnswer, people);
                 people.setUser(user);
-                user.setPeople(people);
                 Patient patient = new Patient(people);
+                people.setPatient(patient);
 
                 this.entityManager.getTransaction().begin();
                 this.entityManager.persist(user);
@@ -58,7 +58,7 @@ public class PatientDAO {
                         + "Entre em contato e agende uma avaliação! "
                         + "Telefone: 3451-8620");
             }
-        } catch (Exception e) {
+        } catch (UserException e) {
             System.err.println(e.getMessage());
         }
     }

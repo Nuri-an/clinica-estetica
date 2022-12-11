@@ -37,10 +37,9 @@ public class UserController {
         return fecthUser;
     }
 
-    public void onRegister(String name, String CPF, String birthDate, String number, boolean isWhatsapp, String zipCode, String street, String neighborhood, String login, String password, String securityQuestion, String securityAnswer, String type) {
+    public void onRegister(String name, String CPF, String birthDate, String number, boolean isWhatsapp, String zipCode, String street, String neighborhood, String password, String securityQuestion, String securityAnswer, String type) {
         try {
             ValidatePeople validPeople = new ValidatePeople();
-
             validPeople.basicRegisterValidate(name, CPF, birthDate);
 
             ValidatePhoneNumber validPhone = new ValidatePhoneNumber();
@@ -50,9 +49,9 @@ public class UserController {
             validAddress.addressValidate(zipCode, street, neighborhood);
 
             ValidateUser valid = new ValidateUser();
-            valid.registerValidate(login, password, securityQuestion, securityAnswer);
+            valid.registerValidate(CPF, password, securityQuestion, securityAnswer);
 
-            repositorio.register(name, CPF, birthDate, number, isWhatsapp, zipCode, street, neighborhood, login, password, securityQuestion, securityAnswer, type);
+            repositorio.register(name, CPF, birthDate, number, isWhatsapp, zipCode, street, neighborhood, password, securityQuestion, securityAnswer, type);
         } catch (UserException e) {
             throw new UserException(e.getMessage());
         }

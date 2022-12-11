@@ -9,6 +9,8 @@ import com.gp2.clinica_estetica.factory.Database;
 import com.gp2.clinica_estetica.model.Address;
 import com.gp2.clinica_estetica.model.People;
 import com.gp2.clinica_estetica.model.PhoneNumber;
+import com.gp2.clinica_estetica.model.exceptions.UserException;
+import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
@@ -37,6 +39,28 @@ public class PeopleDAO {
         this.entityManager.persist(address);
         this.entityManager.persist(people);
         this.entityManager.getTransaction().commit();
+    }
+    
+    public boolean hasPeopleWithCpf (String CPF) {
+        try {
+            sql = " SELECT "
+                    + " p.CPF "
+                    + " FROM People p "
+                    + " WHERE CPF LIKE :cpf ";
+
+            qry = this.entityManager.createQuery(sql);
+            qry.setParameter("cpf", CPF);
+
+            List<String> lst = qry.getResultList();
+
+            if (lst.isEmpty()) {
+                return false;
+            } else {
+                return true;
+            }
+        } catch (Exception e) {
+            throw new UserException("Houve um erro inesperado! \n" + e.getMessage());
+        }
     }
     
 }

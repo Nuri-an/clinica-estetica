@@ -6,6 +6,7 @@
 package com.gp2.clinica_estetica.model.valid;
 
 import com.gp2.clinica_estetica.model.User;
+import com.gp2.clinica_estetica.model.dao.UserDAO;
 import com.gp2.clinica_estetica.model.exceptions.UserException;
 
 /**
@@ -43,6 +44,8 @@ public class ValidateUser {
     }
     
     public void registerValidate(String login, String password, String securityQuestion, String securityAnswer){
+        UserDAO userDao = new UserDAO();
+        
         if (login.isEmpty())
             throw new UserException("Error - Campo vazio: 'login'.");
         
@@ -50,8 +53,12 @@ public class ValidateUser {
         if(!validCPF.verifyCPF(login))
           throw new UserException("Error - CPF para login inválido!");
         
+        if(userDao.hasUserWithCpf(login))
+            throw new UserException("Error - Este CPF já está sendo utilizado por outro usuário.");
+        
         if (password.isEmpty()) 
             throw new UserException("Error - Campo vazio: 'senha'.");  
+        
         if (!isValidPassword(password)) 
             throw new UserException("Error - Informe ao menos 1 número para a senha e o menos 8 caracteres.");   
         

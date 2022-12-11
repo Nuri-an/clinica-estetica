@@ -5,6 +5,7 @@
  */
 package com.gp2.clinica_estetica.model.valid;
 
+import com.gp2.clinica_estetica.model.dao.PeopleDAO;
 import com.gp2.clinica_estetica.model.exceptions.UserException;
 
 /**
@@ -13,12 +14,17 @@ import com.gp2.clinica_estetica.model.exceptions.UserException;
  */
 public class ValidatePeople {
     
-    public void basicRegisterValidate(String name, String CPF, String birthDate){       
+    public void basicRegisterValidate(String name, String CPF, String birthDate){ 
+        PeopleDAO peopleDao = new PeopleDAO();
+        
         if (name.isEmpty()) 
             throw new UserException("Error - Campo vazio: 'nome'.");  
         
         if (CPF.isEmpty()) 
-            throw new UserException("Error - Campo vazio: 'CPF'.");   
+            throw new UserException("Error - Campo vazio: 'CPF'.");  
+        
+        if(peopleDao.hasPeopleWithCpf(CPF))
+            throw new UserException("Error - Este CPF já está sendo utilizdo por outra pessoa.");
         
         ValidatePF validCPF = new ValidatePF();
         if(!validCPF.verifyCPF(CPF))

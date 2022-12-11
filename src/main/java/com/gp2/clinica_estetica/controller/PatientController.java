@@ -14,6 +14,7 @@ import com.gp2.clinica_estetica.model.valid.ValidateUser;
  * @author nuria
  */
 public class PatientController {
+
     private PatientDAO repositorio;
 
     public PatientController() {
@@ -23,7 +24,7 @@ public class PatientController {
     public void onCompleteRegister(String login, String password, String securityQuestion, String securityAnswer) {
         ValidateUser validUser = new ValidateUser();
         validUser.registerValidate(login, password, securityQuestion, securityAnswer);
-
+        
         try {
             repositorio.completeRegister(login, password, securityQuestion, securityAnswer);
         } catch (UserException e) {
