@@ -39,7 +39,7 @@ public class Attendance implements Serializable {
     
     @OneToOne
     @JoinColumn(name = "procedure_id") // nome para coluna foreign key no banco
-    private Procedure procedure;
+    private MedicalProcedure procedure;
     
     
     public Attendance() {
@@ -158,14 +158,14 @@ public class Attendance implements Serializable {
     /**
      * @return the procedure
      */
-    public Procedure getProcedure() {
+    public MedicalProcedure getProcedure() {
         return procedure;
     }
 
     /**
      * @param procedure the procedure to set
      */
-    public void setProcedure(Procedure procedure) {
+    public void setProcedure(MedicalProcedure procedure) {
         this.procedure = procedure;
     }
     

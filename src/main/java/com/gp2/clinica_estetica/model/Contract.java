@@ -31,16 +31,16 @@ public class Contract extends DaoReports implements Serializable {
     private boolean signed;
     private String file;
 
-    @OneToOne
     @JoinColumn(name = "procedure_id") // nome para coluna foreign key no banco
-    private Procedure procedure;
-    
     @OneToOne
+    private MedicalProcedure procedure;
+    
     @JoinColumn(name = "patient_id") // nome para coluna foreign key no banco
+    @OneToOne
     private Patient patient;
     
-    @OneToOne
     @JoinColumn(name = "doctor_id") // nome para coluna foreign key no banco
+    @OneToOne
     private Doctor doctor;
     
     
@@ -121,14 +121,14 @@ public class Contract extends DaoReports implements Serializable {
     /**
      * @return the procedure
      */
-    public Procedure getProcedure() {
+    public MedicalProcedure getProcedure() {
         return procedure;
     }
 
     /**
      * @param procedure the procedure to set
      */
-    public void setProcedure(Procedure procedure) {
+    public void setProcedure(MedicalProcedure procedure) {
         this.procedure = procedure;
     }
 

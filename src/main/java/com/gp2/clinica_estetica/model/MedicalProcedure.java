@@ -16,7 +16,7 @@ import javax.persistence.Id;
  * @author nuria
  */
 @Entity
-public class Procedure implements Serializable {
+public class MedicalProcedure implements Serializable {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,13 +25,13 @@ public class Procedure implements Serializable {
     private Double price;
     
     
-    public Procedure() {
+    public MedicalProcedure() {
         this.id = -1;
         this.name = "";
         this.price = 0.0;
     }
     
-    public Procedure(String name, double price) {
+    public MedicalProcedure(String name, double price) {
         this.name = name;
         this.price = price;
     }
