@@ -7,6 +7,7 @@ package com.gp2.clinica_estetica.model.dao;
 
 import com.gp2.clinica_estetica.factory.Database;
 import com.gp2.clinica_estetica.model.Address;
+import com.gp2.clinica_estetica.model.Attendant;
 import com.gp2.clinica_estetica.model.Doctor;
 import com.gp2.clinica_estetica.model.Patient;
 import com.gp2.clinica_estetica.model.People;
@@ -59,21 +60,37 @@ public class UserDAO {
     public void register(String name, String CPF, String birthDate, String number, boolean isWhatsapp, String zipCode, String street, String neighborhood, String login, String password, String securityQuestion, String securityAnswer, String type) {
         PhoneNumber phoneNumber = new PhoneNumber(number, isWhatsapp);
         Address address = new Address(zipCode, street, neighborhood);
-        User user = new User(login, password, securityQuestion, securityAnswer);
-        People people = new People(name, CPF, birthDate, phoneNumber, address, user);
-
-        if (type.equals("Doctor")) {
-            Doctor doctor = new Doctor();
-            people.setDoctor(doctor);
-        } else if (type.equals("Patient")) {
-            Patient patient = new Patient();
-            people.setPatient(patient);
-        }
+        People people = new People(name, CPF, birthDate, phoneNumber, address);
+        User user = new User(login, password, securityQuestion, securityAnswer, people);
+        people.setUser(user);
+        System.out.println(user.getPeople().getName());
 
         this.entityManager.getTransaction().begin();
         this.entityManager.persist(phoneNumber);
-        this.entityManager.persist(address);
+        this.entityManager.persist(address); 
+        
+        switch (type) {
+            case "Doctor":
+                Doctor doctor = new Doctor(people);
+                this.entityManager.persist(doctor);
+                people.setDoctor(doctor);
+                break;
+            case "Patient":
+                Patient patient = new Patient(people);
+                this.entityManager.persist(patient);
+                people.setPatient(patient);
+                break;
+            case "Attendant":
+                Attendant attendant = new Attendant(people);
+                this.entityManager.persist(attendant);
+                people.setAttendant(attendant);
+                break;
+            default:
+                break;
+        }
+               
         this.entityManager.persist(people);
+        this.entityManager.persist(user);
         this.entityManager.getTransaction().commit();
     }
     
