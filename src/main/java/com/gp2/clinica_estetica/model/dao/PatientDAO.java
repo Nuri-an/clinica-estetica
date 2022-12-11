@@ -49,8 +49,9 @@ public class PatientDAO {
                 Patient patient = new Patient(people);
 
                 this.entityManager.getTransaction().begin();
-                this.entityManager.merge(patient);
+                this.entityManager.persist(user);
                 this.entityManager.persist(patient);
+                this.entityManager.merge(people);
                 this.entityManager.getTransaction().commit();
             } else {
                 throw new UserException("É preciso ser cliente para ter acesso às funções. "
