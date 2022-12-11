@@ -15,6 +15,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
 /**
@@ -27,11 +28,14 @@ public class Appointment extends DaoReports implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private List<String> recipte;
     private int numberOfSessions;
     private int currentSession;
     private Double budget;
 
+    @OneToMany
+    @JoinColumn(name = "appointment_id")
+    private List<Recipte> reciptes;
+    
     @OneToOne
     @JoinColumn(name = "attendance_id") // nome para coluna foreign key no banco
     private Attendance attendance;
@@ -47,9 +51,8 @@ public class Appointment extends DaoReports implements Serializable {
         this.budget = 0.0;
     }
 
-    public Appointment(List<String> recipte, int numberOfSessions, int currentSession, Double budget) {
-        this.recipte = recipte;
-        this.id = -1;
+    public Appointment(List<Recipte> recipte, int numberOfSessions, int currentSession, Double budget) {
+        this.reciptes = recipte;
         this.numberOfSessions = 0;
         this.currentSession = 0;
         this.budget = 0.0;
@@ -77,15 +80,22 @@ public class Appointment extends DaoReports implements Serializable {
     /**
      * @return the recipte
      */
-    public List<String> getRecipte() {
-        return recipte;
+    public List<Recipte> getRecipte() {
+        return reciptes;
+    }
+
+    /**
+     * @param reciptes
+     */
+    public void setRecipte(List<Recipte> reciptes) {
+        this.reciptes = reciptes;
     }
 
     /**
      * @param recipte the recipte to set
      */
-    public void setRecipte(List<String> recipte) {
-        this.recipte = recipte;
+    public void addRecipte(Recipte recipte) {
+        this.reciptes.add(recipte);
     }
 
     /**
