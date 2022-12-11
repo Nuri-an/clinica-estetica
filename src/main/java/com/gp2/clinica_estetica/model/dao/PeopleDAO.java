@@ -7,12 +7,8 @@ package com.gp2.clinica_estetica.model.dao;
 
 import com.gp2.clinica_estetica.factory.Database;
 import com.gp2.clinica_estetica.model.Address;
-import com.gp2.clinica_estetica.model.Patient;
 import com.gp2.clinica_estetica.model.People;
 import com.gp2.clinica_estetica.model.PhoneNumber;
-import com.gp2.clinica_estetica.model.User;
-import com.gp2.clinica_estetica.model.exceptions.UserException;
-import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
