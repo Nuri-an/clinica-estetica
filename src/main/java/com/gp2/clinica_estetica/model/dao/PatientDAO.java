@@ -6,9 +6,8 @@
 package com.gp2.clinica_estetica.model.dao;
 
 import com.gp2.clinica_estetica.factory.Database;
-import com.gp2.clinica_estetica.model.Address;
 import com.gp2.clinica_estetica.model.Patient;
-import com.gp2.clinica_estetica.model.PhoneNumber;
+import com.gp2.clinica_estetica.model.People;
 import com.gp2.clinica_estetica.model.User;
 import com.gp2.clinica_estetica.model.exceptions.UserException;
 import java.util.List;
@@ -33,45 +32,34 @@ public class PatientDAO {
     public void completeRegister(String login, String password, String securityQuestion, String securityAnswer) {
         try {
             sql = " SELECT "
-                    + " p.id "
-                    + " FROM Patient p "
+                    + " p "
+                    + " FROM People p "
                     + " WHERE CPF LIKE :login ";
 
-            qry = this.entityManager.createQuery(sql);
+            qry = this.entityManager.createQuery(sql, People.class);
             qry.setParameter("login", login);
 
-            List<Integer> lst = qry.getResultList();
+            List<People> lst = qry.getResultList();
 
             if (!lst.isEmpty()) {
-                User user = new User(login, password);
-                Patient patient = this.entityManager.find(Patient.class, lst.get(0));
-                patient.setUser(user);
-                patient.setSecurityQuestion(securityQuestion);
-                patient.setSecurityAnswer(securityAnswer);
-                user.setPatient(patient);
+                People people = lst.get(0);
+                User user = new User(login, password, securityQuestion, securityAnswer, people);
+                people.setUser(user);
+                Patient patient = new Patient(people);
+                people.setPatient(patient);
 
                 this.entityManager.getTransaction().begin();
-                this.entityManager.merge(patient);
+                this.entityManager.persist(user);
+                this.entityManager.persist(patient);
+                this.entityManager.merge(people);
                 this.entityManager.getTransaction().commit();
             } else {
                 throw new UserException("É preciso ser cliente para ter acesso às funções. "
                         + "Entre em contato e agende uma avaliação! "
                         + "Telefone: 3451-8620");
             }
-        } catch (Exception e) {
+        } catch (UserException e) {
             System.err.println(e.getMessage());
         }
-    }
-
-    public void basicRegister(String name, String CPF, String birthDate, String number, boolean isWhatsapp, String zipCode, String street, String neighborhood) {
-        PhoneNumber phoneNumber = new PhoneNumber(number, isWhatsapp);
-        Address address = new Address(zipCode, street, neighborhood);
-        Patient patient = new Patient(name, CPF, birthDate, phoneNumber, address);
-
-        this.entityManager.getTransaction().begin();
-        this.entityManager.persist(phoneNumber);
-        this.entityManager.persist(address);
-        this.entityManager.persist(patient);
-        this.entityManager.getTransaction().commit();
     }
 }

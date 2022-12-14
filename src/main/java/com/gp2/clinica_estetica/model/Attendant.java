@@ -5,41 +5,35 @@
  */
 package com.gp2.clinica_estetica.model;
 
-import com.gp2.clinica_estetica.model.dao.reports.DaoReports;
 import java.io.Serializable;
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
-import javax.swing.JTable;
 
 /**
  *
  * @author nuria
  */
 @Entity
-public class Patient extends DaoReports implements Serializable {
+public class Attendant implements Serializable {
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-
+    
     @OneToOne
     @JoinColumn(name = "people_id") // nome para coluna foreign key no banco
     private People people;
     
-    public Patient() {
+    public Attendant() {
         this.id = -1;
     }
     
-    public Patient(People people) {
+    public Attendant(People people) {
         this.people = people;
-    }
-    
-    public void generateAttendancePDF(JTable table, String type) {
-        super.generateTablePDF("Relatorio.pdf", "Relatório de Atendimentos - " + type.toUpperCase(), table);
     }
 
             
@@ -70,5 +64,4 @@ public class Patient extends DaoReports implements Serializable {
     public void setPeople(People people) {
         this.people = people;
     }
-    
 }

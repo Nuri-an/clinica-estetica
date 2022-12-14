@@ -25,30 +25,35 @@ public class User implements Serializable {
     private Integer id;
     private String login;
     private String password;
+    private String securityQuestion;
+    private String securityAnswer;
     
+    @JoinColumn(name = "people_id") // nome para coluna foreign key no banco
     @OneToOne
-    @JoinColumn(name="doctor_id") // nome para coluna foreign key no banco
-    private Doctor doctor;
-    
-    @OneToOne
-    @JoinColumn(name="patient_id") // nome para coluna foreign key no banco
-    private Patient patient;
+    private People people;
 
 
     public User() {
         this.id = -1;
         this.login = "";
         this.password = "";
+        this.securityQuestion = "";
+        this.securityAnswer = "";
     }
 
-    public User(String login, String password) {
+    public User(String login, String password, String securityQuestion, String securityAnswer) {
         this.login = login;
         this.password = password;
+        this.securityQuestion = securityQuestion;
+        this.securityAnswer = securityAnswer;
     }
-    
-    public void onLogin(String login, String password) {
-        this.setLogin(login);
-        this.setPassword(password);
+
+    public User(String login, String password, String securityQuestion, String securityAnswer, People people) {
+        this.login = login;
+        this.password = password;
+        this.securityQuestion = securityQuestion;
+        this.securityAnswer = securityAnswer;
+        this.people = people;
     }
 
     /**
@@ -96,29 +101,43 @@ public class User implements Serializable {
     /**
      * @return the doctor
      */
-    public Doctor getDoctor() {
-        return doctor;
+    public People getPeople() {
+        return people;
     }
 
     /**
-     * @param doctor the doctor to set
+     * @param people
      */
-    public void setDoctor(Doctor doctor) {
-        this.doctor = doctor;
+    public void setPeople(People people) {
+        this.people = people;
     }
 
     /**
-     * @return the patient
+     * @return the securityQuestion
      */
-    public Patient getPatient() {
-        return patient;
+    public String getSecurityQuestion() {
+        return securityQuestion;
     }
 
     /**
-     * @param patient the patient to set
+     * @param securityQuestion the securityQuestion to set
      */
-    public void setPatient(Patient patient) {
-        this.patient = patient;
+    public void setSecurityQuestion(String securityQuestion) {
+        this.securityQuestion = securityQuestion;
+    }
+
+    /**
+     * @return the securityAnswer
+     */
+    public String getSecurityAnswer() {
+        return securityAnswer;
+    }
+
+    /**
+     * @param securityAnswer the securityAnswer to set
+     */
+    public void setSecurityAnswer(String securityAnswer) {
+        this.securityAnswer = securityAnswer;
     }
     
 }
