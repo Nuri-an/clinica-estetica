@@ -5,7 +5,11 @@
 package com.gp2.clinica_estetica.view;
 
 import com.gp2.clinica_estetica.controller.PatientController;
-import com.gp2.clinica_estetica.model.Patient;
+import com.gp2.clinica_estetica.controller.PeopleController;
+import com.gp2.clinica_estetica.controller.UserController;
+import com.gp2.clinica_estetica.model.People;
+import com.gp2.clinica_estetica.model.exceptions.UserException;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.text.MaskFormatter;
 
@@ -13,66 +17,93 @@ import javax.swing.text.MaskFormatter;
  *
  * @author gabri
  */
-public class FrPatientManagement extends javax.swing.JFrame {
+public class FrRegister extends javax.swing.JFrame {
 
-    private Patient selectedPatient;
     private Boolean fieldsEnabled;
-    private PatientController patienteController;
+    private String userType;
 
     /**
      * Creates new form FrPatientManagement
      */
-    public FrPatientManagement() {
+    public FrRegister() {
         initComponents();
-        this.fieldsEnabled = false;
+    }
+
+    public FrRegister(String userType) {
+        initComponents();
+        this.fieldsEnabled = true;
+        this.userType = userType;
         this.setFieldsEnabled(this.fieldsEnabled);
         this.clearFields();
         this.setMasks();
-        this.patienteController = new PatientController();
         this.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        this.setLocationRelativeTo(null);
+        this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        this.setExtendedState(JFrame.MAXIMIZED_BOTH);
     }
 
     public void setFieldsEnabled(Boolean flag) {
-        jTextFieldBirthDate.setEnabled(flag);
-        jTextFieldZipCode.setEnabled(flag);
-        jTextFieldCpf.setEnabled(flag);
-        jTextFieldNeighborhood.setEnabled(flag);
-        jTextFieldNumber.setEnabled(flag);
-        jTextFieldPhoneNumber.setEnabled(flag);
-        jTextFieldStreet.setEnabled(flag);
-        jTextFieldName.setEnabled(flag);
+        textFieldCpf.setEnabled(flag);
+        textFieldBirthDate.setEnabled(flag);
+        textFieldZipCode.setEnabled(flag);
+        textFieldNeighborhood.setEnabled(flag);
+        textFieldNumber.setEnabled(flag);
+        textFieldPhoneNumber.setEnabled(flag);
+        textFieldStreet.setEnabled(flag);
+        textFieldName.setEnabled(flag);
         jCheckBoxIsWhatsapp.setEnabled(flag);
-        btnSave.setEnabled(flag);
+        textFieldSecQuestion.setEnabled(flag);
+        textFieldSecAnswer.setEnabled(flag);
+        jPasswordField.setEnabled(flag);
+        jPasswordFieldConfirmation.setEnabled(flag);
+        btnRegister.setEnabled(flag);
+        disableFieldsFeedback.setVisible(false);
+
+        if (this.userType.equals("Patient")) {
+            textFieldBirthDate.setEnabled(false);
+            textFieldZipCode.setEnabled(false);
+            textFieldNeighborhood.setEnabled(false);
+            textFieldNumber.setEnabled(false);
+            textFieldPhoneNumber.setEnabled(false);
+            textFieldStreet.setEnabled(false);
+            textFieldName.setEnabled(false);
+            jCheckBoxIsWhatsapp.setEnabled(false);
+            disableFieldsFeedback.setVisible(true);
+        }
     }
 
     public void clearFields() {
-        jTextFieldBirthDate.setText("");
-        jTextFieldZipCode.setText("");
-        jTextFieldCpf.setText("");
-        jTextFieldNeighborhood.setText("");
-        jTextFieldNumber.setText("");
-        jTextFieldPhoneNumber.setText("");
-        jTextFieldStreet.setText("");
-        jTextFieldName.setText("");
+        textFieldBirthDate.setText("");
+        textFieldZipCode.setText("");
+        textFieldCpf.setText("");
+        textFieldNeighborhood.setText("");
+        textFieldNumber.setText("");
+        textFieldPhoneNumber.setText("");
+        textFieldStreet.setText("");
+        textFieldName.setText("");
         jCheckBoxIsWhatsapp.setSelected(false);
+        textFieldSecQuestion.setText("");
+        textFieldSecAnswer.setText("");
+        jPasswordField.setText("");
+        jPasswordFieldConfirmation.setText("");
     }
 
     public void setMasks() {
         try {
             MaskFormatter maskCpf = new MaskFormatter("###.###.###-##");
-            maskCpf.install(jTextFieldCpf);
+            maskCpf.install(textFieldCpf);
 
             MaskFormatter maskBirthDate = new MaskFormatter("##/##/####");
-            maskBirthDate.install(jTextFieldBirthDate);
+            maskBirthDate.install(textFieldBirthDate);
 
             MaskFormatter maskPhoneNumber = new MaskFormatter("(##) #####-####");
-            maskPhoneNumber.install(jTextFieldPhoneNumber);
+            maskPhoneNumber.install(textFieldPhoneNumber);
 
             MaskFormatter maskZipCode = new MaskFormatter("#####-###");
-            maskZipCode.install(jTextFieldZipCode);
+            maskZipCode.install(textFieldZipCode);
 
             MaskFormatter maskNumber = new MaskFormatter("#####");
-            maskNumber.install(jTextFieldNumber);
+            maskNumber.install(textFieldNumber);
 
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Erro ao aplicar máscara nos campos");
@@ -89,38 +120,46 @@ public class FrPatientManagement extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated
     // <editor-fold defaultstate="collapsed" desc="Generated
     // <editor-fold defaultstate="collapsed" desc="Generated
-    // Code">//GEN-BEGIN:initComponents
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPanel1 = new javax.swing.JPanel();
-        jTextFieldName = new javax.swing.JTextField();
+        boxPersonalData = new javax.swing.JPanel();
+        textFieldName = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jCheckBoxIsWhatsapp = new javax.swing.JCheckBox();
-        jTextFieldBirthDate = new javax.swing.JFormattedTextField();
-        jTextFieldCpf = new javax.swing.JFormattedTextField();
-        jTextFieldPhoneNumber = new javax.swing.JFormattedTextField();
-        jPanel2 = new javax.swing.JPanel();
+        textFieldBirthDate = new javax.swing.JFormattedTextField();
+        textFieldCpf = new javax.swing.JFormattedTextField();
+        textFieldPhoneNumber = new javax.swing.JFormattedTextField();
+        boxAddress = new javax.swing.JPanel();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
-        jTextFieldStreet = new javax.swing.JTextField();
+        textFieldStreet = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
-        jTextFieldNeighborhood = new javax.swing.JTextField();
+        textFieldNeighborhood = new javax.swing.JTextField();
         jLabel8 = new javax.swing.JLabel();
-        jTextFieldZipCode = new javax.swing.JFormattedTextField();
-        jTextFieldNumber = new javax.swing.JFormattedTextField();
-        btnNew = new javax.swing.JButton();
-        btnUpdate = new javax.swing.JButton();
-        btnDelete = new javax.swing.JButton();
-        btnCancel = new javax.swing.JButton();
-        btnSave = new javax.swing.JButton();
+        textFieldZipCode = new javax.swing.JFormattedTextField();
+        textFieldNumber = new javax.swing.JFormattedTextField();
+        btnBack = new javax.swing.JButton();
+        boxAccessData = new javax.swing.JPanel();
+        jLabel9 = new javax.swing.JLabel();
+        jLabel10 = new javax.swing.JLabel();
+        jLabel11 = new javax.swing.JLabel();
+        jLabel12 = new javax.swing.JLabel();
+        textFieldSecQuestion = new javax.swing.JFormattedTextField();
+        textFieldSecAnswer = new javax.swing.JFormattedTextField();
+        jPasswordField = new javax.swing.JPasswordField();
+        jPasswordFieldConfirmation = new javax.swing.JPasswordField();
+        jLabel13 = new javax.swing.JLabel();
+        disableFieldsFeedback = new javax.swing.JLabel();
+        btnRegister = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Dados pessoais"));
-        jPanel1.setToolTipText("");
+        boxPersonalData.setBorder(javax.swing.BorderFactory.createTitledBorder("Dados pessoais"));
+        boxPersonalData.setToolTipText("");
 
         jLabel1.setText("Nome:");
 
@@ -132,70 +171,71 @@ public class FrPatientManagement extends javax.swing.JFrame {
 
         jCheckBoxIsWhatsapp.setText("É WhatsApp");
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-                jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addContainerGap()
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                        .addComponent(jLabel3)
-                                        .addComponent(jLabel1))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addGroup(jPanel1Layout.createSequentialGroup()
-                                                .addGroup(jPanel1Layout
-                                                        .createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING,
-                                                                false)
-                                                        .addComponent(jTextFieldName,
-                                                                javax.swing.GroupLayout.DEFAULT_SIZE, 223,
-                                                                Short.MAX_VALUE)
-                                                        .addComponent(jTextFieldCpf))
-                                                .addGap(43, 43, 43)
-                                                .addGroup(jPanel1Layout
-                                                        .createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                        .addGroup(jPanel1Layout.createSequentialGroup()
-                                                                .addComponent(jLabel2)
-                                                                .addPreferredGap(
-                                                                        javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                                .addComponent(jTextFieldBirthDate))
-                                                        .addGroup(jPanel1Layout.createSequentialGroup()
-                                                                .addComponent(jLabel4)
-                                                                .addPreferredGap(
-                                                                        javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                                .addComponent(jTextFieldPhoneNumber))))
-                                        .addGroup(jPanel1Layout.createSequentialGroup()
-                                                .addGap(0, 0, Short.MAX_VALUE)
-                                                .addComponent(jCheckBoxIsWhatsapp)))
-                                .addContainerGap()));
-        jPanel1Layout.setVerticalGroup(
-                jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(jLabel1)
-                                        .addComponent(jTextFieldName, javax.swing.GroupLayout.PREFERRED_SIZE,
-                                                javax.swing.GroupLayout.DEFAULT_SIZE,
-                                                javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(jLabel2)
-                                        .addComponent(jTextFieldBirthDate, javax.swing.GroupLayout.PREFERRED_SIZE,
-                                                javax.swing.GroupLayout.DEFAULT_SIZE,
-                                                javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(jLabel3)
-                                        .addComponent(jLabel4)
-                                        .addComponent(jTextFieldCpf, javax.swing.GroupLayout.PREFERRED_SIZE,
-                                                javax.swing.GroupLayout.DEFAULT_SIZE,
-                                                javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(jTextFieldPhoneNumber, javax.swing.GroupLayout.PREFERRED_SIZE,
-                                                javax.swing.GroupLayout.DEFAULT_SIZE,
-                                                javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jCheckBoxIsWhatsapp)));
+        textFieldCpf.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                textFieldCpfActionPerformed(evt);
+            }
+        });
+        textFieldCpf.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                textFieldCpfPropertyChange(evt);
+            }
+        });
 
-        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Endereço"));
-        jPanel2.setToolTipText("");
+        javax.swing.GroupLayout boxPersonalDataLayout = new javax.swing.GroupLayout(boxPersonalData);
+        boxPersonalData.setLayout(boxPersonalDataLayout);
+        boxPersonalDataLayout.setHorizontalGroup(
+            boxPersonalDataLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(boxPersonalDataLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(boxPersonalDataLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel1)
+                    .addComponent(jLabel3))
+                .addGroup(boxPersonalDataLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(boxPersonalDataLayout.createSequentialGroup()
+                        .addGroup(boxPersonalDataLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(boxPersonalDataLayout.createSequentialGroup()
+                                .addGap(4, 4, 4)
+                                .addComponent(textFieldCpf, javax.swing.GroupLayout.PREFERRED_SIZE, 231, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(boxPersonalDataLayout.createSequentialGroup()
+                                .addGap(12, 12, 12)
+                                .addComponent(textFieldName, javax.swing.GroupLayout.PREFERRED_SIZE, 231, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(boxPersonalDataLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(boxPersonalDataLayout.createSequentialGroup()
+                                .addComponent(jLabel2)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(textFieldBirthDate))
+                            .addGroup(boxPersonalDataLayout.createSequentialGroup()
+                                .addComponent(jLabel4)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(textFieldPhoneNumber))))
+                    .addGroup(boxPersonalDataLayout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jCheckBoxIsWhatsapp)))
+                .addContainerGap())
+        );
+        boxPersonalDataLayout.setVerticalGroup(
+            boxPersonalDataLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(boxPersonalDataLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(boxPersonalDataLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(textFieldName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2)
+                    .addComponent(textFieldBirthDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(boxPersonalDataLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel3)
+                    .addComponent(jLabel4)
+                    .addComponent(textFieldCpf, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(textFieldPhoneNumber, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jCheckBoxIsWhatsapp))
+        );
+
+        boxAddress.setBorder(javax.swing.BorderFactory.createTitledBorder("Endereço"));
+        boxAddress.setToolTipText("");
 
         jLabel5.setText("CEP:");
 
@@ -205,159 +245,282 @@ public class FrPatientManagement extends javax.swing.JFrame {
 
         jLabel8.setText("Número");
 
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-                jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addGroup(jPanel2Layout.createSequentialGroup()
-                                                .addGap(18, 18, 18)
-                                                .addComponent(jLabel5)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jTextFieldZipCode, javax.swing.GroupLayout.PREFERRED_SIZE,
-                                                        144, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addGap(18, 18, 18)
-                                                .addComponent(jLabel6)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jTextFieldStreet))
-                                        .addGroup(jPanel2Layout.createSequentialGroup()
-                                                .addContainerGap()
-                                                .addComponent(jLabel7)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jTextFieldNeighborhood,
-                                                        javax.swing.GroupLayout.PREFERRED_SIZE, 236,
-                                                        javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addGap(54, 54, 54)
-                                                .addComponent(jLabel8)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jTextFieldNumber, javax.swing.GroupLayout.DEFAULT_SIZE,
-                                                        138, Short.MAX_VALUE)))
-                                .addContainerGap()));
-        jPanel2Layout.setVerticalGroup(
-                jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addContainerGap()
-                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(jLabel5)
-                                        .addComponent(jLabel6)
-                                        .addComponent(jTextFieldStreet, javax.swing.GroupLayout.PREFERRED_SIZE,
-                                                javax.swing.GroupLayout.DEFAULT_SIZE,
-                                                javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(jTextFieldZipCode, javax.swing.GroupLayout.PREFERRED_SIZE,
-                                                javax.swing.GroupLayout.DEFAULT_SIZE,
-                                                javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(jLabel7)
-                                        .addComponent(jTextFieldNeighborhood, javax.swing.GroupLayout.PREFERRED_SIZE,
-                                                javax.swing.GroupLayout.DEFAULT_SIZE,
-                                                javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(jLabel8)
-                                        .addComponent(jTextFieldNumber, javax.swing.GroupLayout.PREFERRED_SIZE,
-                                                javax.swing.GroupLayout.DEFAULT_SIZE,
-                                                javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)));
+        javax.swing.GroupLayout boxAddressLayout = new javax.swing.GroupLayout(boxAddress);
+        boxAddress.setLayout(boxAddressLayout);
+        boxAddressLayout.setHorizontalGroup(
+            boxAddressLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(boxAddressLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(boxAddressLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(boxAddressLayout.createSequentialGroup()
+                        .addComponent(jLabel5)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(textFieldZipCode, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(24, 24, 24)
+                        .addComponent(jLabel6)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(textFieldStreet))
+                    .addGroup(boxAddressLayout.createSequentialGroup()
+                        .addComponent(jLabel7)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(textFieldNeighborhood, javax.swing.GroupLayout.PREFERRED_SIZE, 236, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(54, 54, 54)
+                        .addComponent(jLabel8)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(textFieldNumber)))
+                .addContainerGap())
+        );
+        boxAddressLayout.setVerticalGroup(
+            boxAddressLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(boxAddressLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(boxAddressLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel5)
+                    .addComponent(jLabel6)
+                    .addComponent(textFieldStreet, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(textFieldZipCode, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(boxAddressLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel7)
+                    .addComponent(textFieldNeighborhood, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel8)
+                    .addComponent(textFieldNumber, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(24, Short.MAX_VALUE))
+        );
 
-        btnNew.setText("Novo");
-        btnNew.addActionListener(new java.awt.event.ActionListener() {
+        btnBack.setText("Voltar");
+        btnBack.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnNewActionPerformed(evt);
+                btnBackActionPerformed(evt);
             }
         });
 
-        btnUpdate.setText("Editar");
-        btnUpdate.addActionListener(new java.awt.event.ActionListener() {
+        boxAccessData.setBorder(javax.swing.BorderFactory.createTitledBorder("Dados de acesso"));
+        boxAccessData.setToolTipText("");
+
+        jLabel9.setText("Pergunta de Segurança:");
+
+        jLabel10.setText("Confirmação da senha:");
+
+        jLabel11.setText("Senha:");
+
+        jLabel12.setText("Resposta da pergunta de segurança:");
+
+        javax.swing.GroupLayout boxAccessDataLayout = new javax.swing.GroupLayout(boxAccessData);
+        boxAccessData.setLayout(boxAccessDataLayout);
+        boxAccessDataLayout.setHorizontalGroup(
+            boxAccessDataLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(boxAccessDataLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(boxAccessDataLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(boxAccessDataLayout.createSequentialGroup()
+                        .addComponent(jLabel9)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(textFieldSecQuestion))
+                    .addGroup(boxAccessDataLayout.createSequentialGroup()
+                        .addComponent(jLabel12)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(textFieldSecAnswer))
+                    .addGroup(boxAccessDataLayout.createSequentialGroup()
+                        .addComponent(jLabel11)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jPasswordField, javax.swing.GroupLayout.PREFERRED_SIZE, 255, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jLabel10)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jPasswordFieldConfirmation, javax.swing.GroupLayout.DEFAULT_SIZE, 176, Short.MAX_VALUE)))
+                .addContainerGap())
+        );
+        boxAccessDataLayout.setVerticalGroup(
+            boxAccessDataLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(boxAccessDataLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(boxAccessDataLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel9)
+                    .addComponent(textFieldSecQuestion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(boxAccessDataLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel12)
+                    .addComponent(textFieldSecAnswer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(boxAccessDataLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel11)
+                    .addComponent(jLabel10)
+                    .addComponent(jPasswordField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jPasswordFieldConfirmation, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(20, Short.MAX_VALUE))
+        );
+
+        jLabel13.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        jLabel13.setText("Preencha os campos abaixo para realizar o cadastro");
+
+        disableFieldsFeedback.setFont(new java.awt.Font("Dialog", 2, 10)); // NOI18N
+        disableFieldsFeedback.setText("** Informe seu CPF para preencher os campos desabilitados");
+
+        btnRegister.setText("Cadastrar");
+        btnRegister.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnUpdateActionPerformed(evt);
-            }
-        });
-
-        btnDelete.setText("Excluir");
-
-        btnCancel.setText("Cancelar");
-
-        btnSave.setText("Salvar");
-        btnSave.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnSaveActionPerformed(evt);
+                btnRegisterActionPerformed(evt);
             }
         });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
-                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(layout.createSequentialGroup()
-                                .addGap(0, 0, Short.MAX_VALUE)
-                                .addComponent(btnNew)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btnSave)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btnUpdate)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btnDelete)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btnCancel)
-                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGroup(layout.createSequentialGroup()
-                                .addContainerGap()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE,
-                                                javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE,
-                                                javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                .addContainerGap()));
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(boxPersonalData, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(btnBack)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnRegister))
+                    .addComponent(boxAccessData, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(boxAddress, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel13)
+                            .addComponent(disableFieldsFeedback))
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
+        );
         layout.setVerticalGroup(
-                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addContainerGap()
-                                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE,
-                                        javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE,
-                                        javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 8, Short.MAX_VALUE)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(btnNew)
-                                        .addComponent(btnUpdate)
-                                        .addComponent(btnDelete)
-                                        .addComponent(btnCancel)
-                                        .addComponent(btnSave))
-                                .addGap(360, 360, 360)));
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(55, Short.MAX_VALUE)
+                .addComponent(jLabel13)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(disableFieldsFeedback)
+                .addGap(23, 23, 23)
+                .addComponent(boxPersonalData, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(boxAddress, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(boxAccessData, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(45, 45, 45)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnBack)
+                    .addComponent(btnRegister))
+                .addGap(53, 53, 53))
+        );
+
+        boxAccessData.getAccessibleContext().setAccessibleName("Dados de acesso");
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnUpdateActionPerformed
-    }// GEN-LAST:event_btnUpdateActionPerformed
-
-    private void btnNewActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnNewActionPerformed
-        setFieldsEnabled(true);
-    }// GEN-LAST:event_btnNewActionPerformed
-
-    private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnSaveActionPerformed
+    private void btnRegisterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegisterActionPerformed
+        // TODO add your handling code here:
+        String cpf = textFieldCpf.getText().replaceAll("\\.", "").replaceAll("\\-", "");
+        if(jPasswordField.getText().length() > 7 && !jPasswordFieldConfirmation.getText().equals(jPasswordField.getText())) {
+            JOptionPane.showMessageDialog(this, "Erro - Os campos 'senha' e 'confirmar senha' não conferem!");
+            return;
+        }
+        
         try {
-            patienteController.onBasicRegister(
-                    jTextFieldName.getText(),
-                    jTextFieldCpf.getText(),
-                    jTextFieldBirthDate.getText(),
-                    jTextFieldNumber.getText(),
-                    jCheckBoxIsWhatsapp.isSelected(),
-                    jTextFieldZipCode.getText(),
-                    jTextFieldStreet.getText(),
-                    jTextFieldNeighborhood.getText());
+            if (this.userType.equals("Patient")) {
+                PatientController patienteCon = new PatientController();
+                patienteCon.onCompleteRegister(cpf, jPasswordField.getText(), textFieldSecQuestion.getText(), textFieldSecAnswer.getText());
+            } else {
+                UserController userCon = new UserController();
+                Integer houseNumber = null;
+                
+                if(!textFieldNumber.getText().replaceAll(" ", "").equals("")) {
+                    houseNumber = Integer.parseInt(textFieldNumber.getText().replaceAll(" ", ""));
+                }
+                
+                userCon.onRegister(
+                        textFieldName.getText(),
+                        cpf,
+                        textFieldBirthDate.getText().replaceAll(" ", "").replaceAll("\\/", ""),
+                        textFieldPhoneNumber.getText().replaceAll(" ", "").replaceAll("\\(", "").replaceAll("\\)", "").replaceAll("-", ""),
+                        jCheckBoxIsWhatsapp.isSelected(),
+                        textFieldZipCode.getText().replaceAll(" ", "").replaceAll("-", ""),
+                        textFieldStreet.getText(),
+                        textFieldNeighborhood.getText(),
+                        houseNumber,
+                        jPasswordField.getText(),
+                        textFieldSecQuestion.getText(),
+                        textFieldSecAnswer.getText(),
+                        userType);
+            }
 
-            JOptionPane.showMessageDialog(this, "Paciente " + jTextFieldName.getText() +
-                    " cadastrado com sucesso!");
+            this.setFieldsEnabled(false);
+            int response = JOptionPane.showConfirmDialog(null,
+                    "Ir para a tela de login?",
+                    "Cadastro realizado com sucesso!",
+                    JOptionPane.OK_OPTION,
+                    JOptionPane.QUESTION_MESSAGE);
 
-            this.clearFields();
+            if (response == JOptionPane.OK_OPTION) {
+                this.clearFields();
+                FrLogin loginScreen = new FrLogin();
+                this.setVisible(false);
+                loginScreen.setVisible(true);
+            }
 
-        } catch (Exception e) {
+        } catch (UserException e) {
             JOptionPane.showMessageDialog(this, e.getMessage());
         }
+    }//GEN-LAST:event_btnRegisterActionPerformed
 
-    }// GEN-LAST:event_btnSaveActionPerformed
+    private void textFieldCpfActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldCpfActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_textFieldCpfActionPerformed
+
+    private void textFieldCpfPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_textFieldCpfPropertyChange
+        // TODO add your handling code here:
+        if (textFieldCpf.getText().equals("")) {
+            return;
+        }
+        String cpf = textFieldCpf.getText().replaceAll(" ", "");
+
+        if (cpf.length() == 14 && this.userType.equals("Patient")) {
+            try {
+                cpf = textFieldCpf.getText().replaceAll("\\.", "").replaceAll("\\-", "");
+                PeopleController peopleCon = new PeopleController();
+                People curretUser = peopleCon.onFetchPatient(cpf);
+                
+                if(curretUser == null) JOptionPane.showMessageDialog(this, "É preciso ser cliente para ter acesso ao sistema. "
+                        + "Entre em contato e agende uma avaliação! "
+                        + "Telefone: 3451-8620");
+
+                if (curretUser.getBirthDate() != null) {
+                    textFieldBirthDate.setText(curretUser.getBirthDate());
+                }
+                if (curretUser.getAddress().getZipCode() != null) {
+                    textFieldZipCode.setText(curretUser.getAddress().getZipCode());
+                }
+                if (curretUser.getAddress().getNeighborhood() != null) {
+                    textFieldNeighborhood.setText(curretUser.getAddress().getNeighborhood());
+                }
+                if (curretUser.getAddress().getStreet() != null) {
+                    textFieldStreet.setText(curretUser.getAddress().getStreet());
+                }
+                if (curretUser.getPhoneNumber().getNumber() != null) {
+                    textFieldPhoneNumber.setText(curretUser.getPhoneNumber().getNumber());
+                }
+                if (curretUser.getName() != null) {
+                    textFieldName.setText(curretUser.getName());
+                }
+                jCheckBoxIsWhatsapp.setSelected(curretUser.getPhoneNumber().isIsWhatsapp());
+                if (curretUser.getAddress().getHouseNumber() != null) {
+                    textFieldNumber.setText(curretUser.getAddress().getHouseNumber().toString());
+                }
+            } catch (UserException e) {
+                JOptionPane.showMessageDialog(this, e.getMessage());
+            }
+        }
+
+    }//GEN-LAST:event_textFieldCpfPropertyChange
+
+    private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
+        // TODO add your handling code here:
+        this.setVisible(false);
+        FrUserType userTypeScreen = new FrUserType();
+        userTypeScreen.setVisible(true);
+    }//GEN-LAST:event_btnBackActionPerformed
 
     /**
      * @param args the command line arguments
@@ -380,36 +543,42 @@ public class FrPatientManagement extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(FrPatientManagement.class.getName()).log(java.util.logging.Level.SEVERE,
+            java.util.logging.Logger.getLogger(FrRegister.class.getName()).log(java.util.logging.Level.SEVERE,
                     null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(FrPatientManagement.class.getName()).log(java.util.logging.Level.SEVERE,
+            java.util.logging.Logger.getLogger(FrRegister.class.getName()).log(java.util.logging.Level.SEVERE,
                     null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(FrPatientManagement.class.getName()).log(java.util.logging.Level.SEVERE,
+            java.util.logging.Logger.getLogger(FrRegister.class.getName()).log(java.util.logging.Level.SEVERE,
                     null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(FrPatientManagement.class.getName()).log(java.util.logging.Level.SEVERE,
+            java.util.logging.Logger.getLogger(FrRegister.class.getName()).log(java.util.logging.Level.SEVERE,
                     null, ex);
         }
+        // </editor-fold>
         // </editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new FrPatientManagement().setVisible(true);
+                new FrRegister().setVisible(true);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnCancel;
-    private javax.swing.JButton btnDelete;
-    private javax.swing.JButton btnNew;
-    private javax.swing.JButton btnSave;
-    private javax.swing.JButton btnUpdate;
+    private javax.swing.JPanel boxAccessData;
+    private javax.swing.JPanel boxAddress;
+    private javax.swing.JPanel boxPersonalData;
+    private javax.swing.JButton btnBack;
+    private javax.swing.JButton btnRegister;
+    private javax.swing.JLabel disableFieldsFeedback;
     private javax.swing.JCheckBox jCheckBoxIsWhatsapp;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -417,15 +586,18 @@ public class FrPatientManagement extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
-    private javax.swing.JFormattedTextField jTextFieldBirthDate;
-    private javax.swing.JFormattedTextField jTextFieldCpf;
-    private javax.swing.JTextField jTextFieldName;
-    private javax.swing.JTextField jTextFieldNeighborhood;
-    private javax.swing.JFormattedTextField jTextFieldNumber;
-    private javax.swing.JFormattedTextField jTextFieldPhoneNumber;
-    private javax.swing.JTextField jTextFieldStreet;
-    private javax.swing.JFormattedTextField jTextFieldZipCode;
+    private javax.swing.JLabel jLabel9;
+    private javax.swing.JPasswordField jPasswordField;
+    private javax.swing.JPasswordField jPasswordFieldConfirmation;
+    private javax.swing.JFormattedTextField textFieldBirthDate;
+    private javax.swing.JFormattedTextField textFieldCpf;
+    private javax.swing.JTextField textFieldName;
+    private javax.swing.JTextField textFieldNeighborhood;
+    private javax.swing.JFormattedTextField textFieldNumber;
+    private javax.swing.JFormattedTextField textFieldPhoneNumber;
+    private javax.swing.JFormattedTextField textFieldSecAnswer;
+    private javax.swing.JFormattedTextField textFieldSecQuestion;
+    private javax.swing.JTextField textFieldStreet;
+    private javax.swing.JFormattedTextField textFieldZipCode;
     // End of variables declaration//GEN-END:variables
 }
