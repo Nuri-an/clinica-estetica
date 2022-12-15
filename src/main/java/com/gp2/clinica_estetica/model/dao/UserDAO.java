@@ -58,9 +58,9 @@ public class UserDAO {
         }
     }
 
-    public void register(String name, String CPF, String birthDate, String number, boolean isWhatsapp, String zipCode, String street, String neighborhood, String password, String securityQuestion, String securityAnswer, String type) {
+    public void register(String name, String CPF, String birthDate, String number, boolean isWhatsapp, String zipCode, String street, String neighborhood, Integer houseNumber, String password, String securityQuestion, String securityAnswer, String type) {
         PhoneNumber phoneNumber = new PhoneNumber(number, isWhatsapp);
-        Address address = new Address(zipCode, street, neighborhood);
+        Address address = new Address(zipCode, street, neighborhood, houseNumber);
         People people = new People(name, CPF, birthDate, phoneNumber, address);
         User user = new User(CPF, password, securityQuestion, securityAnswer, people);
         people.setUser(user);

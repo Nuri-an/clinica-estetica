@@ -29,9 +29,9 @@ public class PeopleDAO {
         entityManager = Database.getInstance().getEntityManager();
     }
 
-    public void basicRegister(String name, String CPF, String birthDate, String number, boolean isWhatsapp, String zipCode, String street, String neighborhood) {
+    public void basicRegister(String name, String CPF, String birthDate, String number, boolean isWhatsapp, String zipCode, String street, String neighborhood, Integer houseNumber) {
         PhoneNumber phoneNumber = new PhoneNumber(number, isWhatsapp);
-        Address address = new Address(zipCode, street, neighborhood);
+        Address address = new Address(zipCode, street, neighborhood, houseNumber);
         People people = new People(name, CPF, birthDate, phoneNumber, address);
 
         this.entityManager.getTransaction().begin();

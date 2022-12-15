@@ -23,18 +23,18 @@ public class PeopleController {
         repositorio = new PeopleDAO();
     }
 
-    public void onBasicRegister(String name, String CPF, String birthDate, String number, boolean isWhatsapp, String zipCode, String street, String neighborhood) {
+    public void onBasicRegister(String name, String CPF, String birthDate, String number, boolean isWhatsapp, String zipCode, String street, String neighborhood, Integer houseNumber) {
         try {
             ValidatePhoneNumber validPhone = new ValidatePhoneNumber();
             validPhone.phoneNumberValidate(number, isWhatsapp);
 
             ValidateAddress validAddress = new ValidateAddress();
-            validAddress.addressValidate(zipCode, street, neighborhood);
+            validAddress.addressValidate(zipCode, street, neighborhood, houseNumber);
 
             ValidatePeople validPeople = new ValidatePeople();
             validPeople.basicRegisterValidate(name, CPF, birthDate);
 
-            repositorio.basicRegister(name, CPF, birthDate, number, isWhatsapp, zipCode, street, neighborhood);
+            repositorio.basicRegister(name, CPF, birthDate, number, isWhatsapp, zipCode, street, neighborhood, houseNumber);
         } catch (UserException e) {
             throw new UserException("Error - Falha ao realizar cadastro de paciente.");
         }
