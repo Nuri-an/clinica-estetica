@@ -17,8 +17,8 @@ public class clinica_estetica {
     public static void main(String[] args) {
         UserController userCon = new UserController();
         userCon.onCreateSeeds();
+        
         FrLogin frLogin = new FrLogin();
-        frLogin.setLocationRelativeTo(null);
         frLogin.setVisible(true);
     }
 }
