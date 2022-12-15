@@ -31,18 +31,10 @@ public class PatientDAO {
 
     public void completeRegister(String login, String password, String securityQuestion, String securityAnswer) {
         try {
-            sql = " SELECT "
-                    + " p "
-                    + " FROM People p "
-                    + " WHERE CPF LIKE :login ";
+            PeopleDAO peopleDao = new PeopleDAO();
+            People people = peopleDao.fetchPeople(login);
 
-            qry = this.entityManager.createQuery(sql, People.class);
-            qry.setParameter("login", login);
-
-            List<People> lst = qry.getResultList();
-
-            if (!lst.isEmpty()) {
-                People people = lst.get(0);
+            if (people != null) {
                 User user = new User(login, password, securityQuestion, securityAnswer, people);
                 people.setUser(user);
                 Patient patient = new Patient(people);

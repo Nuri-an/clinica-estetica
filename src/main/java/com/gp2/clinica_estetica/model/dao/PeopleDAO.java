@@ -29,6 +29,29 @@ public class PeopleDAO {
         entityManager = Database.getInstance().getEntityManager();
     }
 
+    public People fetchPeople(String CPF) {
+        try {
+            sql = " SELECT "
+                    + " p "
+                    + " FROM People p "
+                    + " WHERE CPF LIKE :login ";
+
+            qry = this.entityManager.createQuery(sql, People.class);
+            qry.setParameter("login", CPF);
+
+            List<People> lst = qry.getResultList();
+
+            if (!lst.isEmpty()) {
+                People people = lst.get(0);
+                return people;
+            } else {
+                return null;
+            }
+        } catch (Exception e) {
+            throw new UserException("Ocorreu um erro, tente novamente.");
+        }
+    }
+
     public void basicRegister(String name, String CPF, String birthDate, String number, boolean isWhatsapp, String zipCode, String street, String neighborhood, Integer houseNumber) {
         PhoneNumber phoneNumber = new PhoneNumber(number, isWhatsapp);
         Address address = new Address(zipCode, street, neighborhood, houseNumber);
@@ -43,17 +66,9 @@ public class PeopleDAO {
     
     public boolean hasPeopleWithCpf (String CPF) {
         try {
-            sql = " SELECT "
-                    + " p.CPF "
-                    + " FROM People p "
-                    + " WHERE CPF LIKE :cpf ";
+            People people = this.fetchPeople(CPF);
 
-            qry = this.entityManager.createQuery(sql);
-            qry.setParameter("cpf", CPF);
-
-            List<String> lst = qry.getResultList();
-
-            if (lst.isEmpty()) {
+            if (people == null) {
                 return false;
             } else {
                 return true;

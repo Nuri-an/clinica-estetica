@@ -25,6 +25,7 @@ public class ValidateUser {
     
     public User loginValidate(String login, String password){
         User user = new User();
+
         if (login.isEmpty())
             throw new UserException("Error - Campo vazio: 'login'.");
         
@@ -54,19 +55,19 @@ public class ValidateUser {
           throw new UserException("Error - CPF para login inválido!");
         
         if(userDao.hasUserWithCpf(login))
-            throw new UserException("Error - Este CPF já está sendo utilizado por outro usuário.");
-        
-        if (password.isEmpty()) 
-            throw new UserException("Error - Campo vazio: 'senha'.");  
-        
-        if (!isValidPassword(password)) 
-            throw new UserException("Error - Informe ao menos 1 número para a senha e o menos 8 caracteres.");   
+            throw new UserException("Error - Este CPF já está sendo utilizado por outro usuário."); 
         
         if (securityQuestion.isEmpty()) 
             throw new UserException("Error - Campo vazio: 'pergunta de segurança'.");   
         
         if (securityAnswer.isEmpty()) 
             throw new UserException("Error - Campo vazio: 'resposta de segurança'.");  
+        
+        if (password.isEmpty()) 
+            throw new UserException("Error - Campo vazio: 'senha'.");  
+        
+        if (!isValidPassword(password)) 
+            throw new UserException("Error - Informe ao menos 1 número para a senha e o menos 8 caracteres.");  
         
     }
     
