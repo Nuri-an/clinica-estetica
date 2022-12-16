@@ -4,7 +4,9 @@
  */
 package com.gp2.clinica_estetica.view;
 
+import com.gp2.clinica_estetica.controller.PeopleController;
 import com.gp2.clinica_estetica.controller.UserController;
+import com.gp2.clinica_estetica.model.People;
 import com.gp2.clinica_estetica.model.User;
 import com.gp2.clinica_estetica.model.exceptions.UserException;
 import javax.swing.JOptionPane;
@@ -27,12 +29,11 @@ public class FrLogin extends javax.swing.JFrame {
         this.setExtendedState(JFrame.MAXIMIZED_BOTH);
         this.setMasks();
     }
-    
+
     public void clearFields() {
         this.jTextLogin.setText("");
         this.jPassword.setText("");
     }
-    
 
     public void setMasks() {
         try {
@@ -104,6 +105,11 @@ public class FrLogin extends javax.swing.JFrame {
         jLabel1.setFont(new java.awt.Font("Dialog", 2, 10)); // NOI18N
         jLabel1.setText("Esquici a senha");
         jLabel1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jLabel1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel1MouseClicked(evt);
+            }
+        });
 
         jTextLogin.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -174,26 +180,25 @@ public class FrLogin extends javax.swing.JFrame {
             String password = jPassword.getText();
             System.out.println("login: " + login);
             try {
-            User userLogged = userController.onLogin(login, password);
-            
-            this.setVisible(false);
-            this.clearFields();
+                User userLogged = userController.onLogin(login, password);
+
+                this.setVisible(false);
+                this.clearFields();
             } catch (UserException e) {
                 JOptionPane.showMessageDialog(this, e.getMessage(), "Erro!", JOptionPane.ERROR_MESSAGE);
             }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, e.getMessage());
-        }     
+        }
     }//GEN-LAST:event_btnLoginActionPerformed
 
     private void btnForgotPasswordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnForgotPasswordActionPerformed
         // TODO add your handling code here:
-        
-            
-            FrUserType frMain = new FrUserType();
-            this.setVisible(false);
-            frMain.setLocationRelativeTo(null);
-            frMain.setVisible(true);
+
+        FrUserType frMain = new FrUserType();
+        this.setVisible(false);
+        frMain.setLocationRelativeTo(null);
+        frMain.setVisible(true);
     }//GEN-LAST:event_btnForgotPasswordActionPerformed
 
     private void jPasswordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jPasswordActionPerformed
@@ -203,6 +208,27 @@ public class FrLogin extends javax.swing.JFrame {
     private void jTextLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextLoginActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextLoginActionPerformed
+
+    private void jLabel1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel1MouseClicked
+        // TODO add your handling code here:
+        String login = jTextLogin.getText().replaceAll(" ", "").replaceAll("\\.", "").replaceAll("\\-", "");
+        if (login.length() == 11) {
+            PeopleController peopleCon = new PeopleController();
+            People currentUser = peopleCon.onFetchPeople(login);
+
+            if (currentUser == null) {
+                JOptionPane.showMessageDialog(this, "Usuário não encontrado! Verifique o login para recuperar a senha");
+                return;
+            }
+            
+            FrResetPassword resetPasswordScreen = new FrResetPassword(currentUser);
+            this.setVisible(false);
+            resetPasswordScreen.setVisible(true);
+            
+        } else {
+            JOptionPane.showMessageDialog(this, "Atenção - Informe o login para recuperar a senha.");
+        }
+    }//GEN-LAST:event_jLabel1MouseClicked
 
     /**
      * @param args the command line arguments
