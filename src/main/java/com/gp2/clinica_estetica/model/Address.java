@@ -23,18 +23,21 @@ public class Address implements Serializable {
     private String zipCode;
     private String street;
     private String neighborhood;
+    private Integer houseNumber;
     
     public Address() {
         this.id = -1;
         this.zipCode = "";
         this.street = "";
         this.neighborhood = "";
+        this.houseNumber = 0;
     }
     
-    public Address(String zipCode, String street, String neighborhood) {
+    public Address(String zipCode, String street, String neighborhood, Integer houseNumber) {
         this.zipCode = zipCode;
         this.street = street;
         this.neighborhood = neighborhood;
+        this.houseNumber = houseNumber;
     }
 
     /**
@@ -91,6 +94,20 @@ public class Address implements Serializable {
      */
     public void setNeighborhood(String neighborhood) {
         this.neighborhood = neighborhood;
+    }
+
+    /**
+     * @return the houseNumber
+     */
+    public Integer getHouseNumber() {
+        return houseNumber;
+    }
+
+    /**
+     * @param houseNumber the houseNumber to set
+     */
+    public void setHouseNumber(Integer houseNumber) {
+        this.houseNumber = houseNumber;
     }
     
 }
