@@ -57,6 +57,22 @@ public class UserController {
         }
     }
 
+    public void onCheckSecurityAnswer(String securityAnswer, String fieldSecurityAnswer) {
+        ValidateUser valid = new ValidateUser();
+        valid.securityAnswerValidate(securityAnswer, fieldSecurityAnswer);
+    }
+
+    public void onResetPassword(String login, String password) {
+        ValidateUser valid = new ValidateUser();
+        valid.resetPasswordValidate(password);
+        
+        try {
+            repositorio.resetPassword(login, password);
+        } catch (UserException e) {
+            throw new UserException("Error - erro ao atualizar senha.");
+        }
+    }
+
     public void onCreateSeeds() {
         repositorio.createSeeds();
     }

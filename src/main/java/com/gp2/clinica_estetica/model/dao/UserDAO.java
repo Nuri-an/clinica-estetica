@@ -68,8 +68,8 @@ public class UserDAO {
 
         this.entityManager.getTransaction().begin();
         this.entityManager.persist(phoneNumber);
-        this.entityManager.persist(address); 
-        
+        this.entityManager.persist(address);
+
         switch (type) {
             case "Doctor":
                 Doctor doctor = new Doctor(people);
@@ -89,27 +89,41 @@ public class UserDAO {
             default:
                 break;
         }
-               
+
         this.entityManager.persist(people);
         this.entityManager.persist(user);
         this.entityManager.getTransaction().commit();
     }
     
-    
-    
-    public boolean hasUserWithCpf (String login) {
+
+    public User fetchUser(String CPF) {
         try {
             sql = " SELECT "
-                    + " u.login "
+                    + " u "
                     + " FROM User u "
                     + " WHERE login LIKE :login ";
 
-            qry = this.entityManager.createQuery(sql);
-            qry.setParameter("login", login);
+            qry = this.entityManager.createQuery(sql, User.class);
+            qry.setParameter("login", CPF);
 
-            List<String> lst = qry.getResultList();
+            List<User> lst = qry.getResultList();
 
-            if (lst.isEmpty()) {
+            if (!lst.isEmpty()) {
+                User user = lst.get(0);
+                return user;
+            } else {
+                return null;
+            }
+        } catch (Exception e) {
+            throw new UserException("Ocorreu um erro, tente novamente.");
+        }
+    }
+
+    public boolean hasUserWithCpf(String login) {
+        try {
+            User user = this.fetchUser(login);
+
+            if (user == null) {
                 return false;
             } else {
                 return true;
@@ -118,9 +132,24 @@ public class UserDAO {
             throw new UserException("Houve um erro inesperado! \n" + e.getMessage());
         }
     }
-    
+
+    public void resetPassword(String login, String password) {
+        try {
+            User user = this.fetchUser(login);
+
+            if (user != null) {
+                user.setPassword(password);
+                
+                this.entityManager.getTransaction().begin();
+                this.entityManager.merge(user);
+                this.entityManager.getTransaction().commit();                
+            }
+        } catch (Exception e) {
+            throw new UserException("Houve um erro inesperado! \n" + e.getMessage());
+        }
+    }
 
     public void createSeeds() {
-        
+
     }
 }

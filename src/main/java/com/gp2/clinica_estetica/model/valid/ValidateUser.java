@@ -71,4 +71,16 @@ public class ValidateUser {
         
     }
     
+    public void securityAnswerValidate(String securityAnswer, String fieldSecurityAnswer) {
+        if (!securityAnswer.equals(fieldSecurityAnswer)) 
+            throw new UserException("Error - Resposta de segurança incorreta!");  
+    }
+    
+    public void resetPasswordValidate(String password) {        
+        if (password.isEmpty()) 
+            throw new UserException("Error - Campo vazio: 'senha'.");  
+        if (!isValidPassword(password)) 
+            throw new UserException("Error - Senha inválida.");  
+    }
+    
 }
