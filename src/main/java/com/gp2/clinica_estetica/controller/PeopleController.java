@@ -26,7 +26,7 @@ public class PeopleController {
     }
     
 
-    public People onFetchPatient(String CPF) {
+    public People onFetchPeople(String CPF) {
         ValidatePF validPF = new ValidatePF();
         boolean valid = validPF.verifyCPF(CPF);
 
@@ -34,7 +34,7 @@ public class PeopleController {
             try {
                 return repositorio.fetchPeople(CPF);
             } catch (UserException e) {
-                throw new UserException("Error - Falha ao buscar paciente.");
+                throw new UserException("Error - Falha ao buscar pessoa.");
             }
         } else {
             return null;

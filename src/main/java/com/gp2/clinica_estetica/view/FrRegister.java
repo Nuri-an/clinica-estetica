@@ -413,11 +413,11 @@ public class FrRegister extends javax.swing.JFrame {
     private void btnRegisterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegisterActionPerformed
         // TODO add your handling code here:
         String cpf = textFieldCpf.getText().replaceAll("\\.", "").replaceAll("\\-", "");
-        if(jPasswordField.getText().length() > 7 && !jPasswordFieldConfirmation.getText().equals(jPasswordField.getText())) {
+        if (jPasswordField.getText().length() > 7 && !jPasswordFieldConfirmation.getText().equals(jPasswordField.getText())) {
             JOptionPane.showMessageDialog(this, "Erro - Os campos 'senha' e 'confirmar senha' não conferem!");
             return;
         }
-        
+
         try {
             if (this.userType.equals("Patient")) {
                 PatientController patienteCon = new PatientController();
@@ -425,11 +425,11 @@ public class FrRegister extends javax.swing.JFrame {
             } else {
                 UserController userCon = new UserController();
                 Integer houseNumber = null;
-                
-                if(!textFieldNumber.getText().replaceAll(" ", "").equals("")) {
+
+                if (!textFieldNumber.getText().replaceAll(" ", "").equals("")) {
                     houseNumber = Integer.parseInt(textFieldNumber.getText().replaceAll(" ", ""));
                 }
-                
+
                 userCon.onRegister(
                         textFieldName.getText(),
                         cpf,
@@ -442,7 +442,7 @@ public class FrRegister extends javax.swing.JFrame {
                         houseNumber,
                         jPasswordField.getText(),
                         textFieldSecQuestion.getText(),
-                        textFieldSecAnswer.getText(),
+                        textFieldSecAnswer.getText().toLowerCase(),
                         userType);
             }
 
@@ -480,11 +480,14 @@ public class FrRegister extends javax.swing.JFrame {
             try {
                 cpf = textFieldCpf.getText().replaceAll("\\.", "").replaceAll("\\-", "");
                 PeopleController peopleCon = new PeopleController();
-                People curretUser = peopleCon.onFetchPatient(cpf);
-                
-                if(curretUser == null) JOptionPane.showMessageDialog(this, "É preciso ser cliente para ter acesso ao sistema. "
-                        + "Entre em contato e agende uma avaliação! "
-                        + "Telefone: 3451-8620");
+                People curretUser = peopleCon.onFetchPeople(cpf);
+
+                if (curretUser == null) {
+                    JOptionPane.showMessageDialog(this, "É preciso ser cliente para ter acesso ao sistema. "
+                            + "Entre em contato e agende uma avaliação! "
+                            + "Telefone: 3451-8620");
+                    return;
+                }
 
                 if (curretUser.getBirthDate() != null) {
                     textFieldBirthDate.setText(curretUser.getBirthDate());
