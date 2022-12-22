@@ -40,4 +40,9 @@ public class PatientController {
         List<People> listAll = repositorio.findAllPatients();
         Util.jTableShow(grd, new TMListPatient(listAll), null);
     }
+    
+    public void updateTableWithFilter(JTable grd, String CPF) {
+        List<People> listAll = repositorio.findAllByCPF(CPF);
+        Util.jTableShow(grd, new TMListPatient(listAll), null);
+    }
 }

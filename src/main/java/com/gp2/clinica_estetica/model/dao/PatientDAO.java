@@ -74,7 +74,20 @@ public class PatientDAO implements IDao {
     public List<Object> findAll() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
+
+    public List<People> findAllByCPF(String cpf) {
+        sql = " SELECT p "
+                + " FROM People p "
+                + " WHERE patient_id is not null "
+                + " AND CPF LIKE CONCAT('%',CONCAT(:cpf, '%')) ";
+
+        qry = this.entityManager.createQuery(sql, People.class);
+        qry.setParameter("cpf", cpf);
+
+        List<People> lst = qry.getResultList();
+        return lst;
+    }
+
     /**
      *
      * @return
@@ -82,10 +95,10 @@ public class PatientDAO implements IDao {
     public List<People> findAllPatients() {
         sql = " SELECT p "
                 + " FROM People p "
-                + " WHERE patient_id is not null " ;
+                + " WHERE patient_id is not null ";
 
         qry = this.entityManager.createQuery(sql, People.class);
-        
+
         List<People> lst = qry.getResultList();
         return lst;
     }
