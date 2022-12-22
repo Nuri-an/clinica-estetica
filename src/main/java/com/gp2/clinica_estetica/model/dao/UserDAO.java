@@ -6,7 +6,14 @@
 package com.gp2.clinica_estetica.model.dao;
 
 import com.gp2.clinica_estetica.factory.Database;
+import com.gp2.clinica_estetica.model.Address;
+import com.gp2.clinica_estetica.model.Attendant;
+import com.gp2.clinica_estetica.model.Doctor;
+import com.gp2.clinica_estetica.model.Patient;
+import com.gp2.clinica_estetica.model.People;
+import com.gp2.clinica_estetica.model.PhoneNumber;
 import com.gp2.clinica_estetica.model.User;
+import com.gp2.clinica_estetica.model.exceptions.UserException;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
@@ -26,20 +33,19 @@ public class UserDAO {
         entityManager = Database.getInstance().getEntityManager();
     }
 
-    public Object login(String login, String password) {
+    public User login(String login, String password) {
         try {
             sql = " SELECT "
-                    + " u.login, "
-                    + " u.password "
+                    + " u "
                     + " FROM User u "
                     + " WHERE login LIKE :login "
                     + " AND password LIKE :password ";
 
-            qry = this.entityManager.createQuery(sql);
+            qry = this.entityManager.createQuery(sql, User.class);
             qry.setParameter("login", login);
             qry.setParameter("password", password);
 
-            List lst = qry.getResultList();
+            List<User> lst = qry.getResultList();
 
             if (lst.isEmpty()) {
                 return null;
@@ -51,38 +57,99 @@ public class UserDAO {
             return null;
         }
     }
-    
-    public void createAttendantSeed() {
-        try {
-            String attendantEmail = "atendente@clinica.com";
-            String attendantPassword = "Clinica@2022";
 
-            sql = " SELECT "
-                    + " u.login, "
-                    + " u.password "
-                    + " FROM User u "
-                    + " WHERE login LIKE :login "
-                    + " AND password LIKE :password ";
+    public void register(String name, String CPF, String birthDate, String number, boolean isWhatsapp, String zipCode, String street, String neighborhood, Integer houseNumber, String password, String securityQuestion, String securityAnswer, String type) {
+        PhoneNumber phoneNumber = new PhoneNumber(number, isWhatsapp);
+        Address address = new Address(zipCode, street, neighborhood, houseNumber);
+        People people = new People(name, CPF, birthDate, phoneNumber, address);
+        User user = new User(CPF, password, securityQuestion, securityAnswer, people);
+        people.setUser(user);
+        System.out.println(user.getPeople().getName());
 
-            qry = this.entityManager.createQuery(sql);
-            qry.setParameter("login", attendantEmail);
-            qry.setParameter("password", attendantPassword);
+        this.entityManager.getTransaction().begin();
+        this.entityManager.persist(phoneNumber);
+        this.entityManager.persist(address);
 
-            List lst = qry.getResultList();
-
-            if (lst.isEmpty()) {
-                User attendant = new User(attendantEmail, attendantPassword);
-
-                this.entityManager.getTransaction().begin();
+        switch (type) {
+            case "Doctor":
+                Doctor doctor = new Doctor(people);
+                this.entityManager.persist(doctor);
+                people.setDoctor(doctor);
+                break;
+            case "Patient":
+                Patient patient = new Patient(people);
+                this.entityManager.persist(patient);
+                people.setPatient(patient);
+                break;
+            case "Attendant":
+                Attendant attendant = new Attendant(people);
                 this.entityManager.persist(attendant);
-                this.entityManager.getTransaction().commit();
+                people.setAttendant(attendant);
+                break;
+            default:
+                break;
+        }
+
+        this.entityManager.persist(people);
+        this.entityManager.persist(user);
+        this.entityManager.getTransaction().commit();
+    }
+    
+
+    public User fetchUser(String CPF) {
+        try {
+            sql = " SELECT "
+                    + " u "
+                    + " FROM User u "
+                    + " WHERE login LIKE :login ";
+
+            qry = this.entityManager.createQuery(sql, User.class);
+            qry.setParameter("login", CPF);
+
+            List<User> lst = qry.getResultList();
+
+            if (!lst.isEmpty()) {
+                User user = lst.get(0);
+                return user;
+            } else {
+                return null;
             }
         } catch (Exception e) {
-            System.err.println("Seed Atendente: " + e.getMessage());
+            throw new UserException("Ocorreu um erro, tente novamente.");
+        }
+    }
+
+    public boolean hasUserWithCpf(String login) {
+        try {
+            User user = this.fetchUser(login);
+
+            if (user == null) {
+                return false;
+            } else {
+                return true;
+            }
+        } catch (Exception e) {
+            throw new UserException("Houve um erro inesperado! \n" + e.getMessage());
+        }
+    }
+
+    public void resetPassword(String login, String password) {
+        try {
+            User user = this.fetchUser(login);
+
+            if (user != null) {
+                user.setPassword(password);
+                
+                this.entityManager.getTransaction().begin();
+                this.entityManager.merge(user);
+                this.entityManager.getTransaction().commit();                
+            }
+        } catch (Exception e) {
+            throw new UserException("Houve um erro inesperado! \n" + e.getMessage());
         }
     }
 
     public void createSeeds() {
-        this.createAttendantSeed();
+
     }
 }

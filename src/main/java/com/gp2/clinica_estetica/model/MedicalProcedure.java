@@ -5,41 +5,35 @@
  */
 package com.gp2.clinica_estetica.model;
 
-import com.gp2.clinica_estetica.model.dao.reports.DaoReports;
 import java.io.Serializable;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
-import javax.swing.JTable;
 
 /**
  *
  * @author nuria
  */
 @Entity
-public class Doctor extends DaoReports implements Serializable {
-
+public class MedicalProcedure implements Serializable {
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-
-    @OneToOne
-    @JoinColumn(name = "people_id") // nome para coluna foreign key no banco
-    private People people;
-
-    public Doctor() {
+    private String name;
+    private Double price;
+    
+    
+    public MedicalProcedure() {
         this.id = -1;
-    }
-
-    public Doctor(People people) {
-        this.people = people;
+        this.name = "";
+        this.price = 0.0;
     }
     
-    public void generateAttendancePDF(JTable table, String type) {
-        super.generateTablePDF("Relatorio.pdf", "Relatório de Atendimentos - " + type.toUpperCase(), table);
+    public MedicalProcedure(String name, double price) {
+        this.name = name;
+        this.price = price;
     }
 
     /**
@@ -57,17 +51,30 @@ public class Doctor extends DaoReports implements Serializable {
     }
 
     /**
-     * @return the people
+     * @return the name
      */
-    public People getPeople() {
-        return people;
+    public String getName() {
+        return name;
     }
 
     /**
-     * @param people the people to set
+     * @param name the name to set
      */
-    public void setPeople(People people) {
-        this.people = people;
+    public void setName(String name) {
+        this.name = name;
     }
 
+    /**
+     * @return the price
+     */
+    public Double getPrice() {
+        return price;
+    }
+
+    /**
+     * @param price the price to set
+     */
+    public void setPrice(Double price) {
+        this.price = price;
+    }
 }

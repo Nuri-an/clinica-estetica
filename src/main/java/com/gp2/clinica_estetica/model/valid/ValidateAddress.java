@@ -13,7 +13,7 @@ import com.gp2.clinica_estetica.model.exceptions.UserException;
  * @author nuria
  */
 public class ValidateAddress {  
-    public Address addressValidate(String zipCode, String street, String neighborhood){
+    public Address addressValidate(String zipCode, String street, String neighborhood, Integer houseNumber){
         Address address = new Address();     
         
         if (zipCode.isEmpty()) 
@@ -27,6 +27,10 @@ public class ValidateAddress {
         if (neighborhood.isEmpty()) 
             throw new UserException("Error - Campo vazio: 'bairro'.");                
         address.setNeighborhood(neighborhood);
+        
+        if (houseNumber == null) 
+            throw new UserException("Error - Campo vazio: 'número da casa'.");                
+        address.setHouseNumber(houseNumber);
 
         return address;
     }

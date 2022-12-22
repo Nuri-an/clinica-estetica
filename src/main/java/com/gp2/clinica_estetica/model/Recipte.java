@@ -5,41 +5,31 @@
  */
 package com.gp2.clinica_estetica.model;
 
-import com.gp2.clinica_estetica.model.dao.reports.DaoReports;
 import java.io.Serializable;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
-import javax.swing.JTable;
 
 /**
  *
  * @author nuria
  */
 @Entity
-public class Doctor extends DaoReports implements Serializable {
-
+public class Recipte implements Serializable {
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-
-    @OneToOne
-    @JoinColumn(name = "people_id") // nome para coluna foreign key no banco
-    private People people;
-
-    public Doctor() {
+    private String src;
+    
+    public Recipte () {
         this.id = -1;
-    }
-
-    public Doctor(People people) {
-        this.people = people;
+        this.src = "";
     }
     
-    public void generateAttendancePDF(JTable table, String type) {
-        super.generateTablePDF("Relatorio.pdf", "Relatório de Atendimentos - " + type.toUpperCase(), table);
+    public Recipte(String src) {
+        this.src = src;
     }
 
     /**
@@ -57,17 +47,17 @@ public class Doctor extends DaoReports implements Serializable {
     }
 
     /**
-     * @return the people
+     * @return the src
      */
-    public People getPeople() {
-        return people;
+    public String getSrc() {
+        return src;
     }
 
     /**
-     * @param people the people to set
+     * @param src the src to set
      */
-    public void setPeople(People people) {
-        this.people = people;
+    public void setSrc(String src) {
+        this.src = src;
     }
-
+    
 }
