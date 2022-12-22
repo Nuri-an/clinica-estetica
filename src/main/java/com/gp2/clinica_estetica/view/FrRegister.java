@@ -8,6 +8,7 @@ import com.gp2.clinica_estetica.controller.PatientController;
 import com.gp2.clinica_estetica.controller.PeopleController;
 import com.gp2.clinica_estetica.controller.UserController;
 import com.gp2.clinica_estetica.model.People;
+import com.gp2.clinica_estetica.model.User;
 import com.gp2.clinica_estetica.model.exceptions.UserException;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -21,6 +22,7 @@ public class FrRegister extends javax.swing.JFrame {
 
     private Boolean fieldsEnabled;
     private String userType;
+    private User currentUser;
 
     /**
      * Creates new form FrPatientManagement
@@ -40,6 +42,25 @@ public class FrRegister extends javax.swing.JFrame {
         this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         this.setExtendedState(JFrame.MAXIMIZED_BOTH);
+    }
+
+    public FrRegister(User user) {
+        initComponents();
+        boxAccessData.setVisible(false);
+        this.fieldsEnabled = true;
+        this.userType = "Attendant";
+        this.currentUser = user;
+        this.setFieldsEnabled(this.fieldsEnabled);
+        this.clearFields();
+        this.setMasks();
+
+        textTitle.setText("Preencha os campos abaixo com os dados do paciente para cadastra-lo");
+
+        this.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        this.setLocationRelativeTo(null);
+        this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        this.setExtendedState(JFrame.MAXIMIZED_BOTH);
+
     }
 
     public void setFieldsEnabled(Boolean flag) {
@@ -152,7 +173,7 @@ public class FrRegister extends javax.swing.JFrame {
         textFieldSecAnswer = new javax.swing.JFormattedTextField();
         jPasswordField = new javax.swing.JPasswordField();
         jPasswordFieldConfirmation = new javax.swing.JPasswordField();
-        jLabel13 = new javax.swing.JLabel();
+        textTitle = new javax.swing.JLabel();
         disableFieldsFeedback = new javax.swing.JLabel();
         btnRegister = new javax.swing.JButton();
 
@@ -351,8 +372,8 @@ public class FrRegister extends javax.swing.JFrame {
                 .addContainerGap(20, Short.MAX_VALUE))
         );
 
-        jLabel13.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jLabel13.setText("Preencha os campos abaixo para realizar o cadastro");
+        textTitle.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        textTitle.setText("Preencha os campos abaixo para realizar o cadastro");
 
         disableFieldsFeedback.setFont(new java.awt.Font("Dialog", 2, 10)); // NOI18N
         disableFieldsFeedback.setText("** Informe seu CPF para preencher os campos desabilitados");
@@ -369,7 +390,7 @@ public class FrRegister extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(boxPersonalData, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
@@ -380,16 +401,16 @@ public class FrRegister extends javax.swing.JFrame {
                     .addComponent(boxAddress, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel13)
+                            .addComponent(textTitle)
                             .addComponent(disableFieldsFeedback))
                         .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(55, Short.MAX_VALUE)
-                .addComponent(jLabel13)
+                .addGap(55, 55, 55)
+                .addComponent(textTitle)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(disableFieldsFeedback)
                 .addGap(23, 23, 23)
@@ -402,10 +423,8 @@ public class FrRegister extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnBack)
                     .addComponent(btnRegister))
-                .addGap(53, 53, 53))
+                .addContainerGap(53, Short.MAX_VALUE))
         );
-
-        boxAccessData.getAccessibleContext().setAccessibleName("Dados de acesso");
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -422,7 +441,7 @@ public class FrRegister extends javax.swing.JFrame {
             if (this.userType.equals("Patient")) {
                 PatientController patienteCon = new PatientController();
                 patienteCon.onCompleteRegister(cpf, jPasswordField.getText(), textFieldSecQuestion.getText(), textFieldSecAnswer.getText());
-            } else {
+            } else if (this.userType.equals("Doctor")) {
                 UserController userCon = new UserController();
                 Integer houseNumber = null;
 
@@ -444,20 +463,56 @@ public class FrRegister extends javax.swing.JFrame {
                         textFieldSecQuestion.getText(),
                         textFieldSecAnswer.getText().toLowerCase(),
                         userType);
+            } else {
+                PeopleController peopleCon = new PeopleController();
+                Integer houseNumber = null;
+
+                if (!textFieldNumber.getText().replaceAll(" ", "").equals("")) {
+                    houseNumber = Integer.parseInt(textFieldNumber.getText().replaceAll(" ", ""));
+                }
+
+                peopleCon.onBasicRegister(
+                        textFieldName.getText(),
+                        cpf,
+                        textFieldBirthDate.getText().replaceAll(" ", "").replaceAll("\\/", ""),
+                        textFieldPhoneNumber.getText().replaceAll(" ", "").replaceAll("\\(", "").replaceAll("\\)", "").replaceAll("-", ""),
+                        jCheckBoxIsWhatsapp.isSelected(),
+                        textFieldZipCode.getText().replaceAll(" ", "").replaceAll("-", ""),
+                        textFieldStreet.getText(),
+                        textFieldNeighborhood.getText(),
+                        houseNumber
+                );
+
             }
 
-            this.setFieldsEnabled(false);
-            int response = JOptionPane.showConfirmDialog(null,
-                    "Ir para a tela de login?",
-                    "Cadastro realizado com sucesso!",
-                    JOptionPane.OK_OPTION,
-                    JOptionPane.QUESTION_MESSAGE);
+            if (this.userType.equals("Attendant")) {
+                this.setFieldsEnabled(false);
+                int response = JOptionPane.showConfirmDialog(null,
+                        "Voltar para a Home?",
+                        "Cadastro de paciente realizado com sucesso!",
+                        JOptionPane.OK_OPTION,
+                        JOptionPane.QUESTION_MESSAGE);
 
-            if (response == JOptionPane.OK_OPTION) {
-                this.clearFields();
-                FrLogin loginScreen = new FrLogin();
-                this.setVisible(false);
-                loginScreen.setVisible(true);
+                if (response == JOptionPane.OK_OPTION) {
+                    this.clearFields();
+                    FrAttendantHome attendantScreen = new FrAttendantHome();
+                    this.setVisible(false);
+                    attendantScreen.setVisible(true);
+                }
+            } else {
+                this.setFieldsEnabled(false);
+                int response = JOptionPane.showConfirmDialog(null,
+                        "Ir para a tela de login?",
+                        "Cadastro realizado com sucesso!",
+                        JOptionPane.OK_OPTION,
+                        JOptionPane.QUESTION_MESSAGE);
+
+                if (response == JOptionPane.OK_OPTION) {
+                    this.clearFields();
+                    FrLogin loginScreen = new FrLogin();
+                    this.setVisible(false);
+                    loginScreen.setVisible(true);
+                }
             }
 
         } catch (UserException e) {
@@ -520,9 +575,15 @@ public class FrRegister extends javax.swing.JFrame {
 
     private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
         // TODO add your handling code here:
-        this.setVisible(false);
-        FrUserType userTypeScreen = new FrUserType();
-        userTypeScreen.setVisible(true);
+        if(this.userType.equals("Attendant")) {
+            this.setVisible(false);
+            FrPatientsList patientListScreen = new FrPatientsList(this.currentUser);
+            patientListScreen.setVisible(true);
+        } else {
+            this.setVisible(false);
+            FrUserType userTypeScreen = new FrUserType();
+            userTypeScreen.setVisible(true);
+        }
     }//GEN-LAST:event_btnBackActionPerformed
 
     /**
@@ -581,7 +642,6 @@ public class FrRegister extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
-    private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -602,5 +662,6 @@ public class FrRegister extends javax.swing.JFrame {
     private javax.swing.JFormattedTextField textFieldSecQuestion;
     private javax.swing.JTextField textFieldStreet;
     private javax.swing.JFormattedTextField textFieldZipCode;
+    private javax.swing.JLabel textTitle;
     // End of variables declaration//GEN-END:variables
 }
