@@ -34,6 +34,7 @@ public class FrAppointment extends javax.swing.JFrame {
      * Creates new form FrAtendimento
      *
      * @param appointment
+     * @param people
      */
     public FrAppointment(Appointment appointment, People people) {
         initComponents();
@@ -62,7 +63,7 @@ public class FrAppointment extends javax.swing.JFrame {
     public void reloadComponents () {
         textTitle.setText(appointment.getAttendance().getProcedure().getName());
         textSubtitle.setText(appointment.getAttendance().getType() + " - " + appointment.getAttendance().getPatient().getPeople().getName());
-        textDate.setText("20/04/2022");
+        textQtnSessions.setText("20/04/2022");
         textQtnSessions.setText(appointment.getCurrentSession() + " de " + appointment.getNumberOfSessions() + " sessões");
         textQtnReciptes.setText(appointment.getRecipte().size() + " reaceitas geradas");
         textPrice.setText("R$ " + appointment.getBudget().toString().replace(".", ","));
@@ -95,31 +96,21 @@ public class FrAppointment extends javax.swing.JFrame {
     private void initComponents() {
 
         textTitle = new javax.swing.JLabel();
-        textDate = new javax.swing.JLabel();
-        jSeparator1 = new javax.swing.JSeparator();
-        jButton1 = new javax.swing.JButton();
-        btnRecipte = new javax.swing.JButton();
         textSubtitle = new javax.swing.JLabel();
-        textQtnSessions = new javax.swing.JLabel();
-        textPrice = new javax.swing.JLabel();
-        textQtnReciptes = new javax.swing.JLabel();
+        btnRecipte = new javax.swing.JButton();
         fileSelector = new javax.swing.JFileChooser();
+        textDate = new javax.swing.JLabel();
+        textQtnSessions = new javax.swing.JLabel();
+        textQtnReciptes = new javax.swing.JLabel();
+        textPrice = new javax.swing.JLabel();
+        jSeparator1 = new javax.swing.JSeparator();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         textTitle.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
-        textTitle.setText("Limpeza de Pele");
+        textTitle.setText("Consulta");
 
-        textDate.setText("dd/mm/aaaa");
-
-        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/back.png"))); // NOI18N
-        jButton1.setBorder(null);
-        jButton1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
-            }
-        });
+        textSubtitle.setText("Nome do Paciente - Tipo de atendimento");
 
         btnRecipte.setText("Adicionar Receita");
         btnRecipte.addActionListener(new java.awt.event.ActionListener() {
@@ -128,78 +119,74 @@ public class FrAppointment extends javax.swing.JFrame {
             }
         });
 
-        textSubtitle.setFont(new java.awt.Font("Dialog", 1, 11)); // NOI18N
-        textSubtitle.setText("Tipo - Nome_Paciente");
 
-        textQtnSessions.setText("x sessões");
+        textDate.setText("01/01/2000");
 
-        textPrice.setText("R$ rr,cc");
+        textQtnSessions.setText("0 sessões");
 
-        textQtnReciptes.setText("x receitas geradas");
+        textQtnReciptes.setText("0 receitas geradas");
 
-        fileSelector.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                fileSelectorActionPerformed(evt);
-            }
-        });
+        textPrice.setText("R$ 0,00");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jSeparator1, javax.swing.GroupLayout.Alignment.TRAILING)
-            .addGroup(layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(fileSelector, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(62, 62, 62))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
+                .addComponent(jSeparator1)
+                .addContainerGap())
+            .addGroup(layout.createSequentialGroup()
+                .addGap(39, 39, 39)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(textTitle)
-                                .addGap(0, 0, Short.MAX_VALUE))
-                            .addComponent(fileSelector, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addContainerGap())
+                        .addComponent(textTitle)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(textSubtitle)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(btnRecipte)
-                        .addGap(20, 20, 20))
+                        .addGap(32, 32, 32))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(textDate)
+                            .addComponent(textPrice))
+                        .addGap(149, 149, 149)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(textQtnReciptes)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(textDate)
-                                .addGap(51, 51, 51)
-                                .addComponent(textQtnSessions)
-                                .addGap(74, 74, 74)
-                                .addComponent(textPrice)))
+                            .addComponent(textQtnSessions))
                         .addGap(0, 0, Short.MAX_VALUE))))
-        );
+		));
+
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(textTitle, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(18, 18, 18)
-                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(35, 35, 35)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(textTitle)
+                        .addGap(18, 18, 18)))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(textSubtitle)
                     .addComponent(btnRecipte))
-                .addGap(25, 25, 25)
+                .addGap(11, 11, 11)
+                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(textDate)
-                    .addComponent(textQtnSessions)
-                    .addComponent(textPrice))
-                .addGap(34, 34, 34)
-                .addComponent(textQtnReciptes)
-                .addGap(29, 29, 29)
-                .addComponent(fileSelector, javax.swing.GroupLayout.PREFERRED_SIZE, 285, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
+                    .addComponent(textQtnSessions))
+                .addGap(38, 38, 38)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(textPrice)
+                    .addComponent(textQtnReciptes))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 85, Short.MAX_VALUE)
+                .addComponent(fileSelector, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -312,7 +299,6 @@ public class FrAppointment extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnRecipte;
     private javax.swing.JFileChooser fileSelector;
-    private javax.swing.JButton jButton1;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JLabel textDate;
     private javax.swing.JLabel textPrice;
