@@ -6,6 +6,7 @@
 package com.gp2.clinica_estetica;
 
 import com.gp2.clinica_estetica.controller.UserController;
+import com.gp2.clinica_estetica.view.FrLogin;
 
 /**
  *
@@ -16,5 +17,8 @@ public class clinica_estetica {
     public static void main(String[] args) {
         UserController userCon = new UserController();
         userCon.onCreateSeeds();
+        
+        FrLogin frLogin = new FrLogin();
+        frLogin.setVisible(true);
     }
 }

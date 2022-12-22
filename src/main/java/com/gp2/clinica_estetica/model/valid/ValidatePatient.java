@@ -9,5 +9,4 @@ package com.gp2.clinica_estetica.model.valid;
  *
  * @author nuria
  */
-public class ValidatePatient {
-}
+public class ValidatePatient {}
