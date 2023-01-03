@@ -29,6 +29,7 @@ public class AttendanceController {
 
     public void onSave(Patient patient, Doctor doctor, MedicalProcedure procedure, String type, Calendar startSection, Calendar endSection, String finality) {
         ValidateAttendance validAttendance = new ValidateAttendance();
+        validAttendance.scheduleValidate(startSection, endSection);
         validAttendance.saveValidate(startSection, endSection, finality);
           
         try {
@@ -37,10 +38,37 @@ public class AttendanceController {
             throw new AttendanceException("Error - salvar atendimento.");
         }
     }
+    
+    public void onEditSchedule(int id, Calendar startSection, Calendar endSection) {
+        ValidateAttendance validAttendance = new ValidateAttendance();
+        validAttendance.scheduleValidate(startSection, endSection);
+        
+        try {
+            repositorio.editSchedule(id, startSection, endSection);
+        } catch (AttendanceException e) {
+            throw new AttendanceException("Error - editar atendimento.");
+        }
+    }
+
+    public List<Attendance> onFindAllAttendances() {        
+        try {
+            return repositorio.findAllAttendances();
+        } catch (AttendanceException e) {
+            throw new AttendanceException("Error - erro buscar atendimento.");
+        }
+    }
 
     public List<Attendance> onFindAll() {        
         try {
-            return repositorio.findAllAttendances();
+            return repositorio.findAll();
+        } catch (AttendanceException e) {
+            throw new AttendanceException("Error - erro buscar atendimento.");
+        }
+    }
+
+    public Attendance onFind(Integer id) {        
+        try {
+            return repositorio.find(id);
         } catch (AttendanceException e) {
             throw new AttendanceException("Error - erro buscar atendimento.");
         }

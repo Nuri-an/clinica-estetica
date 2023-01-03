@@ -6,11 +6,7 @@
 package com.gp2.clinica_estetica.model.dao;
 
 import com.gp2.clinica_estetica.factory.Database;
-import com.gp2.clinica_estetica.model.Attendance;
-import com.gp2.clinica_estetica.model.Doctor;
 import com.gp2.clinica_estetica.model.MedicalProcedure;
-import com.gp2.clinica_estetica.model.Patient;
-import java.util.Calendar;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
@@ -59,11 +55,6 @@ public class ProcedureDAO implements IDao {
         MedicalProcedure procedure = this.entityManager.find(MedicalProcedure.class, id);
         
         return procedure;
-    }
-
-    @Override
-    public List<Object> findAll() {
-         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     public List<MedicalProcedure> findAllProcedurres() {

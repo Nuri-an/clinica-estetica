@@ -5,9 +5,14 @@
  */
 package com.gp2.clinica_estetica.view;
 
+import com.gp2.clinica_estetica.controller.AttendanceController;
+import com.gp2.clinica_estetica.model.Attendance;
 import com.gp2.clinica_estetica.view.util.WeekCalendar;
 import com.gp2.clinica_estetica.model.User;
 import com.mindfusion.common.DateTime;
+import java.util.Calendar;
+import java.util.List;
+import java.util.TimeZone;
 import javax.swing.JFrame;
 
 /**
@@ -52,10 +57,38 @@ public class FrAttendantHome extends javax.swing.JFrame {
     }
 
     public void setWeekCalendar() {
-        DateTime dt = new DateTime(DateTime.today().getYear(), DateTime.today().getMonth(), DateTime.today().getDay() + 3, DateTime.today().getHour(), DateTime.today().getMinute(), 00);
-        DateTime dt2 = new DateTime(DateTime.today().getYear(), DateTime.today().getMonth(), DateTime.today().getDay() + 3, DateTime.today().getHour() + 3, DateTime.today().getMinute(), 00);
-        WeekCalendar calendar = new WeekCalendar(boxCalendar.getSize());
-        calendar.addItem("Limpeza de pele", "Julia M.", dt, dt2, "UUID_123");
+        AttendanceController attendanceCon = new AttendanceController();
+        List<Attendance> attendances = attendanceCon.onFindAll();
+        WeekCalendar calendar = new WeekCalendar(boxCalendar.getSize(), this);
+        
+        for(int i = 0; i < attendances.size(); i++) {
+            Attendance currentAttendance = attendances.get(i);
+            
+            currentAttendance.getStartDateTime().setTimeZone(TimeZone.getTimeZone("GMT+00:00"));
+            DateTime dt = new DateTime(
+                    currentAttendance.getStartDateTime().get(Calendar.YEAR),
+                    currentAttendance.getStartDateTime().get(Calendar.MONTH) + 1,
+                    currentAttendance.getStartDateTime().get(Calendar.DAY_OF_MONTH),
+                    currentAttendance.getStartDateTime().get(Calendar.HOUR_OF_DAY),
+                    currentAttendance.getStartDateTime().get(Calendar.MINUTE),
+                    00);
+            
+            currentAttendance.getEndDateTime().setTimeZone(TimeZone.getTimeZone("GMT+00:00"));
+            DateTime dt2 = new DateTime(
+                    currentAttendance.getEndDateTime().get(Calendar.YEAR),
+                    currentAttendance.getEndDateTime().get(Calendar.MONTH) + 1,
+                    currentAttendance.getEndDateTime().get(Calendar.DAY_OF_MONTH),
+                    currentAttendance.getEndDateTime().get(Calendar.HOUR_OF_DAY),
+                    currentAttendance.getEndDateTime().get(Calendar.MINUTE),
+                    00);
+            
+            calendar.addItem(
+                    currentAttendance.getProcedure().getName(), 
+                    currentAttendance.getPatient().getPeople().getName(),
+                    dt,
+                    dt2,
+                    "" + currentAttendance.getId());         
+        }
         boxCalendar.add(calendar);
     }
 
@@ -172,7 +205,7 @@ public class FrAttendantHome extends javax.swing.JFrame {
 
     private void btnAddCalendarPointActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddCalendarPointActionPerformed
         // TODO add your handling code here:
-        FrAttendance attendanceScreen = new FrAttendance();
+        FrAttendance attendanceScreen = new FrAttendance("create");
         attendanceScreen.setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_btnAddCalendarPointActionPerformed

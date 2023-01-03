@@ -19,7 +19,7 @@ import javax.persistence.Query;
  *
  * @author darloonlino
  */
-public class AttendanceDAO implements IDao {    
+public class AttendanceDAO implements IDao {
 
     EntityManager entityManager;
 
@@ -38,10 +38,20 @@ public class AttendanceDAO implements IDao {
         attendance.setPatient(persistePatient);
         attendance.setDoctor(persisteDoctor);
         attendance.setProcedure(persisteProcedure);
+
+        this.entityManager.getTransaction().begin();
+        this.entityManager.persist(attendance);
+        this.entityManager.getTransaction().commit();
+    }
+    
+    public void editSchedule(int id, Calendar startSection, Calendar endSection) {
+        Attendance attendance = this.find(id);
+        attendance.setStartDateTime(startSection);
+        attendance.setEndDateTime(endSection);
         
         
         this.entityManager.getTransaction().begin();
-        this.entityManager.persist(attendance);
+        this.entityManager.merge(attendance);
         this.entityManager.getTransaction().commit();
     }
 
@@ -56,23 +66,32 @@ public class AttendanceDAO implements IDao {
     }
 
     @Override
-    public Object find(int id) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Attendance find(int id) {
+        Attendance attendance = this.entityManager.find(Attendance.class, id);
+
+        return attendance;
     }
 
-    @Override
-    public List<Object> findAll() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public List<Attendance> findAll() {
+        sql = " SELECT a "
+                + " FROM Attendance a ";
+
+        qry = this.entityManager.createQuery(sql, Attendance.class);
+
+        List<Attendance> lst = qry.getResultList();
+        return lst;
     }
 
     public List<Attendance> findAllAttendances() {
         sql = " SELECT a "
-                + " FROM Attendance a ";
+                + " FROM Attendance a "
+                + " WHERE a.type LIKE :type";
 
         qry = this.entityManager.createQuery(sql);
+        qry.setParameter("type", "Avaliacao");
 
         List lst = qry.getResultList();
         return lst;
     }
-    
+
 }

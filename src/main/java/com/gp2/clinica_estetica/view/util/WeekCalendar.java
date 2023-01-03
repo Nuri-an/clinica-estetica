@@ -5,6 +5,7 @@
  */
 package com.gp2.clinica_estetica.view.util;
 
+import com.gp2.clinica_estetica.view.FrAttendance;
 import com.mindfusion.common.DateTime;
 import com.mindfusion.common.Duration;
 import com.mindfusion.drawing.Align;
@@ -16,7 +17,6 @@ import com.mindfusion.drawing.GradientBrush;
 import com.mindfusion.drawing.Pen;
 import com.mindfusion.drawing.Pens;
 import com.mindfusion.drawing.SolidBrush;
-import com.mindfusion.drawing.TextAlignment;
 import com.mindfusion.drawing.TextFormat;
 import com.mindfusion.scheduling.Calendar;
 import com.mindfusion.scheduling.CalendarAdapter;
@@ -26,7 +26,6 @@ import com.mindfusion.scheduling.CalendarView;
 import com.mindfusion.scheduling.Cursor;
 import com.mindfusion.scheduling.CustomDrawElements;
 import com.mindfusion.scheduling.DateEvent;
-import com.mindfusion.scheduling.DateList;
 import com.mindfusion.scheduling.ItemConfirmEvent;
 import com.mindfusion.scheduling.ItemDrawContext;
 import com.mindfusion.scheduling.ItemModifyConfirmEvent;
@@ -52,6 +51,7 @@ import java.awt.geom.Point2D;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.EnumSet;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 /**
@@ -75,13 +75,15 @@ public class WeekCalendar extends CalendarBase {
 
     private Rectangle currentColumnBounds;
     private ItemList allItems;
+    private JFrame frame;
 
     private int infoColumn = -1;
     private boolean ignoreNextClick = false;
 
     private static final long serialVersionUID = 1L;
 
-    public WeekCalendar(Dimension size) {
+    public WeekCalendar(Dimension size, JFrame frame) {
+        this.frame = frame;
         setSize(size);
         calendar = new Calendar();
         calendar.beginInit();
@@ -300,17 +302,58 @@ public class WeekCalendar extends CalendarBase {
 
     private void onCalendarDoubleClicked(MouseEvent e) {
         System.out.println("double click");
-        Point p = new Point(e.getX(), e.getY());
-        for (int i = 0; i < calendar.getTimetableSettings().getDates().size(); i++) {
-            Rectangle r = calendar.getElementBounds(CalendarElement.TimetableDayHeader, i);
-            if (r.contains(p)) {
-                Appointment app = new Appointment();
-                app.setStartTime(calendar.getTimetableSettings().getDates().get(i));
-                app.setEndTime(calendar.getTimetableSettings().getDates().get(i).addDays(1));
-                app.setAllDayEvent(true);
-                calendar.getSchedule().getItems().add(app);
+        // If the click is within the currently displayed info box, do
+        // not close the info box; instead try to hit-test the items
+        // in the info box
+        Point point = new Point(e.getXOnScreen() - calendar.getLocationOnScreen().x,
+                e.getYOnScreen() - calendar.getLocationOnScreen().y);
+        ItemList items = calendar.getSchedule().getAllItems();
+        for (Item item : items) {
+            Rectangle itemBounds = calendar.getItemBounds(item);
+            System.out.println("item bounds: " + itemBounds);
+            
+            if (itemBounds.contains(point)) {
+                String[] options = {"editar", "excluir", "fechar"};
+                int response = JOptionPane.showOptionDialog(null, "Deseja editar ou excluir esse atendimento?",
+                        "Selecione a ação",
+                        JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[2]);
+
+                if (response == 0) {
+                    FrAttendance attendanceScreen = new FrAttendance("edit", Integer.parseInt(item.getId()));
+                    attendanceScreen.setVisible(true);
+                    this.frame.setVisible(false);
+                } else if (response == 1) {
+                    int responseDel = JOptionPane.showConfirmDialog(null,
+                            "Tem certeza quedeseja delatar e liberar o horario de "
+                            + item.getStartTime().getDayOfYear()
+                            + "/"
+                            + item.getStartTime().getMonth()
+                            + " - "
+                            + item.getStartTime().getHour()
+                            + ":"
+                            + item.getStartTime().getMinute()
+                            + " à "
+                            + item.getEndTime().getDayOfYear()
+                            + "/"
+                            + item.getEndTime().getMonth()
+                            + " - "
+                            + item.getEndTime().getHour()
+                            + ":"
+                            + item.getEndTime().getMinute(),
+                            "Exclusão solicitada!",
+                            JOptionPane.YES_OPTION,
+                            JOptionPane.QUESTION_MESSAGE);
+
+                    if (responseDel == JOptionPane.YES_OPTION) {
+                        // delete atendimento
+                    }
+
+                }
             }
         }
+
+        return;
+
     }
 
     private void onCalendarHiddenItemClick(DateEvent e) {
@@ -376,40 +419,42 @@ public class WeekCalendar extends CalendarBase {
             g.drawRectangle(Pens.LightSteelBlue, currentColumnBounds);
 
             Point p = currentColumnBounds.getLocation();
-            allItems.forEach((item) -> {
-                // Instantiating from the ItemDrawContext class - it is done
-                // through reflection because this class is not meant to be
-                // instantiated directly.
-                Constructor<?>[] constructors = ItemDrawContext.class.getConstructors();
-                //	BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+            allItems
+                    .forEach((item) -> {
+                        // Instantiating from the ItemDrawContext class - it is done
+                        // through reflection because this class is not meant to be
+                        // instantiated directly.
+                        Constructor<?>[] constructors = ItemDrawContext.class
+                                .getConstructors();
+                        //	BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
 
-                int padding = 2;
-                ItemDrawContext context = null;
-                try {
-                    context = (ItemDrawContext) constructors[0].newInstance(
-                            calendar,
-                            item,
-                            g,
-                            new Rectangle(p.x + padding, p.y + padding, currentColumnBounds.width - 2 * padding, calendar.getItemSettings().getSize()),
-                            personalEvents,
-                            true, // Is all-day event ?
-                            true, // Is horizontal ?
-                            true, // Starts here ?
-                            true, // Ends here ?
-                            false, // Is milestone?
-                            false, // Is pointed ?
-                            (Brush) null // Explicit fill brush
-                    );
-                } catch (IllegalArgumentException | InstantiationException | IllegalAccessException | InvocationTargetException e1) {
-                }
+                        int padding = 2;
+                        ItemDrawContext context = null;
+                        try {
+                            context = (ItemDrawContext) constructors[0].newInstance(
+                                    calendar,
+                                    item,
+                                    g,
+                                    new Rectangle(p.x + padding, p.y + padding, currentColumnBounds.width - 2 * padding, calendar.getItemSettings().getSize()),
+                                    personalEvents,
+                                    true, // Is all-day event ?
+                                    true, // Is horizontal ?
+                                    true, // Starts here ?
+                                    true, // Ends here ?
+                                    false, // Is milestone?
+                                    false, // Is pointed ?
+                                    (Brush) null // Explicit fill brush
+                            );
+                        } catch (IllegalArgumentException | InstantiationException | IllegalAccessException | InvocationTargetException e1) {
+                        }
 
-                // Draw the item with its default appearance through the ItemDrawContext
-                if (context != null) {
-                    context.drawDefault();
-                }
+                        // Draw the item with its default appearance through the ItemDrawContext
+                        if (context != null) {
+                            context.drawDefault();
+                        }
 
-                p.y += calendar.getItemSettings().getSize() + padding;
-            });
+                        p.y += calendar.getItemSettings().getSize() + padding;
+                    });
         }
     }
 
@@ -423,7 +468,6 @@ public class WeekCalendar extends CalendarBase {
     private void onCalendarClicked(MouseEvent e) {
         if (ignoreNextClick) {
             ignoreNextClick = false;
-            return;
         }
 
         if (currentColumnBounds != null) {
@@ -599,7 +643,9 @@ public class WeekCalendar extends CalendarBase {
     public void addItem(String title, String patientName, DateTime startDate, DateTime endDate, String id) {
         Appointment appointment = new Appointment();
         appointment.setHeaderText(patientName);
+        System.out.println("title: " + title);
         appointment.setDescriptionText(title);
+        appointment.setDetails(title);
         appointment.setStartTime(startDate);
         appointment.setEndTime(endDate);
         appointment.setId(id);
@@ -610,6 +656,7 @@ public class WeekCalendar extends CalendarBase {
         appointment.setAllowChangeEnd(false);
         appointment.setLocked(true);
         calendar.getSchedule().getItems().add(appointment);
+
     }
 
     class GoogleCalendar extends Calendar {

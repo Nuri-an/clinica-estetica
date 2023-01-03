@@ -21,6 +21,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
+import java.util.TimeZone;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -39,6 +40,9 @@ public class FrAttendance extends javax.swing.JFrame {
     private boolean isNewProcedure;
     private List<MedicalProcedure> procedures;
     private List<Attendance> attendances;
+    private Attendance attendance;
+    private AttendanceController attendanceCon;
+    private String mode; // create | edit
 
     /**
      * Creates new form FrAttendance
@@ -47,8 +51,116 @@ public class FrAttendance extends javax.swing.JFrame {
         initialize();
     }
 
+    /**
+     * Creates new form FrAttendance
+     *
+     * @param mode
+     */
+    public FrAttendance(String mode) {
+        initialize();
+
+        if (mode.equals("edit")) {
+            this.setFieldsEnabled(false);
+            fieldStartSection.setEnabled(true);
+            fieldEndSection.setEnabled(true);
+        }
+
+        this.mode = mode;
+    }
+
+    /**
+     * Creates new form FrAttendance
+     *
+     * @param mode
+     * @param id
+     */
+    public FrAttendance(String mode, Integer id) {
+        initialize();
+
+        if (mode.equals("edit")) {
+            System.out.println(mode + " | " + id);
+
+            Attendance attendanceEdit = this.attendanceCon.onFind(id);
+            System.out.println(attendanceEdit.getId());
+            if (attendanceEdit != null) {
+                this.attendance = attendanceEdit;
+                fieldCpfPatient.setText(attendanceEdit.getPatient().getPeople().getCPF());
+                fieldCpfDoctor.setText(attendanceEdit.getDoctor().getPeople().getCPF());
+                jComboProcedure.setSelectedItem(attendanceEdit.getProcedure().getName());
+                fieldProcedurePrice.setText(attendanceEdit.getProcedure().getPrice().toString().replaceAll("\\.", ","));
+
+                String dt = "";
+                int day = attendanceEdit.getStartDateTime().get(Calendar.DAY_OF_MONTH);
+                if (day < 10) {
+                    dt = dt + "0" + day;
+                } else {
+                    dt = dt + day;
+                }
+                int month = attendanceEdit.getStartDateTime().get(Calendar.MONTH) + 1;
+                if (month < 10) {
+                    dt = dt + "0" + month;
+                } else {
+                    dt = dt + month;
+                }
+                dt = dt + attendanceEdit.getStartDateTime().get(Calendar.YEAR);
+                int hour = attendanceEdit.getStartDateTime().get(Calendar.HOUR_OF_DAY);
+                if (hour < 10) {
+                    dt = dt + "0" + hour;
+                } else {
+                    dt = dt + hour;
+                }
+                int minute = attendanceEdit.getStartDateTime().get(Calendar.MINUTE);
+                if (minute < 10) {
+                    dt = dt + "0" + minute;
+                } else {
+                    dt = dt + minute;
+                }
+
+                String dt2 = "";
+                day = attendanceEdit.getEndDateTime().get(Calendar.DAY_OF_MONTH);
+                if (day < 10) {
+                    dt2 = dt2 + "0" + day;
+                } else {
+                    dt2 = dt2 + day;
+                }
+                month = attendanceEdit.getEndDateTime().get(Calendar.MONTH) + 1;
+                if (month < 10) {
+                    dt2 = dt2 + "0" + month;
+                } else {
+                    dt2 = dt2 + month;
+                }
+                dt2 = dt2 + attendanceEdit.getEndDateTime().get(Calendar.YEAR);
+                hour = attendanceEdit.getEndDateTime().get(Calendar.HOUR_OF_DAY);
+                if (hour < 10) {
+                    dt2 = dt2 + "0" + hour;
+                } else {
+                    dt2 = dt2 + hour;
+                }
+                minute = attendanceEdit.getEndDateTime().get(Calendar.MINUTE);
+                if (minute < 10) {
+                    dt2 = dt2 + "0" + minute;
+                } else {
+                    dt2 = dt2 + minute;
+                }
+
+                System.out.println(dt);
+                fieldStartSection.setText(dt);
+                fieldEndSection.setText(dt2);
+                fieldFinally.setText(attendanceEdit.getFinality());
+
+                this.setFieldsEnabled(false);
+                fieldStartSection.setEnabled(true);
+                fieldEndSection.setEnabled(true);
+            }
+        }
+
+        this.mode = mode;
+    }
+
     public void initialize() {
         initComponents();
+
+        this.attendanceCon = new AttendanceController();
 
         this.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         this.setLocationRelativeTo(null);
@@ -80,9 +192,8 @@ public class FrAttendance extends javax.swing.JFrame {
             }
         });
 
-        AttendanceController attendanceCon = new AttendanceController();
         Vector attendances = new Vector();
-        this.attendances = (List<Attendance>) attendanceCon.onFindAll();
+        this.attendances = (List<Attendance>) this.attendanceCon.onFindAllAttendances();
         attendances.addAll(this.attendances);
         jComboProcedure.setModel(new DefaultComboBoxModel(attendances));
 
@@ -108,6 +219,7 @@ public class FrAttendance extends javax.swing.JFrame {
         fieldStartSection.setEnabled(flag);
         fieldEndSection.setEnabled(flag);
         fieldFinally.setEnabled(flag);
+        btnAddPatient.setEnabled(flag);
     }
 
     public void setMasks() {
@@ -525,60 +637,41 @@ public class FrAttendance extends javax.swing.JFrame {
                 + fieldEndSection.getText().substring(16, 18)
                 + "+0:0000";
 
-        System.out.println(startSection);
-        try {
-            People findPeople = peopleCon.onFetchPeople(patientCpf);
-            if (findPeople == null || findPeople.getPatient() == null) {
-                throw new AttendanceException("Error - Não foi encontrado um paciente com esse CPF.");
-            }
-            Patient patient = findPeople.getPatient();
-
-            findPeople = peopleCon.onFetchPeople(doctorCpf);
-            if (findPeople == null || findPeople.getDoctor() == null) {
-                throw new AttendanceException("Error - Não foi encontrado um doutor com esse CPF.");
-            }
-            Doctor doctor = findPeople.getDoctor();
-
-            if (fieldStartSection.getText() == null
-                    || fieldStartSection.getText()
-                            .replaceAll(" ", "")
-                            .replaceAll("\\/", "")
-                            .replaceAll("\\-", "")
-                            .replaceAll("\\:", "").length() < 12) {
-                throw new AttendanceException("Error - Informe o inicio da sessão.");
-            }
-            if (fieldEndSection.getText() == null
-                    || fieldEndSection.getText()
-                            .replaceAll(" ", "")
-                            .replaceAll("\\/", "")
-                            .replaceAll("\\-", "")
-                            .replaceAll("\\:", "").length() < 12) {
-                throw new AttendanceException("Error - Informe o fim da sessão.");
-            }
-
-            Calendar startSectionCalend = Calendar.getInstance();
-            Calendar endSectionCalend = Calendar.getInstance();
-            startSectionCalend.setTime(formatDate.parse(startSection));
-            endSectionCalend.setTime(formatDate.parse(endSection));
-
-            MedicalProcedure procedure;
+        if (this.mode.equals("edit")) {
             try {
-                if (this.isNewProcedure) {
-                    String price = fieldProcedurePrice.getText().replaceAll(" ", "").replaceAll("R", "").replaceAll("\\$", "").replaceAll("\\.", "").replaceAll(",", "\\.");
-                    procedure = procedureCon.onSave(jComboProcedure.getSelectedItem(), price);
-                } else {
-                    procedure = procedureCon.onFetchProcedure(procedures.get(jComboProcedure.getSelectedIndex()).getId());
+                if (fieldStartSection.getText() == null
+                        || fieldStartSection.getText()
+                                .replaceAll(" ", "")
+                                .replaceAll("\\/", "")
+                                .replaceAll("\\-", "")
+                                .replaceAll("\\:", "").length() < 12) {
+                    throw new AttendanceException("Error - Informe o inicio da sessão.");
                 }
-            } catch (ProcedureException e) {
-                throw new AttendanceException(e.getMessage());
-            }
+                if (fieldEndSection.getText() == null
+                        || fieldEndSection.getText()
+                                .replaceAll(" ", "")
+                                .replaceAll("\\/", "")
+                                .replaceAll("\\-", "")
+                                .replaceAll("\\:", "").length() < 12) {
+                    throw new AttendanceException("Error - Informe o fim da sessão.");
+                }
 
-            attendanceCon.onSave(patient, doctor, procedure, "Avaliacao", startSectionCalend, endSectionCalend, fieldFinally.getText());
+                Calendar startSectionCalend = Calendar.getInstance();
+                Calendar endSectionCalend = Calendar.getInstance();
+                startSectionCalend.setTime(formatDate.parse(startSection));
+                endSectionCalend.setTime(formatDate.parse(endSection));
+
+                attendanceCon.onEditSchedule(attendance.getId(), startSectionCalend, endSectionCalend);
+            } catch (AttendanceException e) {
+                JOptionPane.showMessageDialog(this, e.getMessage());
+            } catch (ParseException ex) {
+                Logger.getLogger(FrAttendance.class.getName()).log(Level.SEVERE, null, ex);
+            }
 
             this.setFieldsEnabled(false);
             int response = JOptionPane.showConfirmDialog(null,
                     "Voltar para a Home?",
-                    "Cadastro de agendamento realizado com sucesso!",
+                    "Agendamento editado com sucesso!",
                     JOptionPane.OK_OPTION,
                     JOptionPane.QUESTION_MESSAGE);
 
@@ -587,10 +680,75 @@ public class FrAttendance extends javax.swing.JFrame {
                 this.setVisible(false);
                 attendantScreen.setVisible(true);
             }
-        } catch (AttendanceException e) {
-            JOptionPane.showMessageDialog(this, e.getMessage());
-        } catch (ParseException ex) {
-            Logger.getLogger(FrAttendance.class.getName()).log(Level.SEVERE, null, ex);
+
+        } else {
+
+            try {
+                People findPeople = peopleCon.onFetchPeople(patientCpf);
+                if (findPeople == null || findPeople.getPatient() == null) {
+                    throw new AttendanceException("Error - Não foi encontrado um paciente com esse CPF.");
+                }
+                Patient patient = findPeople.getPatient();
+
+                findPeople = peopleCon.onFetchPeople(doctorCpf);
+                if (findPeople == null || findPeople.getDoctor() == null) {
+                    throw new AttendanceException("Error - Não foi encontrado um doutor com esse CPF.");
+                }
+                Doctor doctor = findPeople.getDoctor();
+
+                if (fieldStartSection.getText() == null
+                        || fieldStartSection.getText()
+                                .replaceAll(" ", "")
+                                .replaceAll("\\/", "")
+                                .replaceAll("\\-", "")
+                                .replaceAll("\\:", "").length() < 12) {
+                    throw new AttendanceException("Error - Informe o inicio da sessão.");
+                }
+                if (fieldEndSection.getText() == null
+                        || fieldEndSection.getText()
+                                .replaceAll(" ", "")
+                                .replaceAll("\\/", "")
+                                .replaceAll("\\-", "")
+                                .replaceAll("\\:", "").length() < 12) {
+                    throw new AttendanceException("Error - Informe o fim da sessão.");
+                }
+
+                Calendar startSectionCalend = Calendar.getInstance();
+                Calendar endSectionCalend = Calendar.getInstance();
+                startSectionCalend.setTime(formatDate.parse(startSection));
+                endSectionCalend.setTime(formatDate.parse(endSection));
+
+                MedicalProcedure procedure;
+                try {
+                    if (this.isNewProcedure) {
+                        String price = fieldProcedurePrice.getText().replaceAll(" ", "").replaceAll("R", "").replaceAll("\\$", "").replaceAll("\\.", "").replaceAll(",", "\\.");
+                        procedure = procedureCon.onSave(jComboProcedure.getSelectedItem(), price);
+                    } else {
+                        procedure = procedureCon.onFetchProcedure(procedures.get(jComboProcedure.getSelectedIndex()).getId());
+                    }
+                } catch (ProcedureException e) {
+                    throw new AttendanceException(e.getMessage());
+                }
+
+                attendanceCon.onSave(patient, doctor, procedure, "Avaliacao", startSectionCalend, endSectionCalend, fieldFinally.getText());
+
+                this.setFieldsEnabled(false);
+                int response = JOptionPane.showConfirmDialog(null,
+                        "Voltar para a Home?",
+                        "Cadastro de agendamento realizado com sucesso!",
+                        JOptionPane.OK_OPTION,
+                        JOptionPane.QUESTION_MESSAGE);
+
+                if (response == JOptionPane.OK_OPTION) {
+                    FrAttendantHome attendantScreen = new FrAttendantHome();
+                    this.setVisible(false);
+                    attendantScreen.setVisible(true);
+                }
+            } catch (AttendanceException e) {
+                JOptionPane.showMessageDialog(this, e.getMessage());
+            } catch (ParseException ex) {
+                Logger.getLogger(FrAttendance.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }//GEN-LAST:event_btnScheduleActionPerformed
 
