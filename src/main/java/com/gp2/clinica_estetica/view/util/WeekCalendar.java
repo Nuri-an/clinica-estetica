@@ -246,12 +246,35 @@ public class WeekCalendar extends CalendarBase {
         e.getItem().setAllowMove(false);
         e.getItem().setAllowChangeStart(false);
         e.getItem().setAllowChangeEnd(false);
+        System.out.println("create");
         //calendar.startInplaceEdit(e.getItem());
-        if (!e.getItem().getHeaderText().equals("")) {
-            System.out.println("item criado: " + e.getItem().getDescriptionText() + "; " + e.getItem().getHeaderText());
-            System.out.println("\n Datas: " + e.getItem().getStartTime().toString() + " à " + e.getItem().getEndTime().toString());
-            // go to create appointment screen
+        System.out.println("item criado: " + e.getItem().getDescriptionText() + "; " + e.getItem().getHeaderText());
+        System.out.println("\n Datas: " + e.getItem().getStartTime().toString() + " à " + e.getItem().getEndTime().toString());
+        // go to create appointment screen
+
+        String[] options = {"Sim, como uma avaliação", "Sim, como uma consulta", "Não"};
+        int response = JOptionPane.showOptionDialog(null, "Deseja criar esse agendamento?",
+                "Selecione a ação",
+                JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[2]);
+
+        if (response == 0 || response == 1) {
+            String type;
+            if (response == 0) {
+                type = "Avaliacao";
+            } else {
+                type = "Consulta";
+            }
+            FrAttendance attendanceScreen = new FrAttendance(
+                    "create",
+                    type,
+                    e.getItem().getStartTime().toJavaCalendar(),
+                    e.getItem().getEndTime().toJavaCalendar());
+            attendanceScreen.setVisible(true);
+            this.frame.setVisible(false);
+        } else if (response == 2) {
+            calendar.getSchedule().getAllItems().remove(e.getItem());
         }
+
     }
 
     private void onCalendarItemSelecting(ItemConfirmEvent e) {
@@ -276,14 +299,16 @@ public class WeekCalendar extends CalendarBase {
             if (!items.get(i).getId().equals(e.getItem().getId())
                     && items.get(i).getStartTime().getDay() == e.getItem().getStartTime().getDay()) {
 
-                boolean starOfEvent = DateTime.op_LessThanOrEqual(items.get(i).getStartTime(), e.getItem().getStartTime())
-                        && DateTime.op_GreaterThanOrEqual(items.get(i).getStartTime(), e.getItem().getEndTime());
-
-                boolean endOfEvent = DateTime.op_GreaterThanOrEqual(items.get(i).getEndTime(), e.getItem().getStartTime())
+                boolean starOfEvent = DateTime.op_GreaterThanOrEqual(items.get(i).getEndTime(), e.getItem().getStartTime())
                         && DateTime.op_LessThanOrEqual(items.get(i).getEndTime(), e.getItem().getEndTime());
 
+                boolean endOfEvent = DateTime.op_GreaterThanOrEqual(items.get(i).getStartTime(), e.getItem().getStartTime())
+                        && DateTime.op_LessThanOrEqual(items.get(i).getStartTime(), e.getItem().getEndTime());
+
                 boolean middleOfEvent = DateTime.op_GreaterThanOrEqual(items.get(i).getStartTime(), e.getItem().getStartTime())
-                        && DateTime.op_GreaterThanOrEqual(items.get(i).getStartTime(), e.getItem().getEndTime());
+                        && DateTime.op_LessThanOrEqual(items.get(i).getStartTime(), e.getItem().getEndTime())
+                        && DateTime.op_GreaterThanOrEqual(items.get(i).getEndTime(), e.getItem().getStartTime())
+                        && DateTime.op_LessThanOrEqual(items.get(i).getEndTime(), e.getItem().getEndTime());
 
                 boolean outOfEvent = DateTime.op_LessThanOrEqual(items.get(i).getStartTime(), e.getItem().getStartTime())
                         && DateTime.op_GreaterThanOrEqual(items.get(i).getEndTime(), e.getItem().getEndTime());
@@ -315,6 +340,9 @@ public class WeekCalendar extends CalendarBase {
             System.out.println("item bounds: " + itemBounds);
 
             if (itemBounds.contains(point)) {
+                if (item.getHeaderText().equals("")) {
+                    return;
+                }
                 String[] options = {"editar", "excluir", "fechar"};
                 int response = JOptionPane.showOptionDialog(null, "Deseja editar ou excluir esse atendimento?",
                         "Selecione a ação",

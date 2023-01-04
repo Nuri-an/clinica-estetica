@@ -43,6 +43,7 @@ public class FrAttendance extends javax.swing.JFrame {
     private Attendance attendance;
     private AttendanceController attendanceCon;
     private String mode; // create | edit
+    private String type; // Avaliacao | Consulta
 
     /**
      * Creates new form FrAttendance
@@ -78,10 +79,7 @@ public class FrAttendance extends javax.swing.JFrame {
         initialize();
 
         if (mode.equals("edit")) {
-            System.out.println(mode + " | " + id);
-
             Attendance attendanceEdit = this.attendanceCon.onFind(id);
-            System.out.println(attendanceEdit.getId());
             if (attendanceEdit != null) {
                 this.attendance = attendanceEdit;
                 fieldCpfPatient.setText(attendanceEdit.getPatient().getPeople().getCPF());
@@ -89,63 +87,7 @@ public class FrAttendance extends javax.swing.JFrame {
                 jComboProcedure.setSelectedItem(attendanceEdit.getProcedure().getName());
                 fieldProcedurePrice.setText(attendanceEdit.getProcedure().getPrice().toString().replaceAll("\\.", ","));
 
-                String dt = "";
-                int day = attendanceEdit.getStartDateTime().get(Calendar.DAY_OF_MONTH);
-                if (day < 10) {
-                    dt = dt + "0" + day;
-                } else {
-                    dt = dt + day;
-                }
-                int month = attendanceEdit.getStartDateTime().get(Calendar.MONTH) + 1;
-                if (month < 10) {
-                    dt = dt + "0" + month;
-                } else {
-                    dt = dt + month;
-                }
-                dt = dt + attendanceEdit.getStartDateTime().get(Calendar.YEAR);
-                int hour = attendanceEdit.getStartDateTime().get(Calendar.HOUR_OF_DAY);
-                if (hour < 10) {
-                    dt = dt + "0" + hour;
-                } else {
-                    dt = dt + hour;
-                }
-                int minute = attendanceEdit.getStartDateTime().get(Calendar.MINUTE);
-                if (minute < 10) {
-                    dt = dt + "0" + minute;
-                } else {
-                    dt = dt + minute;
-                }
-
-                String dt2 = "";
-                day = attendanceEdit.getEndDateTime().get(Calendar.DAY_OF_MONTH);
-                if (day < 10) {
-                    dt2 = dt2 + "0" + day;
-                } else {
-                    dt2 = dt2 + day;
-                }
-                month = attendanceEdit.getEndDateTime().get(Calendar.MONTH) + 1;
-                if (month < 10) {
-                    dt2 = dt2 + "0" + month;
-                } else {
-                    dt2 = dt2 + month;
-                }
-                dt2 = dt2 + attendanceEdit.getEndDateTime().get(Calendar.YEAR);
-                hour = attendanceEdit.getEndDateTime().get(Calendar.HOUR_OF_DAY);
-                if (hour < 10) {
-                    dt2 = dt2 + "0" + hour;
-                } else {
-                    dt2 = dt2 + hour;
-                }
-                minute = attendanceEdit.getEndDateTime().get(Calendar.MINUTE);
-                if (minute < 10) {
-                    dt2 = dt2 + "0" + minute;
-                } else {
-                    dt2 = dt2 + minute;
-                }
-
-                System.out.println(dt);
-                fieldStartSection.setText(dt);
-                fieldEndSection.setText(dt2);
+                this.setInitialDates(attendanceEdit.getStartDateTime(), attendanceEdit.getEndDateTime());
                 fieldFinally.setText(attendanceEdit.getFinality());
 
                 this.setFieldsEnabled(false);
@@ -155,6 +97,17 @@ public class FrAttendance extends javax.swing.JFrame {
         }
 
         this.mode = mode;
+    }
+
+    public FrAttendance(String mode, String type, Calendar startDate, Calendar endDate) {
+        initialize();
+
+        if (mode.equals("create")) {
+            this.setInitialDates(startDate, endDate);
+        }
+
+        this.mode = mode;
+        this.type = type;
     }
 
     public void initialize() {
@@ -206,6 +159,65 @@ public class FrAttendance extends javax.swing.JFrame {
         if (this.procedures.size() > 0) {
             fieldProcedurePrice.setText("R$ " + this.procedures.get(0).getPrice());
         }
+    }
+
+    public void setInitialDates(Calendar startDate, Calendar endDate) {
+        String dt = "";
+        int day = startDate.get(Calendar.DAY_OF_MONTH);
+        if (day < 10) {
+            dt = dt + "0" + day;
+        } else {
+            dt = dt + day;
+        }
+        int month = startDate.get(Calendar.MONTH) + 1;
+        if (month < 10) {
+            dt = dt + "0" + month;
+        } else {
+            dt = dt + month;
+        }
+        dt = dt + startDate.get(Calendar.YEAR);
+        int hour = startDate.get(Calendar.HOUR_OF_DAY);
+        if (hour < 10) {
+            dt = dt + "0" + hour;
+        } else {
+            dt = dt + hour;
+        }
+        int minute = startDate.get(Calendar.MINUTE);
+        if (minute < 10) {
+            dt = dt + "0" + minute;
+        } else {
+            dt = dt + minute;
+        }
+
+        String dt2 = "";
+        day = endDate.get(Calendar.DAY_OF_MONTH);
+        if (day < 10) {
+            dt2 = dt2 + "0" + day;
+        } else {
+            dt2 = dt2 + day;
+        }
+        month = endDate.get(Calendar.MONTH) + 1;
+        if (month < 10) {
+            dt2 = dt2 + "0" + month;
+        } else {
+            dt2 = dt2 + month;
+        }
+        dt2 = dt2 + endDate.get(Calendar.YEAR);
+        hour = endDate.get(Calendar.HOUR_OF_DAY);
+        if (hour < 10) {
+            dt2 = dt2 + "0" + hour;
+        } else {
+            dt2 = dt2 + hour;
+        }
+        minute = endDate.get(Calendar.MINUTE);
+        if (minute < 10) {
+            dt2 = dt2 + "0" + minute;
+        } else {
+            dt2 = dt2 + minute;
+        }
+
+        fieldStartSection.setText(dt);
+        fieldEndSection.setText(dt2);
     }
 
     public void setFieldsEnabled(Boolean flag) {
