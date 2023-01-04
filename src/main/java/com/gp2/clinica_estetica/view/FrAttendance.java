@@ -656,31 +656,31 @@ public class FrAttendance extends javax.swing.JFrame {
                     throw new AttendanceException("Error - Informe o fim da sessão.");
                 }
 
-                Calendar startSectionCalend = Calendar.getInstance();
-                Calendar endSectionCalend = Calendar.getInstance();
+                Calendar startSectionCalend = Calendar.getInstance(TimeZone.getTimeZone("GMT-00:00"));
+                Calendar endSectionCalend = Calendar.getInstance(TimeZone.getTimeZone("GMT-00:00"));
                 startSectionCalend.setTime(formatDate.parse(startSection));
                 endSectionCalend.setTime(formatDate.parse(endSection));
 
                 attendanceCon.onEditSchedule(attendance.getId(), startSectionCalend, endSectionCalend);
+
+                this.setFieldsEnabled(false);
+                int response = JOptionPane.showConfirmDialog(null,
+                        "Voltar para a Home?",
+                        "Agendamento editado com sucesso!",
+                        JOptionPane.OK_OPTION,
+                        JOptionPane.QUESTION_MESSAGE);
+
+                if (response == JOptionPane.OK_OPTION) {
+                    FrAttendantHome attendantScreen = new FrAttendantHome();
+                    this.setVisible(false);
+                    attendantScreen.setVisible(true);
+                }
+
             } catch (AttendanceException e) {
                 JOptionPane.showMessageDialog(this, e.getMessage());
             } catch (ParseException ex) {
                 Logger.getLogger(FrAttendance.class.getName()).log(Level.SEVERE, null, ex);
             }
-
-            this.setFieldsEnabled(false);
-            int response = JOptionPane.showConfirmDialog(null,
-                    "Voltar para a Home?",
-                    "Agendamento editado com sucesso!",
-                    JOptionPane.OK_OPTION,
-                    JOptionPane.QUESTION_MESSAGE);
-
-            if (response == JOptionPane.OK_OPTION) {
-                FrAttendantHome attendantScreen = new FrAttendantHome();
-                this.setVisible(false);
-                attendantScreen.setVisible(true);
-            }
-
         } else {
 
             try {
@@ -713,8 +713,8 @@ public class FrAttendance extends javax.swing.JFrame {
                     throw new AttendanceException("Error - Informe o fim da sessão.");
                 }
 
-                Calendar startSectionCalend = Calendar.getInstance();
-                Calendar endSectionCalend = Calendar.getInstance();
+                Calendar startSectionCalend = Calendar.getInstance(TimeZone.getTimeZone("GMT-00:00"));
+                Calendar endSectionCalend = Calendar.getInstance(TimeZone.getTimeZone("GMT-00:00"));
                 startSectionCalend.setTime(formatDate.parse(startSection));
                 endSectionCalend.setTime(formatDate.parse(endSection));
 

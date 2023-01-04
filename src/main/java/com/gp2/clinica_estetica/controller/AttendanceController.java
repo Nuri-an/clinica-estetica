@@ -12,6 +12,7 @@ import com.gp2.clinica_estetica.model.Patient;
 import com.gp2.clinica_estetica.model.dao.AttendanceDAO;
 import com.gp2.clinica_estetica.model.exceptions.AttendanceException;
 import com.gp2.clinica_estetica.model.valid.ValidateAttendance;
+import com.gp2.clinica_estetica.model.valid.ValidateIDao;
 import java.util.Calendar;
 import java.util.List;
 
@@ -40,6 +41,8 @@ public class AttendanceController {
     }
     
     public void onEditSchedule(int id, Calendar startSection, Calendar endSection) {
+        ValidateIDao validDao = new ValidateIDao();
+        validDao.find(id);
         ValidateAttendance validAttendance = new ValidateAttendance();
         validAttendance.scheduleValidate(startSection, endSection);
         
@@ -66,11 +69,23 @@ public class AttendanceController {
         }
     }
 
-    public Attendance onFind(Integer id) {        
+    public Attendance onFind(Integer id) { 
+        ValidateIDao validDao = new ValidateIDao();
+        validDao.find(id);
         try {
             return repositorio.find(id);
         } catch (AttendanceException e) {
             throw new AttendanceException("Error - erro buscar atendimento.");
+        }
+    }
+
+    public boolean onDelete(Integer id) {   
+        ValidateIDao validDao = new ValidateIDao();
+        validDao.find(id);     
+        try {
+            return repositorio.delete(id);
+        } catch (AttendanceException e) {
+            throw new AttendanceException("Error - erro deletar atendimento.");
         }
     }
     

@@ -25,26 +25,44 @@ public class ValidateAttendance {
 
         for (int i = 0; i < attendances.size(); i++) {
             if (attendances.get(i).getStartDateTime().get(Calendar.DAY_OF_MONTH) == startSection.get(Calendar.DAY_OF_MONTH)) {
-                DateTime dt_start = new DateTime(attendances.get(i).getStartDateTime().getTime());
+                System.out.println(startSection.get(Calendar.DAY_OF_MONTH));
+                DateTime dt_start = new DateTime(
+                    attendances.get(i).getStartDateTime().get(Calendar.YEAR),
+                    attendances.get(i).getStartDateTime().get(Calendar.MONTH) + 1,
+                    attendances.get(i).getStartDateTime().get(Calendar.DAY_OF_MONTH),
+                    attendances.get(i).getStartDateTime().get(Calendar.HOUR_OF_DAY),
+                    attendances.get(i).getStartDateTime().get(Calendar.MINUTE),
+                    00);
                 DateTime dt2_start = new DateTime(startSection.getTime());
+                
+                System.out.println("dt_start: " + dt_start);
+                System.out.println("dt2_start: " + dt2_start);
 
                 DateTime dt_end = new DateTime(attendances.get(i).getEndDateTime().getTime());
                 DateTime dt2_end = new DateTime(endSection.getTime());
+                
+                System.out.println("dt_end: " + dt_end);
+                System.out.println("dt2_end: " + dt2_end);
 
-                boolean starOfEvent = DateTime.op_LessThanOrEqual(dt_start, dt2_start)
-                        && DateTime.op_GreaterThanOrEqual(dt_start, dt2_start);
+                boolean sameEvent = DateTime.op_Equality(dt_start, dt2_start)
+                        && DateTime.op_Equality(dt_end, dt2_end);
+                
+                boolean starOfEvent = DateTime.op_GreaterThan(dt_end, dt2_start)
+                        && DateTime.op_LessThan(dt_end, dt2_end);
 
-                boolean endOfEvent = DateTime.op_GreaterThanOrEqual(dt_end, dt2_start)
-                        && DateTime.op_LessThanOrEqual(dt_end, dt2_end);
+                boolean endOfEvent = DateTime.op_GreaterThan(dt_start, dt2_start)
+                        && DateTime.op_LessThan(dt_start, dt2_end);
 
-                boolean middleOfEvent = DateTime.op_GreaterThanOrEqual(dt_start, dt2_start)
-                        && DateTime.op_GreaterThanOrEqual(dt_start, dt2_end);
+                boolean middleOfEvent = DateTime.op_GreaterThan(dt_start, dt2_start)
+                        && DateTime.op_LessThan(dt_start, dt2_end)
+                        && DateTime.op_GreaterThan(dt_end, dt2_start)
+                        && DateTime.op_LessThan(dt_end, dt2_end);
 
-                boolean outOfEvent = DateTime.op_LessThanOrEqual(dt_start, dt2_start)
-                        && DateTime.op_GreaterThanOrEqual(dt_end, dt2_end);
+                boolean outOfEvent = DateTime.op_LessThan(dt_start, dt2_start)
+                        && DateTime.op_GreaterThan(dt_end, dt2_end);
 
-                System.out.println(starOfEvent + ", " + endOfEvent + ", " + middleOfEvent);
-                if (starOfEvent || endOfEvent || middleOfEvent || outOfEvent) {
+                System.out.println(sameEvent + ", " + starOfEvent + ", " + endOfEvent + ", " + middleOfEvent + ", " + outOfEvent);
+                if (sameEvent || starOfEvent || endOfEvent || middleOfEvent || outOfEvent) {
                     throw new AttendanceException("Erro - Já existe um agendamento neste horario");
                 }
             }

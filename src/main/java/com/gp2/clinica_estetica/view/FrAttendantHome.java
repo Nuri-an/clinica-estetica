@@ -64,7 +64,7 @@ public class FrAttendantHome extends javax.swing.JFrame {
         for(int i = 0; i < attendances.size(); i++) {
             Attendance currentAttendance = attendances.get(i);
             
-            currentAttendance.getStartDateTime().setTimeZone(TimeZone.getTimeZone("GMT+00:00"));
+            currentAttendance.getStartDateTime().setTimeZone(TimeZone.getDefault());
             DateTime dt = new DateTime(
                     currentAttendance.getStartDateTime().get(Calendar.YEAR),
                     currentAttendance.getStartDateTime().get(Calendar.MONTH) + 1,
@@ -73,7 +73,7 @@ public class FrAttendantHome extends javax.swing.JFrame {
                     currentAttendance.getStartDateTime().get(Calendar.MINUTE),
                     00);
             
-            currentAttendance.getEndDateTime().setTimeZone(TimeZone.getTimeZone("GMT+00:00"));
+            currentAttendance.getEndDateTime().setTimeZone(TimeZone.getDefault());
             DateTime dt2 = new DateTime(
                     currentAttendance.getEndDateTime().get(Calendar.YEAR),
                     currentAttendance.getEndDateTime().get(Calendar.MONTH) + 1,
@@ -81,7 +81,7 @@ public class FrAttendantHome extends javax.swing.JFrame {
                     currentAttendance.getEndDateTime().get(Calendar.HOUR_OF_DAY),
                     currentAttendance.getEndDateTime().get(Calendar.MINUTE),
                     00);
-            
+
             calendar.addItem(
                     currentAttendance.getProcedure().getName(), 
                     currentAttendance.getPatient().getPeople().getName(),

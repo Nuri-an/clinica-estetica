@@ -43,13 +43,12 @@ public class AttendanceDAO implements IDao {
         this.entityManager.persist(attendance);
         this.entityManager.getTransaction().commit();
     }
-    
+
     public void editSchedule(int id, Calendar startSection, Calendar endSection) {
         Attendance attendance = this.find(id);
         attendance.setStartDateTime(startSection);
         attendance.setEndDateTime(endSection);
-        
-        
+
         this.entityManager.getTransaction().begin();
         this.entityManager.merge(attendance);
         this.entityManager.getTransaction().commit();
@@ -62,7 +61,19 @@ public class AttendanceDAO implements IDao {
 
     @Override
     public boolean delete(int id) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        try {
+            Attendance attendance = this.find(id);
+            this.entityManager.getTransaction().begin();
+            sql = " DELETE FROM Attendance "
+                    + " WHERE id=:id";
+            qry = this.entityManager.createQuery(sql);
+            qry.setParameter("id", attendance.getId());
+            qry.executeUpdate();
+            this.entityManager.getTransaction().commit();
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     @Override

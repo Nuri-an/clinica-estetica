@@ -5,6 +5,8 @@
  */
 package com.gp2.clinica_estetica.view.util;
 
+import com.gp2.clinica_estetica.controller.AttendanceController;
+import com.gp2.clinica_estetica.model.exceptions.AttendanceException;
 import com.gp2.clinica_estetica.view.FrAttendance;
 import com.mindfusion.common.DateTime;
 import com.mindfusion.common.Duration;
@@ -311,7 +313,7 @@ public class WeekCalendar extends CalendarBase {
         for (Item item : items) {
             Rectangle itemBounds = calendar.getItemBounds(item);
             System.out.println("item bounds: " + itemBounds);
-            
+
             if (itemBounds.contains(point)) {
                 String[] options = {"editar", "excluir", "fechar"};
                 int response = JOptionPane.showOptionDialog(null, "Deseja editar ou excluir esse atendimento?",
@@ -345,7 +347,13 @@ public class WeekCalendar extends CalendarBase {
                             JOptionPane.QUESTION_MESSAGE);
 
                     if (responseDel == JOptionPane.YES_OPTION) {
-                        // delete atendimento
+                        AttendanceController attendanceCon = new AttendanceController();
+                        try {
+                            attendanceCon.onDelete(Integer.parseInt(item.getId()));
+                            calendar.getSchedule().getAllItems().remove(item);
+                        } catch (AttendanceException ex) {
+                            JOptionPane.showMessageDialog(this.frame, ex.getMessage());
+                        }
                     }
 
                 }
