@@ -87,7 +87,8 @@ public class FrAttendantHome extends javax.swing.JFrame {
                     currentAttendance.getPatient().getPeople().getName(),
                     dt,
                     dt2,
-                    "" + currentAttendance.getId());         
+                    "" + currentAttendance.getId(),
+                    currentAttendance.getType());         
         }
         boxCalendar.add(calendar);
     }

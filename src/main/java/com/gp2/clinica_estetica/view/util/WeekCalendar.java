@@ -349,7 +349,7 @@ public class WeekCalendar extends CalendarBase {
                         JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[2]);
 
                 if (response == 0) {
-                    FrAttendance attendanceScreen = new FrAttendance("edit", Integer.parseInt(item.getId()));
+                    FrAttendance attendanceScreen = new FrAttendance("edit", item.getTag().toString(), Integer.parseInt(item.getId()));
                     attendanceScreen.setVisible(true);
                     this.frame.setVisible(false);
                 } else if (response == 1) {
@@ -392,6 +392,7 @@ public class WeekCalendar extends CalendarBase {
 
     }
 
+    // verify
     private void onCalendarHiddenItemClick(DateEvent e) {
         // Find the index of the column
         System.out.println("hidden item click");
@@ -428,6 +429,7 @@ public class WeekCalendar extends CalendarBase {
         ignoreNextClick = true;
     }
 
+    // verify
     private void onCalendarPaintComponent(Graphics e) {
         System.out.println("paint");
         // Creating a cascading style over Calendar.ItemSettings.Style.
@@ -539,6 +541,7 @@ public class WeekCalendar extends CalendarBase {
         calendar.invalidate();
     }
 
+    // verify
     private void onCalendarDraw(CalendarDrawEvent e) {
         AwtGraphics g = new AwtGraphics(e.getGraphics());
         if (null != e.getElement()) {
@@ -676,15 +679,15 @@ public class WeekCalendar extends CalendarBase {
         }
     }
 
-    public void addItem(String title, String patientName, DateTime startDate, DateTime endDate, String id) {
+    public void addItem(String title, String patientName, DateTime startDate, DateTime endDate, String id, String type) {
         Appointment appointment = new Appointment();
         appointment.setHeaderText(patientName);
-        System.out.println("title: " + title);
         appointment.setDescriptionText(title);
         appointment.setDetails(title);
         appointment.setStartTime(startDate);
         appointment.setEndTime(endDate);
         appointment.setId(id);
+        appointment.setTag(type);
 
         // configs
         appointment.setAllowMove(false);

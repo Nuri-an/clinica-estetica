@@ -22,7 +22,6 @@ import javax.persistence.OneToOne;
 
 @Entity
 public class Attendance implements Serializable {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -44,6 +43,10 @@ public class Attendance implements Serializable {
     @OneToOne
     @JoinColumn(name = "procedure_id") // nome para coluna foreign key no banco
     private MedicalProcedure procedure;
+
+    @OneToOne
+    @JoinColumn(name = "appointment_id") // nome para coluna foreign key no banco
+    private Appointment appointment;
 
     public Attendance() {
         this.id = -1;
@@ -182,6 +185,20 @@ public class Attendance implements Serializable {
      */
     public void setProcedure(MedicalProcedure procedure) {
         this.procedure = procedure;
+    }
+
+    /**
+     * @return the appointment
+     */
+    public Appointment getAppointment() {
+        return appointment;
+    }
+
+    /**
+     * @param appointment the appointment to set
+     */
+    public void setAppointment(Appointment appointment) {
+        this.appointment = appointment;
     }
 
 }

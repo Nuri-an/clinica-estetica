@@ -5,6 +5,7 @@
  */
 package com.gp2.clinica_estetica.view;
 
+import com.gp2.clinica_estetica.controller.AppointmentController;
 import com.gp2.clinica_estetica.controller.AttendanceController;
 import com.gp2.clinica_estetica.controller.PeopleController;
 import com.gp2.clinica_estetica.controller.ProcedureController;
@@ -29,7 +30,6 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.text.MaskFormatter;
-import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 
 /**
  *
@@ -75,7 +75,7 @@ public class FrAttendance extends javax.swing.JFrame {
      * @param mode
      * @param id
      */
-    public FrAttendance(String mode, Integer id) {
+    public FrAttendance(String mode, String type, Integer id) {
         initialize();
 
         if (mode.equals("edit")) {
@@ -93,10 +93,24 @@ public class FrAttendance extends javax.swing.JFrame {
                 this.setFieldsEnabled(false);
                 fieldStartSection.setEnabled(true);
                 fieldEndSection.setEnabled(true);
+
+                if (type.equals("Consulta")) {
+                    fieldNumSections.setText(attendanceEdit.getAppointment().getNumberOfSessions().toString());
+                }
             }
         }
 
+        if (type.equals("Avaliacao")) {
+            labelNumSections.setVisible(false);
+            fieldNumSections.setVisible(false);
+
+            groupAttendanceType.setSelected(optAttendanceTypeA.getModel(), true);
+        } else {
+            groupAttendanceType.setSelected(optAttendanceTypeB.getModel(), true);
+        }
+
         this.mode = mode;
+        this.type = type;
     }
 
     public FrAttendance(String mode, String type, Calendar startDate, Calendar endDate) {
@@ -104,6 +118,15 @@ public class FrAttendance extends javax.swing.JFrame {
 
         if (mode.equals("create")) {
             this.setInitialDates(startDate, endDate);
+        }
+
+        if (type.equals("Avaliacao")) {
+            labelNumSections.setVisible(false);
+            fieldNumSections.setVisible(false);
+
+            groupAttendanceType.setSelected(optAttendanceTypeA.getModel(), true);
+        } else {
+            groupAttendanceType.setSelected(optAttendanceTypeB.getModel(), true);
         }
 
         this.mode = mode;
@@ -129,9 +152,7 @@ public class FrAttendance extends javax.swing.JFrame {
         fieldProcedurePrice.setEnabled(false);
 
         groupAttendanceType.setSelected(optAttendanceTypeA.getModel(), true);
-        boxSelectAttendance.setVisible(false);
 
-        AutoCompleteDecorator.decorate(jComboAttendance);
         jComboProcedure.enableInputMethods(true);
         labelNewProcedureFeedback.setVisible(false);
         jComboProcedure.getEditor().getEditorComponent().addFocusListener(new FocusListener() {
@@ -144,11 +165,6 @@ public class FrAttendance extends javax.swing.JFrame {
                 //To Do Focus Lost
             }
         });
-
-        Vector attendances = new Vector();
-        this.attendances = (List<Attendance>) this.attendanceCon.onFindAllAttendances();
-        attendances.addAll(this.attendances);
-        jComboProcedure.setModel(new DefaultComboBoxModel(attendances));
 
         ProcedureController procedureCon = new ProcedureController();
         Vector procedures = new Vector();
@@ -223,7 +239,6 @@ public class FrAttendance extends javax.swing.JFrame {
     public void setFieldsEnabled(Boolean flag) {
         optAttendanceTypeA.setEnabled(flag);
         optAttendanceTypeB.setEnabled(flag);
-        jComboAttendance.setEnabled(flag);
         fieldCpfPatient.setEnabled(flag);
         fieldCpfDoctor.setEnabled(flag);
         jComboProcedure.setEnabled(flag);
@@ -232,6 +247,7 @@ public class FrAttendance extends javax.swing.JFrame {
         fieldEndSection.setEnabled(flag);
         fieldFinally.setEnabled(flag);
         btnAddPatient.setEnabled(flag);
+        fieldNumSections.setEnabled(flag);
     }
 
     public void setMasks() {
@@ -292,11 +308,10 @@ public class FrAttendance extends javax.swing.JFrame {
         fieldFinally = new javax.swing.JTextArea();
         fieldProcedurePrice = new javax.swing.JFormattedTextField();
         labelNewProcedureFeedback = new javax.swing.JLabel();
+        labelNumSections = new javax.swing.JLabel();
+        fieldNumSections = new javax.swing.JFormattedTextField();
         optAttendanceTypeA = new javax.swing.JRadioButton();
         optAttendanceTypeB = new javax.swing.JRadioButton();
-        boxSelectAttendance = new javax.swing.JPanel();
-        jLabel7 = new javax.swing.JLabel();
-        jComboAttendance = new javax.swing.JComboBox<>();
         btnBack = new javax.swing.JButton();
         btnSchedule = new javax.swing.JButton();
 
@@ -425,6 +440,10 @@ public class FrAttendance extends javax.swing.JFrame {
         labelNewProcedureFeedback.setFont(new java.awt.Font("Dialog", 2, 9)); // NOI18N
         labelNewProcedureFeedback.setText("Um novo procedimento será criado");
 
+        labelNumSections.setText("N° de sessões");
+
+        fieldNumSections.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
@@ -432,12 +451,6 @@ public class FrAttendance extends javax.swing.JFrame {
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addComponent(jComboProcedure, javax.swing.GroupLayout.PREFERRED_SIZE, 376, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(78, 78, 78)
-                        .addComponent(jLabel4)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(fieldProcedurePrice))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addComponent(jLabel5)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -452,7 +465,17 @@ public class FrAttendance extends javax.swing.JFrame {
                         .addComponent(jScrollPane1))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addComponent(labelNewProcedureFeedback)
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addComponent(jComboProcedure, javax.swing.GroupLayout.PREFERRED_SIZE, 222, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel4)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(fieldProcedurePrice, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(labelNumSections)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(fieldNumSections, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
@@ -460,13 +483,15 @@ public class FrAttendance extends javax.swing.JFrame {
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(jComboProcedure, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel4))
+                    .addComponent(jComboProcedure, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(fieldNumSections, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(labelNumSections))
+                    .addComponent(jLabel4)
                     .addComponent(fieldProcedurePrice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(1, 1, 1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(labelNewProcedureFeedback)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 35, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
                     .addComponent(fieldStartSection, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -495,28 +520,6 @@ public class FrAttendance extends javax.swing.JFrame {
             }
         });
 
-        jLabel7.setText("Selecione a avaliação dessa consulta");
-
-        jComboAttendance.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-
-        javax.swing.GroupLayout boxSelectAttendanceLayout = new javax.swing.GroupLayout(boxSelectAttendance);
-        boxSelectAttendance.setLayout(boxSelectAttendanceLayout);
-        boxSelectAttendanceLayout.setHorizontalGroup(
-            boxSelectAttendanceLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(boxSelectAttendanceLayout.createSequentialGroup()
-                .addComponent(jLabel7)
-                .addGap(0, 147, Short.MAX_VALUE))
-            .addComponent(jComboAttendance, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
-        boxSelectAttendanceLayout.setVerticalGroup(
-            boxSelectAttendanceLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(boxSelectAttendanceLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel7)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jComboAttendance, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-        );
-
         btnBack.setText("Voltar");
         btnBack.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -543,7 +546,6 @@ public class FrAttendance extends javax.swing.JFrame {
                         .addComponent(optAttendanceTypeA)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(optAttendanceTypeB))
-                    .addComponent(boxSelectAttendance, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                         .addGroup(layout.createSequentialGroup()
                             .addComponent(btnBack)
@@ -563,9 +565,7 @@ public class FrAttendance extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(optAttendanceTypeA)
                     .addComponent(optAttendanceTypeB))
-                .addGap(18, 18, 18)
-                .addComponent(boxSelectAttendance, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(36, 36, 36)
+                .addGap(30, 30, 30)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -575,7 +575,7 @@ public class FrAttendance extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnBack)
                     .addComponent(btnSchedule))
-                .addGap(35, 35, 35))
+                .addGap(36, 36, 36))
         );
 
         pack();
@@ -587,12 +587,12 @@ public class FrAttendance extends javax.swing.JFrame {
 
     private void optAttendanceTypeAActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_optAttendanceTypeAActionPerformed
         // TODO add your handling code here:
-        boxSelectAttendance.setVisible(false);
+
     }//GEN-LAST:event_optAttendanceTypeAActionPerformed
 
     private void optAttendanceTypeBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_optAttendanceTypeBActionPerformed
         // TODO add your handling code here:
-        boxSelectAttendance.setVisible(true);
+
     }//GEN-LAST:event_optAttendanceTypeBActionPerformed
 
     private void fieldCpfPatientActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fieldCpfPatientActionPerformed
@@ -742,7 +742,16 @@ public class FrAttendance extends javax.swing.JFrame {
                     throw new AttendanceException(e.getMessage());
                 }
 
-                attendanceCon.onSave(patient, doctor, procedure, "Avaliacao", startSectionCalend, endSectionCalend, fieldFinally.getText());
+                if (this.type.equals("Consulta")) {
+                    Attendance newAttendance = new Attendance("Consulta", startSectionCalend, endSectionCalend, fieldFinally.getText());
+                    newAttendance.setPatient(patient);
+                    newAttendance.setDoctor(doctor);
+                    newAttendance.setProcedure(procedure);
+                    AppointmentController appointmentCon = new AppointmentController();
+                    appointmentCon.onSave(newAttendance, Integer.parseInt(fieldNumSections.getText()));
+                } else {
+                    attendanceCon.onSave(patient, doctor, procedure, "Avaliacao", startSectionCalend, endSectionCalend, fieldFinally.getText());
+                }
 
                 this.setFieldsEnabled(false);
                 int response = JOptionPane.showConfirmDialog(null,
@@ -824,7 +833,6 @@ public class FrAttendance extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JPanel boxSelectAttendance;
     private javax.swing.JButton btnAddPatient;
     private javax.swing.JButton btnBack;
     private javax.swing.JButton btnSchedule;
@@ -832,10 +840,10 @@ public class FrAttendance extends javax.swing.JFrame {
     private javax.swing.JFormattedTextField fieldCpfPatient;
     private javax.swing.JFormattedTextField fieldEndSection;
     private javax.swing.JTextArea fieldFinally;
+    private javax.swing.JFormattedTextField fieldNumSections;
     private javax.swing.JFormattedTextField fieldProcedurePrice;
     private javax.swing.JFormattedTextField fieldStartSection;
     private javax.swing.ButtonGroup groupAttendanceType;
-    private javax.swing.JComboBox<String> jComboAttendance;
     private javax.swing.JComboBox<String> jComboProcedure;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -843,13 +851,13 @@ public class FrAttendance extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel labelNewProcedureFeedback;
+    private javax.swing.JLabel labelNumSections;
     private javax.swing.JRadioButton optAttendanceTypeA;
     private javax.swing.JRadioButton optAttendanceTypeB;
     // End of variables declaration//GEN-END:variables

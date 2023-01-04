@@ -30,7 +30,7 @@ public class AttendanceController {
 
     public void onSave(Patient patient, Doctor doctor, MedicalProcedure procedure, String type, Calendar startSection, Calendar endSection, String finality) {
         ValidateAttendance validAttendance = new ValidateAttendance();
-        validAttendance.scheduleValidate(startSection, endSection);
+        validAttendance.scheduleValidate(startSection, endSection, null);
         validAttendance.saveValidate(startSection, endSection, finality);
           
         try {
@@ -44,7 +44,7 @@ public class AttendanceController {
         ValidateIDao validDao = new ValidateIDao();
         validDao.find(id);
         ValidateAttendance validAttendance = new ValidateAttendance();
-        validAttendance.scheduleValidate(startSection, endSection);
+        validAttendance.scheduleValidate(startSection, endSection, id);
         
         try {
             repositorio.editSchedule(id, startSection, endSection);

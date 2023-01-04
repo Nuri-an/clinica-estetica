@@ -7,6 +7,7 @@ package com.gp2.clinica_estetica.model.dao;
 
 import com.gp2.clinica_estetica.factory.Database;
 import com.gp2.clinica_estetica.model.Appointment;
+import com.gp2.clinica_estetica.model.Attendance;
 import com.gp2.clinica_estetica.model.Recipte;
 import com.gp2.clinica_estetica.model.exceptions.AppointmentException;
 import java.util.List;
@@ -31,7 +32,7 @@ public class AppointmentDAO implements IDao {
     public void sendRecipte(Integer id, String recipte) {
         try {
 
-            Appointment appointment = this.entityManager.find(Appointment.class, id);
+            Appointment appointment = this.find(id);
 
             if (appointment != null) {
                 Recipte recipteObj = new Recipte(recipte);
@@ -41,7 +42,7 @@ public class AppointmentDAO implements IDao {
                 this.entityManager.merge(appointment);
                 this.entityManager.getTransaction().commit();
             } else {
-                throw new AppointmentException("Não foi posspivel encontrar esse atendimento!");
+                throw new AppointmentException("Não foi possível encontrar esse atendimento!");
             }
         } catch (AppointmentException e) {
             System.err.println("atendimento " + e.getMessage());
@@ -49,30 +50,37 @@ public class AppointmentDAO implements IDao {
 
     }
 
+
     @Override
     public void save(Object obj) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Appointment app = (Appointment) obj;
+        this.entityManager.getTransaction().begin();
+        this.entityManager.persist(app.getAttendance());
+        this.entityManager.persist(app);
+        this.entityManager.getTransaction().commit();
     }
 
     @Override
     public boolean delete(int id) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        try {
+            Appointment appointment = this.find(id);
+            this.entityManager.getTransaction().begin();
+            sql = " DELETE FROM Appointment "
+                    + " WHERE id=:id";
+            qry = this.entityManager.createQuery(sql);
+            qry.setParameter("id", appointment.getId());
+            qry.executeUpdate();
+            this.entityManager.getTransaction().commit();
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     @Override
     public Appointment find(int id) {
-        sql = " SELECT a "
-                + " FROM Appointment a "
-                + " WHERE id = :id ";
+        Appointment appointment = this.entityManager.find(Appointment.class, id);
 
-        qry = this.entityManager.createQuery(sql, Appointment.class);
-        qry.setParameter("id", id);
-        
-        List<Appointment> lst = qry.getResultList();
-        if (lst.isEmpty()) {
-            return null;
-        } else {
-            return lst.get(0);
-        }
+        return appointment;
     }
 }
