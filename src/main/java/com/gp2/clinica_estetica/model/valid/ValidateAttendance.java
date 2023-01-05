@@ -82,4 +82,12 @@ public class ValidateAttendance {
             throw new AttendanceException("Error - Informe a finalidade do procedimento.");
         }
     }
+    
+
+    public void findTypeValidate(String type) {
+        if (type.isEmpty()) {
+            throw new AttendanceException("Error - Informe o tipo do agendamento.");
+        }
+        
+    }
 }

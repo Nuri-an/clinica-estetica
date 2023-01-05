@@ -45,6 +45,7 @@ public class FrAttendance extends javax.swing.JFrame {
     private String mode; // create | edit
     private String type; // Avaliacao | Consulta
     private User user;
+    private JFrame previusScreen;
 
     /**
      * Creates new form FrAttendance
@@ -56,13 +57,15 @@ public class FrAttendance extends javax.swing.JFrame {
     /**
      * Creates new form FrAttendance
      *
+     * @param previusScreen
      * @param mode
      * @param user
      */
-    public FrAttendance(String mode, User user) {
+    public FrAttendance(JFrame previusScreen, String mode, User user) {
         initialize();
         
         this.user = user;
+        this.previusScreen = previusScreen;
 
         if (mode.equals("edit")) {
             this.setFieldsEnabled(false);
@@ -634,8 +637,7 @@ public class FrAttendance extends javax.swing.JFrame {
 
     private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
         // TODO add your handling code here:
-        FrAttendantHome attendantHomeScreen = new FrAttendantHome(this.user);
-        attendantHomeScreen.setVisible(true);
+        this.previusScreen.setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_btnBackActionPerformed
 

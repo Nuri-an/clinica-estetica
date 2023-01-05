@@ -15,6 +15,7 @@ import com.gp2.clinica_estetica.model.valid.ValidateAttendance;
 import com.gp2.clinica_estetica.model.valid.ValidateIDao;
 import java.util.Calendar;
 import java.util.List;
+import javax.swing.JTable;
 
 /**
  *
@@ -58,6 +59,17 @@ public class AttendanceController {
             return repositorio.findAllAttendances();
         } catch (AttendanceException e) {
             throw new AttendanceException("Error - erro buscar atendimento.");
+        }
+    }
+
+    public void onFindAllAttendancesFilter(JTable grd, String type, String pacientName) {     
+        ValidateAttendance validAttendance = new ValidateAttendance();
+        validAttendance.findTypeValidate(type);
+        try {
+            List<Attendance> listAll = repositorio.findAllAttendancesFilter(type, pacientName);
+            Util.jTableShow(grd, new TMListAttendance(listAll), null);
+        } catch (AttendanceException e) {
+            throw new AttendanceException("Error - erro buscar atendimentos.");
         }
     }
 

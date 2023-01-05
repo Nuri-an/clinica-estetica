@@ -105,4 +105,20 @@ public class AttendanceDAO implements IDao {
         return lst;
     }
 
+    public List<Attendance> findAllAttendancesFilter(String type, String pacientName) {
+        sql = " SELECT a "
+                + " FROM Attendance a "
+                + " INNER JOIN a.patient pat "
+                + " INNER JOIN pat.people p "
+                + " WHERE a.type LIKE :type"
+                + " AND p.name LIKE CONCAT('%',CONCAT(:name, '%')) ";
+
+        qry = this.entityManager.createQuery(sql, Attendance.class);
+        qry.setParameter("type", type);
+        qry.setParameter("name", pacientName);
+
+        List<Attendance> lst = qry.getResultList();
+        return lst;
+    }
+
 }
