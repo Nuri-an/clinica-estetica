@@ -63,6 +63,28 @@ public class PeopleDAO {
         this.entityManager.persist(people);
         this.entityManager.getTransaction().commit();
     }
+
+    public void basicEdit(String name, String CPF, String birthDate, String number, boolean isWhatsapp, String zipCode, String street, String neighborhood, Integer houseNumber) {
+        People currentPeople = this.fetchPeople(CPF);
+        currentPeople.setName(name);
+        currentPeople.setBirthDate(birthDate);
+        
+        PhoneNumber phoneNumber = currentPeople.getPhoneNumber();
+        phoneNumber.setNumber(number);
+        phoneNumber.setIsWhatsapp(isWhatsapp);
+        
+        Address address = currentPeople.getAddress();
+        address.setZipCode(zipCode);
+        address.setStreet(street);
+        address.setNeighborhood(neighborhood);
+        address.setHouseNumber(houseNumber);
+
+        this.entityManager.getTransaction().begin();
+        this.entityManager.merge(phoneNumber);
+        this.entityManager.merge(address);
+        this.entityManager.persist(currentPeople);
+        this.entityManager.getTransaction().commit();
+    }
     
     public boolean hasPeopleWithCpf (String CPF) {
         try {

@@ -42,16 +42,21 @@ public class TMListPatient extends AbstractTableModel {
         } else {
             aux = lstPatient.get(rowIndex);
 
-            switch (columnIndex) {
-                case -1:
-                    return aux;
-                case COL_CPF:
-                    return aux.getCPF();
-                case COL_NAME:
-                    return aux.getName();
+            if (columnIndex == -1) {
+                return aux;
+            } else {
 
-                default:
-                    break;
+                switch (columnIndex) {
+                    case -1:
+                        return aux;
+                    case COL_CPF:
+                        return aux.getCPF();
+                    case COL_NAME:
+                        return aux.getName();
+
+                    default:
+                        break;
+                }
             }
         }
         return aux;

@@ -21,8 +21,9 @@ import javax.swing.text.MaskFormatter;
 public class FrRegister extends javax.swing.JFrame {
 
     private Boolean fieldsEnabled;
-    private String userType;
+    private String userType; // "Patient" | "Doctor" | "Attendant" | "PreRegister"
     private User currentUser;
+    private String mode; // "create | "edit
 
     /**
      * Creates new form FrPatientManagement
@@ -31,6 +32,11 @@ public class FrRegister extends javax.swing.JFrame {
         initComponents();
     }
 
+    /**
+     * Creates new form FrPatientManagement as user register
+     *
+     * @param userType
+     */
     public FrRegister(String userType) {
         initComponents();
         this.fieldsEnabled = true;
@@ -44,23 +50,44 @@ public class FrRegister extends javax.swing.JFrame {
         this.setExtendedState(JFrame.MAXIMIZED_BOTH);
     }
 
-    public FrRegister(User user) {
+    /**
+     * Creates new form FrPatientManagement as attendant registering/editing
+     *
+     * @param user
+     * @param mode
+     */
+    public FrRegister(User user, String mode) {
         initComponents();
+        this.mode = mode;
         boxAccessData.setVisible(false);
         this.fieldsEnabled = true;
-        this.userType = "Attendant";
         this.currentUser = user;
+        this.userType = "PreRegister";
         this.setFieldsEnabled(this.fieldsEnabled);
         this.clearFields();
         this.setMasks();
 
-        textTitle.setText("Preencha os campos abaixo com os dados do paciente para cadastra-lo");
+        People currentPeople = user.getPeople();
 
+        if (mode.equals("create")) {
+            textTitle.setText("Preencha os campos abaixo com os dados do paciente para cadastrá-lo");
+        } else {
+            textFieldName.setText(currentPeople.getName());
+            textFieldCpf.setText(currentPeople.getCPF());
+            textFieldBirthDate.setText(currentPeople.getBirthDate());
+            textFieldPhoneNumber.setText(currentPeople.getPhoneNumber().getNumber());
+            jCheckBoxIsWhatsapp.setSelected(currentPeople.getPhoneNumber().isIsWhatsapp());
+            textFieldZipCode.setText(currentPeople.getAddress().getZipCode());
+            textFieldStreet.setText(currentPeople.getAddress().getStreet());
+            textFieldNeighborhood.setText(currentPeople.getAddress().getNeighborhood());
+            textFieldNumber.setText(currentPeople.getAddress().getHouseNumber() + "");
+
+            textFieldCpf.setEnabled(false);
+        }
         this.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         this.setExtendedState(JFrame.MAXIMIZED_BOTH);
-
     }
 
     public void setFieldsEnabled(Boolean flag) {
@@ -441,7 +468,41 @@ public class FrRegister extends javax.swing.JFrame {
             if (this.userType.equals("Patient")) {
                 PatientController patienteCon = new PatientController();
                 patienteCon.onCompleteRegister(cpf, jPasswordField.getText(), textFieldSecQuestion.getText(), textFieldSecAnswer.getText());
-            } else if (this.userType.equals("Doctor")) {
+            } else if (this.userType.equals("PreRegister")) {
+                PeopleController peopleCon = new PeopleController();
+                Integer houseNumber = null;
+
+                if (!textFieldNumber.getText().replaceAll(" ", "").equals("")) {
+                    houseNumber = Integer.parseInt(textFieldNumber.getText().replaceAll(" ", ""));
+                }
+
+                if (this.mode.equals("create")) {
+                    peopleCon.onBasicRegister(
+                            textFieldName.getText(),
+                            cpf,
+                            textFieldBirthDate.getText().replaceAll(" ", "").replaceAll("\\/", ""),
+                            textFieldPhoneNumber.getText().replaceAll(" ", "").replaceAll("\\(", "").replaceAll("\\)", "").replaceAll("-", ""),
+                            jCheckBoxIsWhatsapp.isSelected(),
+                            textFieldZipCode.getText().replaceAll(" ", "").replaceAll("-", ""),
+                            textFieldStreet.getText(),
+                            textFieldNeighborhood.getText(),
+                            houseNumber
+                    );
+                } else {
+                    peopleCon.onBasicEdit(
+                            textFieldName.getText(),
+                            cpf,
+                            textFieldBirthDate.getText().replaceAll(" ", "").replaceAll("\\/", ""),
+                            textFieldPhoneNumber.getText().replaceAll(" ", "").replaceAll("\\(", "").replaceAll("\\)", "").replaceAll("-", ""),
+                            jCheckBoxIsWhatsapp.isSelected(),
+                            textFieldZipCode.getText().replaceAll(" ", "").replaceAll("-", ""),
+                            textFieldStreet.getText(),
+                            textFieldNeighborhood.getText(),
+                            houseNumber
+                    );
+                }
+
+            } else {
                 UserController userCon = new UserController();
                 Integer houseNumber = null;
 
@@ -463,41 +524,37 @@ public class FrRegister extends javax.swing.JFrame {
                         textFieldSecQuestion.getText(),
                         textFieldSecAnswer.getText().toLowerCase(),
                         userType);
-            } else {
-                PeopleController peopleCon = new PeopleController();
-                Integer houseNumber = null;
-
-                if (!textFieldNumber.getText().replaceAll(" ", "").equals("")) {
-                    houseNumber = Integer.parseInt(textFieldNumber.getText().replaceAll(" ", ""));
-                }
-
-                peopleCon.onBasicRegister(
-                        textFieldName.getText(),
-                        cpf,
-                        textFieldBirthDate.getText().replaceAll(" ", "").replaceAll("\\/", ""),
-                        textFieldPhoneNumber.getText().replaceAll(" ", "").replaceAll("\\(", "").replaceAll("\\)", "").replaceAll("-", ""),
-                        jCheckBoxIsWhatsapp.isSelected(),
-                        textFieldZipCode.getText().replaceAll(" ", "").replaceAll("-", ""),
-                        textFieldStreet.getText(),
-                        textFieldNeighborhood.getText(),
-                        houseNumber
-                );
-
             }
 
-            if (this.userType.equals("Attendant")) {
+            if (this.userType.equals("PreRegister")) {
                 this.setFieldsEnabled(false);
-                int response = JOptionPane.showConfirmDialog(null,
-                        "Voltar para a Home?",
-                        "Cadastro de paciente realizado com sucesso!",
-                        JOptionPane.OK_OPTION,
-                        JOptionPane.QUESTION_MESSAGE);
 
-                if (response == JOptionPane.OK_OPTION) {
-                    this.clearFields();
-                    FrAttendantHome attendantScreen = new FrAttendantHome();
-                    this.setVisible(false);
-                    attendantScreen.setVisible(true);
+                if (this.mode.equals("create")) {
+                    int response = JOptionPane.showConfirmDialog(null,
+                            "Voltar para a Home?",
+                            "Cadastro de paciente realizado com sucesso!",
+                            JOptionPane.OK_OPTION,
+                            JOptionPane.QUESTION_MESSAGE);
+
+                    if (response == JOptionPane.OK_OPTION) {
+                        this.clearFields();
+                        FrAttendantHome attendantScreen = new FrAttendantHome();
+                        this.setVisible(false);
+                        attendantScreen.setVisible(true);
+                    }
+                } else {
+                    int response = JOptionPane.showConfirmDialog(null,
+                            "Voltar para a listagem?",
+                            "Paciente editado com sucesso!",
+                            JOptionPane.OK_OPTION,
+                            JOptionPane.QUESTION_MESSAGE);
+
+                    if (response == JOptionPane.OK_OPTION) {
+                        this.clearFields();
+                        FrPatientsList patientsScreen = new FrPatientsList(this.currentUser);
+                        this.setVisible(false);
+                        patientsScreen.setVisible(true);
+                    }
                 }
             } else {
                 this.setFieldsEnabled(false);
@@ -514,7 +571,6 @@ public class FrRegister extends javax.swing.JFrame {
                     loginScreen.setVisible(true);
                 }
             }
-
         } catch (UserException e) {
             JOptionPane.showMessageDialog(this, e.getMessage());
         }
@@ -575,7 +631,7 @@ public class FrRegister extends javax.swing.JFrame {
 
     private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
         // TODO add your handling code here:
-        if(this.userType.equals("Attendant")) {
+        if (this.userType.equals("Attendant")) {
             this.setVisible(false);
             FrPatientsList patientListScreen = new FrPatientsList(this.currentUser);
             patientListScreen.setVisible(true);
