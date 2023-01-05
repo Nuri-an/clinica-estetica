@@ -63,7 +63,7 @@ public class FrAttendance extends javax.swing.JFrame {
      */
     public FrAttendance(JFrame previusScreen, String mode, User user) {
         initialize();
-        
+
         this.user = user;
         this.previusScreen = previusScreen;
 
@@ -77,17 +77,18 @@ public class FrAttendance extends javax.swing.JFrame {
     }
 
     /**
-     * Creates new form FrAttendance
-     * Initialize to edit attendance
+     * Creates new form FrAttendance Initialize to edit attendance
      *
+     * @param previusScreen
      * @param mode
      * @param type
      * @param id
      * @param user
      */
-    public FrAttendance(String mode, String type, Integer id, User user) {
+    public FrAttendance(JFrame previusScreen, String mode, String type, Integer id, User user) {
         initialize();
-        
+        this.previusScreen = previusScreen;
+
         this.user = user;
 
         if (mode.equals("edit")) {
@@ -126,20 +127,21 @@ public class FrAttendance extends javax.swing.JFrame {
     }
 
     /**
-     * Creates new form FrAttendance
-     * Initialize to initial dates defined
+     * Creates new form FrAttendance Initialize to initial dates defined
      *
+     * @param previusScreen
      * @param mode
      * @param type
      * @param startDate
      * @param endDate
      * @param user
      */
-    public FrAttendance(String mode, String type, Calendar startDate, Calendar endDate, User user) {
+    public FrAttendance(JFrame previusScreen, String mode, String type, Calendar startDate, Calendar endDate, User user) {
         initialize();
+        this.previusScreen = previusScreen;
 
         this.user = user;
-        
+
         if (mode.equals("create")) {
             this.setInitialDates(startDate, endDate);
         }
@@ -172,6 +174,8 @@ public class FrAttendance extends javax.swing.JFrame {
         btnAddPatient.setBorderPainted(false);
 
         setMasks();
+
+        this.type = "Avaliacao";
 
         fieldProcedurePrice.setEnabled(false);
 
@@ -456,6 +460,11 @@ public class FrAttendance extends javax.swing.JFrame {
 
         fieldFinally.setColumns(20);
         fieldFinally.setRows(5);
+        fieldFinally.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                fieldFinallyKeyTyped(evt);
+            }
+        });
         jScrollPane1.setViewportView(fieldFinally);
 
         fieldProcedurePrice.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(java.text.NumberFormat.getCurrencyInstance())));
@@ -611,12 +620,12 @@ public class FrAttendance extends javax.swing.JFrame {
 
     private void optAttendanceTypeAActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_optAttendanceTypeAActionPerformed
         // TODO add your handling code here:
-
+        this.type = "Consulta";
     }//GEN-LAST:event_optAttendanceTypeAActionPerformed
 
     private void optAttendanceTypeBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_optAttendanceTypeBActionPerformed
         // TODO add your handling code here:
-
+        this.type = "Consulta";
     }//GEN-LAST:event_optAttendanceTypeBActionPerformed
 
     private void fieldCpfPatientActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fieldCpfPatientActionPerformed
@@ -816,9 +825,16 @@ public class FrAttendance extends javax.swing.JFrame {
 
     private void jComboProcedureMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jComboProcedureMousePressed
         // TODO add your handling code here:
-        System.out.println("input text");
         jComboProcedure.showPopup();
     }//GEN-LAST:event_jComboProcedureMousePressed
+
+    private void fieldFinallyKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_fieldFinallyKeyTyped
+        // TODO add your handling code here:
+        int max = 254;
+        if (fieldFinally.getText().length() > max) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_fieldFinallyKeyTyped
 
     /**
      * @param args the command line arguments

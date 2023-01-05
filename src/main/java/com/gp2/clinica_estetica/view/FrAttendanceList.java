@@ -255,7 +255,7 @@ public class FrAttendanceList extends javax.swing.JFrame {
                     JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[2]);
 
             if (response == 0) {
-                FrAttendance attendanceScreen = new FrAttendance("edit", attendanceRow.getType(), attendanceRow.getId(), this.user);
+                FrAttendance attendanceScreen = new FrAttendance(this, "edit", attendanceRow.getType(), attendanceRow.getId(), this.user);
                 attendanceScreen.setVisible(true);
                 this.setVisible(false);
             } else if (response == 1) {

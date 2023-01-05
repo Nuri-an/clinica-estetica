@@ -7,12 +7,12 @@ package com.gp2.clinica_estetica.model;
 
 import java.io.Serializable;
 import java.util.Calendar;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.Lob;
 import javax.persistence.OneToOne;
 
 /**
@@ -29,7 +29,7 @@ public class Attendance implements Serializable {
     private Calendar startDateTime;
     private Calendar endDateTime;
     
-    @Lob //for longs texts
+    @Column(length = 1000) //for longs texts - not work
     private String finality;
 
     @OneToOne

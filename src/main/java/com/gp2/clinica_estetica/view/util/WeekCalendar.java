@@ -268,6 +268,7 @@ public class WeekCalendar extends CalendarBase {
                 type = "Consulta";
             }
             FrAttendance attendanceScreen = new FrAttendance(
+                    this.frame,
                     "create",
                     type,
                     e.getItem().getStartTime().toJavaCalendar(),
@@ -353,7 +354,7 @@ public class WeekCalendar extends CalendarBase {
                         JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[2]);
 
                 if (response == 0) {
-                    FrAttendance attendanceScreen = new FrAttendance("edit", item.getTag().toString(), Integer.parseInt(item.getId()), this.user);
+                    FrAttendance attendanceScreen = new FrAttendance(this.frame, "edit", item.getTag().toString(), Integer.parseInt(item.getId()), this.user);
                     attendanceScreen.setVisible(true);
                     this.frame.setVisible(false);
                 } else if (response == 1) {
