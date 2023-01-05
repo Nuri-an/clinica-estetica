@@ -168,7 +168,7 @@ public class FrPatientsList extends javax.swing.JFrame {
 
     private void btnAddPatientActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddPatientActionPerformed
         // TODO add your handling code here:
-        FrRegister registerScreen = new FrRegister(this.user, "edit");
+        FrRegister registerScreen = new FrRegister(this, this.user, "edit");
         registerScreen.setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_btnAddPatientActionPerformed
@@ -204,7 +204,7 @@ public class FrPatientsList extends javax.swing.JFrame {
                     JOptionPane.QUESTION_MESSAGE);
 
             if (response == JOptionPane.YES_OPTION) {
-                FrRegister registerScreen = new FrRegister(patientRow.getUser(), "edit");
+                FrRegister registerScreen = new FrRegister(this, patientRow.getUser(), "edit");
                 registerScreen.setVisible(true);
                 this.setVisible(false);
             }

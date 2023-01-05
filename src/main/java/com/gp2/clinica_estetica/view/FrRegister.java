@@ -24,6 +24,7 @@ public class FrRegister extends javax.swing.JFrame {
     private String userType; // "Patient" | "Doctor" | "Attendant" | "PreRegister"
     private User currentUser;
     private String mode; // "create | "edit
+    private JFrame previusScreen;
 
     /**
      * Creates new form FrPatientManagement
@@ -35,10 +36,12 @@ public class FrRegister extends javax.swing.JFrame {
     /**
      * Creates new form FrPatientManagement as user register
      *
+     * @param previusScreen
      * @param userType
      */
-    public FrRegister(String userType) {
+    public FrRegister(JFrame previusScreen, String userType) {
         initComponents();
+        this.previusScreen = previusScreen;
         this.fieldsEnabled = true;
         this.userType = userType;
         this.setFieldsEnabled(this.fieldsEnabled);
@@ -53,11 +56,13 @@ public class FrRegister extends javax.swing.JFrame {
     /**
      * Creates new form FrPatientManagement as attendant registering/editing
      *
+     * @param previusScreen
      * @param user
      * @param mode
      */
-    public FrRegister(User user, String mode) {
+    public FrRegister(JFrame previusScreen, User user, String mode) {
         initComponents();
+        this.previusScreen = previusScreen;
         this.mode = mode;
         boxAccessData.setVisible(false);
         this.fieldsEnabled = true;
@@ -631,15 +636,8 @@ public class FrRegister extends javax.swing.JFrame {
 
     private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
         // TODO add your handling code here:
-        if (this.userType.equals("Attendant")) {
-            this.setVisible(false);
-            FrPatientsList patientListScreen = new FrPatientsList(this.currentUser);
-            patientListScreen.setVisible(true);
-        } else {
-            this.setVisible(false);
-            FrUserType userTypeScreen = new FrUserType();
-            userTypeScreen.setVisible(true);
-        }
+        this.previusScreen.setVisible(true);
+        this.setVisible(false);
     }//GEN-LAST:event_btnBackActionPerformed
 
     /**
