@@ -53,9 +53,16 @@ public class Appointment extends DaoReports implements Serializable {
 
     public Appointment(List<Recipte> recipte, int numberOfSessions, int currentSession, Double budget) {
         this.reciptes = recipte;
-        this.numberOfSessions = 0;
-        this.currentSession = 0;
-        this.budget = 0.0;
+        this.numberOfSessions = numberOfSessions;
+        this.currentSession = currentSession;
+        this.budget = budget;
+    }
+
+    public Appointment(Attendance attendance, int numberOfSessions, int currentSession, Double budget) {
+        this.attendance = attendance;
+        this.numberOfSessions = numberOfSessions;
+        this.currentSession = currentSession;
+        this.budget = budget;
     }
     
     @Override
@@ -101,7 +108,7 @@ public class Appointment extends DaoReports implements Serializable {
     /**
      * @return the numberOfSessions
      */
-    public int getNumberOfSessions() {
+    public Integer getNumberOfSessions() {
         return numberOfSessions;
     }
 

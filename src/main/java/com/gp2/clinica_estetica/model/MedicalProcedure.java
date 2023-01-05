@@ -35,6 +35,11 @@ public class MedicalProcedure implements Serializable {
         this.name = name;
         this.price = price;
     }
+    
+    @Override
+    public String toString() {  
+        return this.getName();  
+    } 
 
     /**
      * @return the id

@@ -6,7 +6,8 @@
 package com.gp2.clinica_estetica.model;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.util.Calendar;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -18,44 +19,50 @@ import javax.persistence.OneToOne;
  *
  * @author nuria
  */
+
 @Entity
 public class Attendance implements Serializable {
-    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String type; // "Avaliacao" | "Consulta"
-    private Date startDateTime;
-    private Date endDateTime;
-    private String finality;
+    private Calendar startDateTime;
+    private Calendar endDateTime;
     
+    @Column(length = 1000) //for longs texts - not work
+    private String finality;
+
     @OneToOne
     @JoinColumn(name = "patient_id") // nome para coluna foreign key no banco
     private Patient patient;
-    
+
     @OneToOne
     @JoinColumn(name = "doctor_id") // nome para coluna foreign key no banco
     private Doctor doctor;
-    
+
     @OneToOne
     @JoinColumn(name = "procedure_id") // nome para coluna foreign key no banco
     private MedicalProcedure procedure;
-    
-    
+
+    @OneToOne
+    @JoinColumn(name = "appointment_id") // nome para coluna foreign key no banco
+    private Appointment appointment;
+
     public Attendance() {
         this.id = -1;
         this.type = "Avaliacao";
-        this.startDateTime =  new Date();
-        this.endDateTime = new Date();
+        this.startDateTime = Calendar.getInstance();
+        this.endDateTime = Calendar.getInstance();
         this.finality = "";
     }
-    
-    public Attendance(String type, Date startDateTime, Date endDateTime, String finality) {
+
+    public Attendance(String type, Calendar startDateTime, Calendar endDateTime, String finality) {
         this.type = type;
-        this.startDateTime =  startDateTime;
+        this.startDateTime = startDateTime;
         this.endDateTime = endDateTime;
         this.finality = finality;
     }
+    
 
     /**
      * @return the id
@@ -88,28 +95,28 @@ public class Attendance implements Serializable {
     /**
      * @return the startDateTime
      */
-    public Date getStartDateTime() {
+    public Calendar getStartDateTime() {
         return startDateTime;
     }
 
     /**
      * @param startDateTime the startDateTime to set
      */
-    public void setStartDateTime(Date startDateTime) {
+    public void setStartDateTime(Calendar startDateTime) {
         this.startDateTime = startDateTime;
     }
 
     /**
      * @return the endDateTime
      */
-    public Date getEndDateTime() {
+    public Calendar getEndDateTime() {
         return endDateTime;
     }
 
     /**
      * @param endDateTime the endDateTime to set
      */
-    public void setEndDateTime(Date endDateTime) {
+    public void setEndDateTime(Calendar endDateTime) {
         this.endDateTime = endDateTime;
     }
 
@@ -168,5 +175,19 @@ public class Attendance implements Serializable {
     public void setProcedure(MedicalProcedure procedure) {
         this.procedure = procedure;
     }
-    
+
+    /**
+     * @return the appointment
+     */
+    public Appointment getAppointment() {
+        return appointment;
+    }
+
+    /**
+     * @param appointment the appointment to set
+     */
+    public void setAppointment(Appointment appointment) {
+        this.appointment = appointment;
+    }
+
 }

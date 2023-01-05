@@ -21,4 +21,13 @@ public class ValidateAppointment {
             throw new AppointmentException("Error - Selecione uma receita."); 
         
     }
+    
+    public void saveValidate(Integer numberOfSessions, Double budget){       
+        if (numberOfSessions.toString().isEmpty()) 
+            throw new AppointmentException("Error - Informe o número de sessões.");  
+        
+        if (budget.toString().isEmpty()) 
+            throw new AppointmentException("Error - Informe o valor total da consulta."); 
+        
+    }
 }

@@ -6,9 +6,11 @@
 package com.gp2.clinica_estetica.controller;
 
 import com.gp2.clinica_estetica.model.Appointment;
+import com.gp2.clinica_estetica.model.Attendance;
 import com.gp2.clinica_estetica.model.dao.AppointmentDAO;
 import com.gp2.clinica_estetica.model.exceptions.AppointmentException;
 import com.gp2.clinica_estetica.model.valid.ValidateAppointment;
+import com.gp2.clinica_estetica.model.valid.ValidateAttendance;
 import com.gp2.clinica_estetica.model.valid.ValidateIDao;
 
 /**
@@ -40,6 +42,25 @@ public class AppointmentController {
             validIDao.find(id);
 
             return repositorio.find(id);
+        } catch (AppointmentException e) {
+            throw new AppointmentException("Error - Falha ao buscar atendimento.");
+        }
+
+    }
+
+    public void onSave(Attendance attendance, int numberOfSessions) {
+        Double budget = attendance.getProcedure().getPrice() * numberOfSessions;
+        Appointment appointment = new Appointment(attendance, numberOfSessions, 1, budget);
+        attendance.setAppointment(appointment);
+
+        ValidateAttendance validAttendance = new ValidateAttendance();
+        validAttendance.scheduleValidate(attendance.getStartDateTime(), attendance.getEndDateTime(), null);
+
+        ValidateAppointment validAppointment = new ValidateAppointment();
+        validAppointment.saveValidate(numberOfSessions, budget);
+
+        try {
+            repositorio.save(appointment);
         } catch (AppointmentException e) {
             throw new AppointmentException("Error - Falha ao buscar atendimento.");
         }

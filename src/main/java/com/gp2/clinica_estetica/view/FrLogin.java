@@ -179,11 +179,25 @@ public class FrLogin extends javax.swing.JFrame {
             String login = jTextLogin.getText().replaceAll("\\.", "").replaceAll("\\-", "");
             String password = jPassword.getText();
             System.out.println("login: " + login);
+            this.clearFields();
             try {
                 User userLogged = userController.onLogin(login, password);
-
-                this.setVisible(false);
-                this.clearFields();
+                if (userLogged.getPeople().getDoctor() != null) {
+                    System.out.println("doctor logged");
+                    // FrDoctor doctorScreen = new FrDoctor();
+                    // doctorScreen.setVisible(true);
+                    this.setVisible(false);
+                } else if (userLogged.getPeople().getPatient() != null) {
+                    System.out.println("patient logged");
+                    // FrPatient patientScreen = new FrPatient();
+                    // patientScreen.setVisible(true);
+                    this.setVisible(false);
+                } else {
+                    System.out.println("attendant logged");
+                    FrAttendantHome attendantScreen = new FrAttendantHome(userLogged);
+                    attendantScreen.setVisible(true);
+                    this.setVisible(false);
+                }
             } catch (UserException e) {
                 JOptionPane.showMessageDialog(this, e.getMessage(), "Erro!", JOptionPane.ERROR_MESSAGE);
             }
@@ -220,11 +234,11 @@ public class FrLogin extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(this, "Usuário não encontrado! Verifique o login para recuperar a senha");
                 return;
             }
-            
+
             FrResetPassword resetPasswordScreen = new FrResetPassword(currentUser);
             this.setVisible(false);
             resetPasswordScreen.setVisible(true);
-            
+
         } else {
             JOptionPane.showMessageDialog(this, "Atenção - Informe o login para recuperar a senha.");
         }
