@@ -245,14 +245,18 @@ public class WeekCalendar extends CalendarBase {
     }
 
     private void onItemCreated(ItemEvent e) {
+        boolean difDays = e.getItem().getStartTime().getDay() != e.getItem().getEndTime().getDay();        
+        if (difDays) {
+            calendar.getSchedule().getAllItems().remove(e.getItem());
+            return;
+        }
 
         e.getItem().setAllowMove(false);
         e.getItem().setAllowChangeStart(false);
         e.getItem().setAllowChangeEnd(false);
         System.out.println("create");
         //calendar.startInplaceEdit(e.getItem());
-        System.out.println("item criado: " + e.getItem().getDescriptionText() + "; " + e.getItem().getHeaderText());
-        System.out.println("\n Datas: " + e.getItem().getStartTime().toString() + " à " + e.getItem().getEndTime().toString());
+        
         // go to create appointment screen
 
         String[] options = {"Sim, como uma avaliação", "Sim, como uma consulta", "Não"};
@@ -324,9 +328,11 @@ public class WeekCalendar extends CalendarBase {
                 }
             }
         }
+        
         if (!e.getItem().getDescriptionText().equals("")) {
             e.setConfirm(false);
         }
+        
         if (infoColumn != -1) {
             e.setConfirm(false);
         }
