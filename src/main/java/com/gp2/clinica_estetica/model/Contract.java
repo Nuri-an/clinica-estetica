@@ -43,6 +43,10 @@ public class Contract extends DaoReports implements Serializable {
     @OneToOne
     private Doctor doctor;
     
+    @JoinColumn(name = "appointment_id") // nome para coluna foreign key no banco
+    @OneToOne
+    private Appointment appointment;
+    
     
     public Contract() {
         this.id = -1;
@@ -158,6 +162,20 @@ public class Contract extends DaoReports implements Serializable {
      */
     public void setDoctor(Doctor doctor) {
         this.doctor = doctor;
+    }
+
+    /**
+     * @return the appointment
+     */
+    public Appointment getAppointment() {
+        return appointment;
+    }
+
+    /**
+     * @param appointment the appointment to set
+     */
+    public void setAppointment(Appointment appointment) {
+        this.appointment = appointment;
     }
 
 }

@@ -169,7 +169,7 @@ public class FrPatientsList extends javax.swing.JFrame {
 
     private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
         // TODO add your handling code here:
-        FrAttendantHome attendantScreen = new FrAttendantHome();
+        FrAttendantHome attendantScreen = new FrAttendantHome(this.user);
         attendantScreen.setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_btnBackActionPerformed

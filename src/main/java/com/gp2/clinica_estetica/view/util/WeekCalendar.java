@@ -6,6 +6,7 @@
 package com.gp2.clinica_estetica.view.util;
 
 import com.gp2.clinica_estetica.controller.AttendanceController;
+import com.gp2.clinica_estetica.model.User;
 import com.gp2.clinica_estetica.model.exceptions.AttendanceException;
 import com.gp2.clinica_estetica.view.FrAttendance;
 import com.mindfusion.common.DateTime;
@@ -78,14 +79,16 @@ public class WeekCalendar extends CalendarBase {
     private Rectangle currentColumnBounds;
     private ItemList allItems;
     private JFrame frame;
+    private User user;
 
     private int infoColumn = -1;
     private boolean ignoreNextClick = false;
 
     private static final long serialVersionUID = 1L;
 
-    public WeekCalendar(Dimension size, JFrame frame) {
+    public WeekCalendar(Dimension size, JFrame frame, User user) {
         this.frame = frame;
+        this.user = user;
         setSize(size);
         calendar = new Calendar();
         calendar.beginInit();
@@ -155,7 +158,7 @@ public class WeekCalendar extends CalendarBase {
         calendar.setPreferredSize(new Dimension(size.width, size.height - 5));
         calendar.endInit();
 
-        this.setBackground(Color.yellow);
+        // this.setBackground(Color.yellow);
         this.add(calendar);
 
         // overrides
@@ -268,7 +271,8 @@ public class WeekCalendar extends CalendarBase {
                     "create",
                     type,
                     e.getItem().getStartTime().toJavaCalendar(),
-                    e.getItem().getEndTime().toJavaCalendar());
+                    e.getItem().getEndTime().toJavaCalendar(),
+                    this.user);
             attendanceScreen.setVisible(true);
             this.frame.setVisible(false);
         } else if (response == 2) {
@@ -349,7 +353,7 @@ public class WeekCalendar extends CalendarBase {
                         JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[2]);
 
                 if (response == 0) {
-                    FrAttendance attendanceScreen = new FrAttendance("edit", item.getTag().toString(), Integer.parseInt(item.getId()));
+                    FrAttendance attendanceScreen = new FrAttendance("edit", item.getTag().toString(), Integer.parseInt(item.getId()), this.user);
                     attendanceScreen.setVisible(true);
                     this.frame.setVisible(false);
                 } else if (response == 1) {
@@ -696,6 +700,10 @@ public class WeekCalendar extends CalendarBase {
         appointment.setLocked(true);
         calendar.getSchedule().getItems().add(appointment);
 
+    }
+    
+    public void resizeCalendar(Dimension size){
+        setSize(size);
     }
 
     class GoogleCalendar extends Calendar {

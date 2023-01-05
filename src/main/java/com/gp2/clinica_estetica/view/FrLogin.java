@@ -194,7 +194,7 @@ public class FrLogin extends javax.swing.JFrame {
                     this.setVisible(false);
                 } else {
                     System.out.println("attendant logged");
-                    FrAttendantHome attendantScreen = new FrAttendantHome();
+                    FrAttendantHome attendantScreen = new FrAttendantHome(userLogged);
                     attendantScreen.setVisible(true);
                     this.setVisible(false);
                 }

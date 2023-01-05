@@ -10,6 +10,7 @@ import com.gp2.clinica_estetica.model.Attendance;
 import com.gp2.clinica_estetica.view.util.WeekCalendar;
 import com.gp2.clinica_estetica.model.User;
 import com.mindfusion.common.DateTime;
+import java.awt.Color;
 import java.util.Calendar;
 import java.util.List;
 import java.util.TimeZone;
@@ -22,6 +23,7 @@ import javax.swing.JFrame;
 public class FrAttendantHome extends javax.swing.JFrame {
 
     private User user;
+    private WeekCalendar calendar;
 
     /**
      * Creates new form FrAttendant
@@ -41,6 +43,7 @@ public class FrAttendantHome extends javax.swing.JFrame {
 
     /**
      * Creates new form FrAttendant
+     * @param currentUser
      */
     public FrAttendantHome(User currentUser) {
         initComponents();
@@ -59,7 +62,7 @@ public class FrAttendantHome extends javax.swing.JFrame {
     public void setWeekCalendar() {
         AttendanceController attendanceCon = new AttendanceController();
         List<Attendance> attendances = attendanceCon.onFindAll();
-        WeekCalendar calendar = new WeekCalendar(boxCalendar.getSize(), this);
+        calendar = new WeekCalendar(boxCalendar.getSize(), this, this.user);
         
         for(int i = 0; i < attendances.size(); i++) {
             Attendance currentAttendance = attendances.get(i);
@@ -91,6 +94,9 @@ public class FrAttendantHome extends javax.swing.JFrame {
                     currentAttendance.getType());         
         }
         boxCalendar.add(calendar);
+        System.out.println(boxCalendar.getPreferredSize());
+        System.out.println(boxCalendar.getSize() + " w: " + boxCalendar.getWidth());
+        boxCalendar.setBackground(Color.red);
     }
 
     /**
@@ -107,6 +113,7 @@ public class FrAttendantHome extends javax.swing.JFrame {
         btnPatientsList = new javax.swing.JButton();
         btnAddCalendarPoint = new javax.swing.JButton();
         boxCalendar = new javax.swing.JPanel();
+        jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -139,52 +146,72 @@ public class FrAttendantHome extends javax.swing.JFrame {
             }
         });
 
-        boxCalendar.setPreferredSize(new java.awt.Dimension(0, 400));
+        boxCalendar.addComponentListener(new java.awt.event.ComponentAdapter() {
+            public void componentResized(java.awt.event.ComponentEvent evt) {
+                boxCalendarComponentResized(evt);
+            }
+        });
 
         javax.swing.GroupLayout boxCalendarLayout = new javax.swing.GroupLayout(boxCalendar);
         boxCalendar.setLayout(boxCalendarLayout);
         boxCalendarLayout.setHorizontalGroup(
             boxCalendarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 888, Short.MAX_VALUE)
+            .addGap(0, 0, Short.MAX_VALUE)
         );
         boxCalendarLayout.setVerticalGroup(
             boxCalendarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGap(0, 540, Short.MAX_VALUE)
         );
+
+        jButton1.setText("Contratos");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1)
-                    .addComponent(btnPatientsList))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnExit, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnAddCalendarPoint, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(boxCalendar, javax.swing.GroupLayout.PREFERRED_SIZE, 888, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(22, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(btnExit, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(18, 18, 18)
+                                .addComponent(btnAddCalendarPoint, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                        .addComponent(btnPatientsList)
+                        .addGap(18, 18, 18)
+                        .addComponent(jButton1)
+                        .addGap(0, 705, Short.MAX_VALUE))
+                    .addComponent(boxCalendar, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 885, Short.MAX_VALUE))
+                .addContainerGap(24, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(25, 25, 25)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel1)
-                    .addComponent(btnExit, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(32, 32, 32)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(btnPatientsList)
-                    .addComponent(btnAddCalendarPoint, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addComponent(boxCalendar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(26, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(btnExit, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel1))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(22, 22, 22)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btnPatientsList)
+                            .addComponent(jButton1)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(26, 26, 26)
+                        .addComponent(btnAddCalendarPoint, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(18, 18, 18)
+                .addComponent(boxCalendar, javax.swing.GroupLayout.DEFAULT_SIZE, 540, Short.MAX_VALUE)
+                .addContainerGap(27, Short.MAX_VALUE))
         );
 
         pack();
@@ -206,10 +233,23 @@ public class FrAttendantHome extends javax.swing.JFrame {
 
     private void btnAddCalendarPointActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddCalendarPointActionPerformed
         // TODO add your handling code here:
-        FrAttendance attendanceScreen = new FrAttendance("create");
+        FrAttendance attendanceScreen = new FrAttendance("create", user);
         attendanceScreen.setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_btnAddCalendarPointActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        FrContract contractScreen = new FrContract(user.getPeople());
+        this.setVisible(false);
+        contractScreen.setVisible(true);
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void boxCalendarComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_boxCalendarComponentResized
+        // TODO add your handling code here:
+        System.out.println("resize: " + evt.getComponent().getSize());
+        calendar.resizeCalendar(evt.getComponent().getSize());
+    }//GEN-LAST:event_boxCalendarComponentResized
 
     /**
      * @param args the command line arguments
@@ -252,6 +292,7 @@ public class FrAttendantHome extends javax.swing.JFrame {
     private javax.swing.JButton btnAddCalendarPoint;
     private javax.swing.JButton btnExit;
     private javax.swing.JButton btnPatientsList;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     // End of variables declaration//GEN-END:variables
 }

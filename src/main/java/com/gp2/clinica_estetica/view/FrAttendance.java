@@ -14,6 +14,7 @@ import com.gp2.clinica_estetica.model.Doctor;
 import com.gp2.clinica_estetica.model.MedicalProcedure;
 import com.gp2.clinica_estetica.model.Patient;
 import com.gp2.clinica_estetica.model.People;
+import com.gp2.clinica_estetica.model.User;
 import com.gp2.clinica_estetica.model.exceptions.AttendanceException;
 import com.gp2.clinica_estetica.model.exceptions.ProcedureException;
 import java.awt.event.FocusEvent;
@@ -39,11 +40,11 @@ public class FrAttendance extends javax.swing.JFrame {
 
     private boolean isNewProcedure;
     private List<MedicalProcedure> procedures;
-    private List<Attendance> attendances;
     private Attendance attendance;
     private AttendanceController attendanceCon;
     private String mode; // create | edit
     private String type; // Avaliacao | Consulta
+    private User user;
 
     /**
      * Creates new form FrAttendance
@@ -56,9 +57,12 @@ public class FrAttendance extends javax.swing.JFrame {
      * Creates new form FrAttendance
      *
      * @param mode
+     * @param user
      */
-    public FrAttendance(String mode) {
+    public FrAttendance(String mode, User user) {
         initialize();
+        
+        this.user = user;
 
         if (mode.equals("edit")) {
             this.setFieldsEnabled(false);
@@ -71,12 +75,17 @@ public class FrAttendance extends javax.swing.JFrame {
 
     /**
      * Creates new form FrAttendance
+     * Initialize to edit attendance
      *
      * @param mode
+     * @param type
      * @param id
+     * @param user
      */
-    public FrAttendance(String mode, String type, Integer id) {
+    public FrAttendance(String mode, String type, Integer id, User user) {
         initialize();
+        
+        this.user = user;
 
         if (mode.equals("edit")) {
             Attendance attendanceEdit = this.attendanceCon.onFind(id);
@@ -113,9 +122,21 @@ public class FrAttendance extends javax.swing.JFrame {
         this.type = type;
     }
 
-    public FrAttendance(String mode, String type, Calendar startDate, Calendar endDate) {
+    /**
+     * Creates new form FrAttendance
+     * Initialize to initial dates defined
+     *
+     * @param mode
+     * @param type
+     * @param startDate
+     * @param endDate
+     * @param user
+     */
+    public FrAttendance(String mode, String type, Calendar startDate, Calendar endDate, User user) {
         initialize();
 
+        this.user = user;
+        
         if (mode.equals("create")) {
             this.setInitialDates(startDate, endDate);
         }
@@ -613,7 +634,7 @@ public class FrAttendance extends javax.swing.JFrame {
 
     private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
         // TODO add your handling code here:
-        FrAttendantHome attendantHomeScreen = new FrAttendantHome();
+        FrAttendantHome attendantHomeScreen = new FrAttendantHome(this.user);
         attendantHomeScreen.setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_btnBackActionPerformed
