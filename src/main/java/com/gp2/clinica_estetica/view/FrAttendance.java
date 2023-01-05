@@ -615,7 +615,10 @@ public class FrAttendance extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnAddPatientActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddPatientActionPerformed
-        // TODO add your handling code here:
+        // TODO add your handling code here:       
+        FrRegister registerScreen = new FrRegister(this, this.user, "edit");
+        registerScreen.setVisible(true);
+        this.setVisible(false);
     }//GEN-LAST:event_btnAddPatientActionPerformed
 
     private void optAttendanceTypeAActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_optAttendanceTypeAActionPerformed

@@ -536,16 +536,15 @@ public class FrRegister extends javax.swing.JFrame {
 
                 if (this.mode.equals("create")) {
                     int response = JOptionPane.showConfirmDialog(null,
-                            "Voltar para a Home?",
+                            "Voltar à tela anterior?",
                             "Cadastro de paciente realizado com sucesso!",
                             JOptionPane.OK_OPTION,
                             JOptionPane.QUESTION_MESSAGE);
 
                     if (response == JOptionPane.OK_OPTION) {
                         this.clearFields();
-                        FrAttendantHome attendantScreen = new FrAttendantHome();
                         this.setVisible(false);
-                        attendantScreen.setVisible(true);
+                        previusScreen.setVisible(true);
                     }
                 } else {
                     int response = JOptionPane.showConfirmDialog(null,
