@@ -24,7 +24,6 @@ public class ValidateAttendance {
 
         for (int i = 0; i < attendances.size(); i++) {
             if (attendances.get(i).getStartDateTime().get(Calendar.DAY_OF_MONTH) == startSection.get(Calendar.DAY_OF_MONTH)) {
-                System.out.println(startSection.get(Calendar.DAY_OF_MONTH));
                 DateTime dt_start = new DateTime(
                         attendances.get(i).getStartDateTime().get(Calendar.YEAR),
                         attendances.get(i).getStartDateTime().get(Calendar.MONTH) + 1,
@@ -34,14 +33,8 @@ public class ValidateAttendance {
                         00);
                 DateTime dt2_start = new DateTime(startSection.getTime());
 
-                System.out.println("dt_start: " + dt_start);
-                System.out.println("dt2_start: " + dt2_start);
-
                 DateTime dt_end = new DateTime(attendances.get(i).getEndDateTime().getTime());
                 DateTime dt2_end = new DateTime(endSection.getTime());
-
-                System.out.println("dt_end: " + dt_end);
-                System.out.println("dt2_end: " + dt2_end);
 
                 boolean sameEvent = DateTime.op_Equality(dt_start, dt2_start)
                         && DateTime.op_Equality(dt_end, dt2_end);

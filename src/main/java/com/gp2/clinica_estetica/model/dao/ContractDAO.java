@@ -7,7 +7,6 @@ package com.gp2.clinica_estetica.model.dao;
 
 import com.gp2.clinica_estetica.factory.Database;
 import com.gp2.clinica_estetica.model.Contract;
-import com.gp2.clinica_estetica.model.People;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
@@ -32,9 +31,7 @@ public class ContractDAO implements IDao {
 
         
         LocalDate date = LocalDate.now().minusDays(7);
-        System.out.println("date: " + date);
         this.currentDate = Date.from(date.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
-        System.out.println(this.currentDate);
     }
 
     @Override

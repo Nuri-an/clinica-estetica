@@ -33,7 +33,7 @@ public class Appointment extends DaoReports implements Serializable {
     private Double budget;
 
     @OneToMany
-    @JoinColumn(name = "reciptes_id")
+    @JoinColumn(name = "appointment_id")
     private List<Recipte> reciptes;
     
     @OneToOne

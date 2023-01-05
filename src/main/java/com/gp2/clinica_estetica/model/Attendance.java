@@ -63,17 +63,6 @@ public class Attendance implements Serializable {
         this.finality = finality;
     }
     
-    @Override
-    public String toString() {  
-        return "" 
-                + this.getPatient().getPeople().getName()
-                + " - "
-                + this.getStartDateTime().DAY_OF_MONTH
-                + "/" + this.getStartDateTime().MONTH
-                + "/" + this.getStartDateTime().YEAR
-                + " " + this.getStartDateTime().HOUR_OF_DAY
-                + ":" + this.getStartDateTime().MINUTE;  
-    } 
 
     /**
      * @return the id

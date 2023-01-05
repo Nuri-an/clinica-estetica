@@ -300,7 +300,6 @@ public class WeekCalendar extends CalendarBase {
     }
 
     private void onCalendarItemModifying(ItemModifyConfirmEvent e) {
-        System.out.println(e.getItem().getDescriptionText() + ", " + e.getItem().getHeaderText());
 
         //Point p = new Point(e.getItem().getgetX(), e.getY());
         ItemList items = calendar.getSchedule().getAllItems();
@@ -348,7 +347,6 @@ public class WeekCalendar extends CalendarBase {
         ItemList items = calendar.getSchedule().getAllItems();
         for (Item item : items) {
             Rectangle itemBounds = calendar.getItemBounds(item);
-            System.out.println("item bounds: " + itemBounds);
 
             if (itemBounds.contains(point)) {
                 if (item.getHeaderText().equals("")) {

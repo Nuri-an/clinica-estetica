@@ -44,10 +44,10 @@ public class ProcedureController {
     }
 
     public MedicalProcedure onFetchProcedure(Integer id) {
-        try {
             ValidateIDao validIDao = new ValidateIDao();
             validIDao.find(id);
 
+        try {
             return repositorio.find(id);
         } catch (ProcedureException e) {
             throw new ProcedureException("Error - Falha ao buscar atendimento.");

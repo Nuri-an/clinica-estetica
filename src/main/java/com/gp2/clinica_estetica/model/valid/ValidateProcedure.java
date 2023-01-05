@@ -15,7 +15,6 @@ public class ValidateProcedure {
     public void saveValidate(Object name, String price){        
         if (name == null) 
             throw new ProcedureException("Error - Selecione ou crie um procedimento.");  
-        System.out.println(price);
         if (price == null || price.equals("")) 
             throw new ProcedureException("Error - Informe o preço do procedimento.");  
     }

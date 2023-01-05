@@ -77,6 +77,7 @@ public class FrRegister extends javax.swing.JFrame {
         if (mode.equals("create")) {
             textTitle.setText("Preencha os campos abaixo com os dados do paciente para cadastrá-lo");
         } else {
+            textTitle.setText("Altere os campos abaixo com os dados do paciente para editá-lo");
             textFieldName.setText(currentPeople.getName());
             textFieldCpf.setText(currentPeople.getCPF());
             textFieldBirthDate.setText(currentPeople.getBirthDate());
