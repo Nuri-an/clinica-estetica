@@ -9,6 +9,7 @@ import com.gp2.clinica_estetica.controller.ContractController;
 import com.gp2.clinica_estetica.model.Contract;
 import com.gp2.clinica_estetica.model.People;
 import com.gp2.clinica_estetica.model.exceptions.ContractException;
+import com.gp2.clinica_estetica.model.exceptions.ReportsException;
 import com.lowagie.text.Document;
 import com.lowagie.text.DocumentException;
 import com.lowagie.text.Element;
@@ -37,6 +38,7 @@ public class FrContract extends javax.swing.JFrame {
     private String type; // "Patient" | "Attendant"
     private ContractController contractCon;
     private People people;
+    private JFrame previusScreen;
 
     /**
      * Creates new form FrContratos
@@ -47,17 +49,24 @@ public class FrContract extends javax.swing.JFrame {
 
     /**
      * Creates new form FrContratos
+     *
+     * @param previusScreen
+     * @param people
      */
-    public FrContract(People people) {
-        initialize();
-        
+    public FrContract(JFrame previusScreen, People people) {
+        this.previusScreen = previusScreen;
         this.people = people;
 
+        initialize();
         if (people.getPatient() != null) {
             type = "Patient";
+            // load 
+
+            contractCon.updateTableWithUnsigned(table, this.people.getCPF(), "");
         }
         if (people.getAttendant() != null) {
             type = "Attendant";
+            contractCon.updateTableWithUnsigned(table, "");
             boxContractFilter.setVisible(false);
             btnPrintAll.setVisible(false);
         }
@@ -65,9 +74,9 @@ public class FrContract extends javax.swing.JFrame {
 
     public void initialize() {
         initComponents();
-        
+
         contractCon = new ContractController();
-        
+
         this.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -75,7 +84,6 @@ public class FrContract extends javax.swing.JFrame {
 
         grupoEstadoContrato.setSelected(radioNovos.getModel(), true);
 
-        contractCon.updateTableWithUnsigned(table, "");
         this.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -287,14 +295,17 @@ public class FrContract extends javax.swing.JFrame {
 
     private void radioAssindosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radioAssindosActionPerformed
         // TODO add your handling code here:
+        contractCon.updateTableWithSigned(table, this.people.getCPF(), fieldSearch.getText());
     }//GEN-LAST:event_radioAssindosActionPerformed
 
     private void radioNovosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radioNovosActionPerformed
         // TODO add your handling code here:
+        contractCon.updateTableWithUnsigned(table, this.people.getCPF(), fieldSearch.getText());
     }//GEN-LAST:event_radioNovosActionPerformed
 
     private void radioExpirdosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radioExpirdosActionPerformed
         // TODO add your handling code here:
+        contractCon.updateTableWithExpired(table, this.people.getCPF(), fieldSearch.getText());
     }//GEN-LAST:event_radioExpirdosActionPerformed
 
     private void tablePropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_tablePropertyChange
@@ -305,22 +316,45 @@ public class FrContract extends javax.swing.JFrame {
         // TODO add your handling code here:
         if (evt.getClickCount() > 1) {
             int row = table.getSelectedRow();
-            int col = table.getSelectedColumn();
             Contract contractRow = (Contract) table.getValueAt(row, -1);
-            System.err.println(contractRow);
 
-            int response = JOptionPane.showConfirmDialog(null,
-                    "Marcar esse contrato como assinado?",
-                    contractRow.getProcedure().getName() + " - " + contractRow.getPatient().getPeople().getName(),
-                    JOptionPane.YES_NO_OPTION,
-                    JOptionPane.QUESTION_MESSAGE);
+            if (this.type.equals("Attendant")) {
 
-            if (response == JOptionPane.YES_OPTION) {
-                try {
-                    contractCon.onSetAsSigned(contractRow.getId());
-                    contractCon.updateTableWithUnsigned(table, "");
-                } catch (ContractException e) {
-                    JOptionPane.showMessageDialog(this, e.getMessage());
+                int response = JOptionPane.showConfirmDialog(null,
+                        "Marcar esse contrato como assinado?",
+                        contractRow.getProcedure().getName() + " - " + contractRow.getPatient().getPeople().getName(),
+                        JOptionPane.YES_NO_OPTION,
+                        JOptionPane.QUESTION_MESSAGE);
+
+                if (response == JOptionPane.YES_OPTION) {
+                    try {
+                        contractCon.onSetAsSigned(contractRow.getId());
+                        contractCon.updateTableWithUnsigned(table, "");
+                    } catch (ContractException e) {
+                        JOptionPane.showMessageDialog(this, e.getMessage());
+                    }
+                }
+            } else {
+                if (contractRow.getFile() == null) {
+                    JOptionPane.showMessageDialog(this, "Contrato indisponível");
+                    return;
+                }
+                int response = JOptionPane.showConfirmDialog(null,
+                        "Baixar esse contrato?",
+                        "Contrato de " + contractRow.getProcedure().getName(),
+                        JOptionPane.YES_NO_OPTION,
+                        JOptionPane.QUESTION_MESSAGE);
+
+                if (response == JOptionPane.YES_OPTION) {
+                    String nameFile = contractRow.getFile();
+                    File src = new File("src/main/resources/contracts/" + nameFile);
+                    File dest = new File(nameFile);
+                    try {
+                        contractRow.saveFile(src, dest);
+                        JOptionPane.showMessageDialog(this, "Contrato gerado com sucesso!");
+                    } catch (IOException ex) {
+                        JOptionPane.showMessageDialog(this, "Erro ao salvar contrato " + nameFile);
+                    }
                 }
             }
         }
@@ -328,76 +362,47 @@ public class FrContract extends javax.swing.JFrame {
 
     private void btnPrintAllActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPrintAllActionPerformed
         // TODO add your handling code here:
-        Document document = new Document();
-        try {
-            PdfWriter.getInstance(document, new FileOutputStream("Relatorio.pdf"));
-            document.open();
+        int response = JOptionPane.showConfirmDialog(null,
+                "Baixar o relatório dessa listagem de contratos?",
+                "Relatório de listagem completa",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE);
 
-            Font titlefont = new Font(Font.HELVETICA, 24, Font.BOLD);
-            Paragraph title = new Paragraph("Relatório de Atendimentos", titlefont);
-            title.setAlignment(Element.ALIGN_CENTER);
-            title.setSpacingAfter(50);
-            document.add(title);
+        if (response == JOptionPane.YES_OPTION) {
+            try {
+                Contract contract = new Contract();
 
-            // total colunas - coluna ID
-            PdfPTable pdfTable = new PdfPTable(table.getColumnCount() - 1);
-
-            PdfPCell cell;
-            Font headerTableFont = new Font(Font.HELVETICA, 12);
-
-            cell = new PdfPCell(new Phrase("Data", headerTableFont));
-            cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-            cell.setBackgroundColor(Color.LIGHT_GRAY);
-            cell.setPaddingTop(10);
-            cell.setPaddingBottom(10);
-            cell.setBorderColor(Color.DARK_GRAY);
-            pdfTable.addCell(cell);
-
-            cell = new PdfPCell(new Phrase("Procedimento", headerTableFont));
-            cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-            cell.setBackgroundColor(Color.LIGHT_GRAY);
-            cell.setPaddingTop(10);
-            cell.setPaddingBottom(10);
-            cell.setBorderColor(Color.DARK_GRAY);
-            pdfTable.addCell(cell);
-
-            cell = new PdfPCell(new Phrase("Valor", headerTableFont));
-            cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-            cell.setBackgroundColor(Color.LIGHT_GRAY);
-            cell.setPaddingTop(10);
-            cell.setPaddingBottom(10);
-            cell.setBorderColor(Color.DARK_GRAY);
-            pdfTable.addCell(cell);
-
-            Font textTableFont = new Font(Font.HELVETICA, 10, Font.NORMAL, Color.DARK_GRAY);
-            for (int i = 0; i < table.getRowCount(); i++) {
-                cell = new PdfPCell(new Phrase(table.getValueAt(i, 1).toString(), textTableFont));
-                pdfTable.addCell(cell);
-                cell = new PdfPCell(new Phrase(table.getValueAt(i, 2).toString(), textTableFont));
-                pdfTable.addCell(cell);
-                cell = new PdfPCell(new Phrase(table.getValueAt(i, 3).toString(), textTableFont));
-                pdfTable.addCell(cell);
+                contract.generateTablePDF("Lista_de_contratos.pdf", "Lista de contratos", table);
+                JOptionPane.showMessageDialog(this, "Listagem de contratos gerada com sucesso!");
+            } catch (ReportsException e) {
+                JOptionPane.showMessageDialog(this, e.getMessage());
             }
-            document.add(pdfTable);
-
-            JOptionPane.showMessageDialog(this, "Relatório gerado com sucesso!");
-        } catch (DocumentException | IOException de) {
-            System.err.println(de.getMessage());
         }
-        document.close();
     }//GEN-LAST:event_btnPrintAllActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
+        if (this.type.equals("Attendant")) {
+            contractCon.updateTableWithUnsigned(table, fieldSearch.getText());
+            fieldSearch.setText("");
+            return;
+        }
+        if (radioNovos.isSelected()) {
+            contractCon.updateTableWithUnsigned(table, this.people.getCPF(), fieldSearch.getText());
+        }
+        if (radioAssindos.isSelected()) {
+            contractCon.updateTableWithSigned(table, this.people.getCPF(), fieldSearch.getText());
+        }
+        if (radioExpirdos.isSelected()) {
+            contractCon.updateTableWithExpired(table, this.people.getCPF(), fieldSearch.getText());
+        }
 
-        contractCon.updateTableWithUnsigned(table, fieldSearch.getText());
         fieldSearch.setText("");
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void btnBack2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBack2ActionPerformed
         // TODO add your handling code here:
-        FrAttendantHome attendantHomeScreen = new FrAttendantHome(this.people.getUser());
-        attendantHomeScreen.setVisible(true);
+        previusScreen.setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_btnBack2ActionPerformed
 

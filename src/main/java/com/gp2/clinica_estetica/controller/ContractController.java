@@ -55,7 +55,9 @@ public class ContractController {
 
         try {
             List<Contract> listAll = repositorio.findAllBySigned(cpf, procedureName);
-            Util.jTableShow(grd, new TMListContracts(listAll), null);
+            TMListContracts TMList = new TMListContracts(listAll);
+            TMList.putColumns(0, 1, -100, 2);
+            Util.jTableShow(grd, TMList, null);
         } catch (ContractException e) {
             throw new ContractException(e.getMessage());
         }
@@ -79,7 +81,9 @@ public class ContractController {
 
         try {
             List<Contract> listAll = repositorio.findAllByUnsigned(cpf, procedureName);
-            Util.jTableShow(grd, new TMListContracts(listAll), null);
+            TMListContracts TMList = new TMListContracts(listAll);
+            TMList.putColumns(0, 1, -100, 2);
+            Util.jTableShow(grd, TMList, null);
         } catch (ContractException e) {
             throw new ContractException(e.getMessage());
         }
@@ -91,7 +95,9 @@ public class ContractController {
 
         try {
             List<Contract> listAll = repositorio.findAllByExpired(cpf, procedureName);
-            Util.jTableShow(grd, new TMListContracts(listAll), null);
+            TMListContracts TMList = new TMListContracts(listAll);
+            TMList.putColumns(0, 1, -100, 2);
+            Util.jTableShow(grd, TMList, null);
         } catch (ContractException e) {
             throw new ContractException(e.getMessage());
         }

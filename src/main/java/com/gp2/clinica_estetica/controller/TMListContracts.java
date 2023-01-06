@@ -18,13 +18,20 @@ public class TMListContracts extends AbstractTableModel {
 
     private List<Contract> lstContracts;
 
-    private final int COL_DATE = 0;
-    private final int COL_PROCEDURE = 1;
-    private final int COL_PATIENT = 2;
-    private final int COL_PRICE = 3;
+    private int COL_DATE = 0;
+    private int COL_PROCEDURE = 1;
+    private int COL_PATIENT = 2;
+    private int COL_PRICE = 3;
 
     public TMListContracts(List<Contract> lstContracts) {
         this.lstContracts = lstContracts;
+    }
+
+    public void putColumns(int col_data, int col_procedure, int col_patient, int col_price) {
+        this.COL_DATE = col_data;
+        this.COL_PROCEDURE = col_procedure;
+        this.COL_PATIENT = col_patient;
+        this.COL_PRICE = col_price;
     }
 
     @Override
@@ -34,7 +41,21 @@ public class TMListContracts extends AbstractTableModel {
 
     @Override
     public int getColumnCount() {
-        return 4;
+        int qtn = 0;
+        if (this.COL_DATE >= 0) {
+            qtn++;
+        }
+        if (this.COL_PROCEDURE >= 0) {
+            qtn++;
+        }
+        if (this.COL_PATIENT >= 0) {
+            qtn++;
+        }
+        if (this.COL_PRICE >= 0) {
+            qtn++;
+        }
+
+        return qtn;
     }
 
     @Override
@@ -49,53 +70,56 @@ public class TMListContracts extends AbstractTableModel {
                 return aux;
             } else {
                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
-                switch (columnIndex) {
-                    case -1:
-                        return aux;
-                    case COL_DATE:
-                        return simpleDateFormat.format(aux.getDate());
-                    case COL_PROCEDURE:
-                        return aux.getProcedure().getName();
-                    case COL_PATIENT:
-                        return aux.getPatient().getPeople().getName();
-                    case COL_PRICE:
-                        return "R$ " + ((Double) (Math.round(aux.getAppointment().getBudget() * 100.0) / 100.0)).toString().replaceAll("\\.", ",");
 
-                    default:
-                        break;
+                if (columnIndex == -1) {
+                    return aux;
+                }
+                if (columnIndex == COL_DATE) {
+                    return simpleDateFormat.format(aux.getDate());
+                }
+                if (columnIndex == COL_PROCEDURE) {
+                    return aux.getProcedure().getName();
+                }
+                if (columnIndex == COL_PATIENT) {
+                    return aux.getPatient().getPeople().getName();
+                }
+                if (columnIndex == COL_PRICE) {
+                    return "R$ " + ((Double) (Math.round(aux.getAppointment().getBudget() * 100.0) / 100.0)).toString().replaceAll("\\.", ",");
                 }
             }
+            return aux;
         }
-        return aux;
     }
 
     @Override
-    public boolean isCellEditable(int rowIndex, int columnIndex) {
+    public boolean isCellEditable(int rowIndex, int columnIndex
+    ) {
         return false;
     }
 
     @Override
-    public String getColumnName(int column) {
+    public String getColumnName(int column
+    ) {
 
-        switch (column) {
-            case COL_DATE:
-                return "Data";
-            case COL_PROCEDURE:
-                return "Procedimento";
-            case COL_PATIENT:
-                return "Paciente";
-            case COL_PRICE:
-                return "Valor";
-
-            default:
-                break;
+        if (column == COL_DATE) {
+            return "Data";
         }
-
+        if (column == COL_PROCEDURE) {
+            return "Procedimento";
+        }
+        if (column == COL_PATIENT) {
+            return "Paciente";
+        }
+        if (column == COL_PRICE) {
+            return "Valor";
+        }
+        
         return "";
     }
 
     @Override
-    public Class getColumnClass(int columnIndex) {
+    public Class getColumnClass(int columnIndex
+    ) {
 
         return String.class;
     }

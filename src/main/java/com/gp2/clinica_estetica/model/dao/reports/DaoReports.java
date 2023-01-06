@@ -43,43 +43,27 @@ public abstract class DaoReports {
             document.add(titleFile);
 
             // total colunas
-            PdfPTable pdfTable = new PdfPTable(table.getColumnCount() - 1);
+            PdfPTable pdfTable = new PdfPTable(table.getColumnCount());
 
             PdfPCell cell;
             Font headerTableFont = new Font(Font.HELVETICA, 12);
 
-            cell = new PdfPCell(new Phrase("Data", headerTableFont));
-            cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-            cell.setBackgroundColor(Color.LIGHT_GRAY);
-            cell.setPaddingTop(10);
-            cell.setPaddingBottom(10);
-            cell.setBorderColor(Color.DARK_GRAY);
-            pdfTable.addCell(cell);
-
-            cell = new PdfPCell(new Phrase("Procedimento", headerTableFont));
-            cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-            cell.setBackgroundColor(Color.LIGHT_GRAY);
-            cell.setPaddingTop(10);
-            cell.setPaddingBottom(10);
-            cell.setBorderColor(Color.DARK_GRAY);
-            pdfTable.addCell(cell);
-
-            cell = new PdfPCell(new Phrase("Valor", headerTableFont));
-            cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-            cell.setBackgroundColor(Color.LIGHT_GRAY);
-            cell.setPaddingTop(10);
-            cell.setPaddingBottom(10);
-            cell.setBorderColor(Color.DARK_GRAY);
-            pdfTable.addCell(cell);
+            for (int i = 0; i < table.getColumnCount(); i++) {
+                cell = new PdfPCell(new Phrase(table.getColumnName(i), headerTableFont));
+                cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+                cell.setBackgroundColor(Color.LIGHT_GRAY);
+                cell.setPaddingTop(10);
+                cell.setPaddingBottom(10);
+                cell.setBorderColor(Color.DARK_GRAY);
+                pdfTable.addCell(cell);
+            }
 
             Font textTableFont = new Font(Font.HELVETICA, 10, Font.NORMAL, Color.DARK_GRAY);
             for (int i = 0; i < table.getRowCount(); i++) {
-                cell = new PdfPCell(new Phrase(table.getValueAt(i, 1).toString(), textTableFont));
-                pdfTable.addCell(cell);
-                cell = new PdfPCell(new Phrase(table.getValueAt(i, 2).toString(), textTableFont));
-                pdfTable.addCell(cell);
-                cell = new PdfPCell(new Phrase(table.getValueAt(i, 3).toString(), textTableFont));
-                pdfTable.addCell(cell);
+                for (int j = 0; j < table.getColumnCount(); j++) {
+                    cell = new PdfPCell(new Phrase(table.getValueAt(i, j).toString(), textTableFont));
+                    pdfTable.addCell(cell);
+                }
             }
             document.add(pdfTable);
 
