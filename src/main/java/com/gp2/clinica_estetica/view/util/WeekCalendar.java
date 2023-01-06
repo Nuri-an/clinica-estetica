@@ -53,6 +53,10 @@ import java.awt.event.MouseEvent;
 import java.awt.geom.Point2D;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.EnumSet;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -117,13 +121,26 @@ public class WeekCalendar extends CalendarBase {
         calendar.getTimetableSettings().setColumnBandSize(0);
         calendar.getTimetableSettings().setVisibleColumns(5);
 
-        calendar.getTimetableSettings().getDates().add(new DateTime(DateTime.today().getYear(), DateTime.today().getMonth(), DateTime.today().getDay() + 1));
-        calendar.getTimetableSettings().getDates().add(new DateTime(DateTime.today().getYear(), DateTime.today().getMonth(), DateTime.today().getDay() + 2));
-        calendar.getTimetableSettings().getDates().add(new DateTime(DateTime.today().getYear(), DateTime.today().getMonth(), DateTime.today().getDay() + 3));
-        calendar.getTimetableSettings().getDates().add(new DateTime(DateTime.today().getYear(), DateTime.today().getMonth(), DateTime.today().getDay() + 4));
-        calendar.getTimetableSettings().getDates().add(new DateTime(DateTime.today().getYear(), DateTime.today().getMonth(), DateTime.today().getDay() + 5));
-        calendar.getTimetableSettings().getDates().add(new DateTime(DateTime.today().getYear(), DateTime.today().getMonth(), DateTime.today().getDay() + 6));
+        LocalDate today = LocalDate.now();
 
+        // Go backward to get Sunday
+        LocalDate monday = today;
+        while (monday.getDayOfWeek() != DayOfWeek.MONDAY) {
+            monday = monday.minusDays(1);
+        }
+        DateTime start = new DateTime(Date.from(monday.atStartOfDay(ZoneId.systemDefault()).toInstant()));
+        calendar.getTimetableSettings().getDates().add(start);
+
+        int plusDay = 1;
+        while (monday.getDayOfWeek() != DayOfWeek.FRIDAY) {
+            if (monday.getDayOfMonth() != (today.getDayOfMonth() - 1)) {
+                calendar.getTimetableSettings().getDates().add(new DateTime(start.getYear(), start.getMonth(), start.getDay() + plusDay));
+            }
+            monday = monday.plusDays(1);
+            plusDay++;
+        }
+        calendar.getTimetableSettings().setStartTime(420); // 7am
+        calendar.getTimetableSettings().setEndTime(1200); // 8pm
         calendar.setCustomDraw(EnumSet.of(
                 CustomDrawElements.TimetableTimelineHourCell,
                 CustomDrawElements.TimetableWholeDayHeader,
@@ -132,79 +149,109 @@ public class WeekCalendar extends CalendarBase {
                 CustomDrawElements.TimetableInfoHeader));
 
         Style personalEvents = new Style();
-        personalEvents.setTextColor(new Color(84, 84, 84));
-        personalEvents.setTextTopMargin(8);
+
+        personalEvents.setTextColor(
+                new Color(84, 84, 84));
+        personalEvents.setTextTopMargin(
+                8);
         personalEvents.setBorderTopColor(Colors.Goldenrod);
+
         personalEvents.setBorderLeftColor(Colors.Goldenrod);
+
         personalEvents.setBorderBottomColor(Colors.Goldenrod);
+
         personalEvents.setBorderRightColor(Colors.Goldenrod);
+
         personalEvents.setLineColor(Colors.Goldenrod);
-        personalEvents.setFillColor(new Color(250, 200, 100));
-        personalEvents.setBrush(new GradientBrush(Colors.White, Colors.PaleGoldenrod, 90));
+
+        personalEvents.setFillColor(
+                new Color(250, 200, 100));
+        personalEvents.setBrush(
+                new GradientBrush(Colors.White, Colors.PaleGoldenrod, 90));
         personalEvents.setHeaderTextColor(Colors.DarkGoldenrod);
-        calendar.getItemSettings().setStyle(personalEvents);
-        calendar.getItemSettings().setSelectedItemStyle(personalEvents);
 
-        calendar.setShowToolTips(true);
+        calendar.getItemSettings()
+                .setStyle(personalEvents);
+        calendar.getItemSettings()
+                .setSelectedItemStyle(personalEvents);
 
-        calendar.getItemSettings().setMoveBandSize(0);
-        calendar.getItemSettings().setResizeBandSize(0);
+        calendar.setShowToolTips(
+                true);
+
+        calendar.getItemSettings()
+                .setMoveBandSize(0);
+        calendar.getItemSettings()
+                .setResizeBandSize(0);
         // TODO:
         //calendar.setAllowInplaceCreate(false);
 
-        calendar.getSelection().setStyle(SelectionStyle.None);
-        calendar.getSelection().getSelectedElementsStyle().setBrush(new SolidBrush(new Color(0, 0, 0, 20)));
+        calendar.getSelection()
+                .setStyle(SelectionStyle.None);
+        calendar.getSelection()
+                .getSelectedElementsStyle().setBrush(new SolidBrush(new Color(0, 0, 0, 20)));
 
-        calendar.setPreferredSize(new Dimension(size.width, size.height - 5));
+        calendar.setPreferredSize(
+                new Dimension(size.width, size.height - 5));
         calendar.endInit();
 
         // this.setBackground(Color.yellow);
         this.add(calendar);
 
         // overrides
-        calendar.addCalendarListener(new CalendarAdapter() {
+        calendar.addCalendarListener(
+                new CalendarAdapter() {
             @Override
-            public void draw(CalendarDrawEvent e) {
+            public void draw(CalendarDrawEvent e
+            ) {
                 onCalendarDraw(e);
             }
 
             @Override
-            public void hiddenItemClick(DateEvent e) {
+            public void hiddenItemClick(DateEvent e
+            ) {
                 onCalendarHiddenItemClick(e);
             }
 
             // Disable all interactions while the info box is open
             @Override
-            public void itemModifying(ItemModifyConfirmEvent e) {
+            public void itemModifying(ItemModifyConfirmEvent e
+            ) {
                 System.out.println("type: " + e.getItem().getDescriptionText());
                 //e.setConfirm(false);
                 onCalendarItemModifying(e);
             }
 
             @Override
-            public void itemInplaceEditStarting(ItemConfirmEvent e) {
+            public void itemInplaceEditStarting(ItemConfirmEvent e
+            ) {
                 onCalendarItemInplaceEditStarting(e);
             }
 
             @Override
-            public void itemSelecting(ItemConfirmEvent e) {
+            public void itemSelecting(ItemConfirmEvent e
+            ) {
                 onCalendarItemSelecting(e);
             }
 
             @Override
-            public void itemTooltipDisplaying(ItemTooltipEvent e) {
+            public void itemTooltipDisplaying(ItemTooltipEvent e
+            ) {
                 onCalendarItemTooltipDisplaying(e);
             }
 
             @Override
-            public void itemCreated(ItemEvent e) {
+            public void itemCreated(ItemEvent e
+            ) {
                 onItemCreated(e);
             }
-        });
+        }
+        );
 
-        calendar.addMouseListener(new MouseAdapter() {
+        calendar.addMouseListener(
+                new MouseAdapter() {
             @Override
-            public void mouseClicked(MouseEvent e) {
+            public void mouseClicked(MouseEvent e
+            ) {
                 if (e.getClickCount() == 1) {
                     onCalendarClicked(e);
                 } else if (e.getClickCount() == 2) {
@@ -213,17 +260,22 @@ public class WeekCalendar extends CalendarBase {
             }
 
             @Override
-            public void mouseMoved(MouseEvent e) {
+            public void mouseMoved(MouseEvent e
+            ) {
                 onCalendarMouseMoved(e);
             }
-        });
+        }
+        );
 
-        calendar.addComponentListener(new ComponentAdapter() {
+        calendar.addComponentListener(
+                new ComponentAdapter() {
             @Override
-            public void componentResized(ComponentEvent e) {
+            public void componentResized(ComponentEvent e
+            ) {
                 onCalendarSizeChanged(e);
             }
-        });
+        }
+        );
 
         content.add(calendar);
     }
@@ -245,7 +297,7 @@ public class WeekCalendar extends CalendarBase {
     }
 
     private void onItemCreated(ItemEvent e) {
-        boolean difDays = e.getItem().getStartTime().getDay() != e.getItem().getEndTime().getDay();        
+        boolean difDays = e.getItem().getStartTime().getDay() != e.getItem().getEndTime().getDay();
         if (difDays) {
             calendar.getSchedule().getAllItems().remove(e.getItem());
             return;
@@ -256,9 +308,8 @@ public class WeekCalendar extends CalendarBase {
         e.getItem().setAllowChangeEnd(false);
         System.out.println("create");
         //calendar.startInplaceEdit(e.getItem());
-        
-        // go to create appointment screen
 
+        // go to create appointment screen
         String[] options = {"Sim, como uma avaliação", "Sim, como uma consulta", "Não"};
         int response = JOptionPane.showOptionDialog(null, "Deseja criar esse agendamento?",
                 "Selecione a ação",
@@ -327,11 +378,11 @@ public class WeekCalendar extends CalendarBase {
                 }
             }
         }
-        
+
         if (!e.getItem().getDescriptionText().equals("")) {
             e.setConfirm(false);
         }
-        
+
         if (infoColumn != -1) {
             e.setConfirm(false);
         }
@@ -706,9 +757,10 @@ public class WeekCalendar extends CalendarBase {
         calendar.getSchedule().getItems().add(appointment);
 
     }
-    
-    public void resizeCalendar(Dimension size){
+
+    public void resizeCalendar(Dimension size) {
         setSize(size);
+
     }
 
     class GoogleCalendar extends Calendar {
