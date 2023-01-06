@@ -6,6 +6,7 @@
 package com.gp2.clinica_estetica.controller;
 
 import com.gp2.clinica_estetica.model.Attendance;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
@@ -60,21 +61,12 @@ public class TMListAttendance extends AbstractTableModel {
             return aux;
         } else {
             aux = lstAttendance.get(rowIndex);
-            String date = aux.getStartDateTime().get(Calendar.DAY_OF_MONTH)
-                    + "/"
-                    + (aux.getStartDateTime().get(Calendar.MONTH) + 1)
-                    + "/"
-                    + aux.getStartDateTime().get(Calendar.YEAR)
-                    + " - "
-                    + aux.getStartDateTime().get(Calendar.HOUR_OF_DAY)
-                    + ":"
-                    + aux.getStartDateTime().get(Calendar.MINUTE);
-
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy - HH:mm");
             if (columnIndex == -1) {
                 return aux;
             }
             if (columnIndex == COL_DATA) {
-                return date;
+                return simpleDateFormat.format(aux.getStartDateTime().getTime());
             }
             if (columnIndex == COL_PATIENT) {
                 return aux.getPatient().getPeople().getName();

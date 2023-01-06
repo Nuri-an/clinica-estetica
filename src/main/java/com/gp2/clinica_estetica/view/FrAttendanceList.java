@@ -9,6 +9,7 @@ import com.gp2.clinica_estetica.controller.AttendanceController;
 import com.gp2.clinica_estetica.model.Attendance;
 import com.gp2.clinica_estetica.model.User;
 import com.gp2.clinica_estetica.model.exceptions.AttendanceException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -258,24 +259,13 @@ public class FrAttendanceList extends javax.swing.JFrame {
                 FrAttendance attendanceScreen = new FrAttendance(this, "edit", attendanceRow.getType(), attendanceRow.getId(), this.user);
                 attendanceScreen.setVisible(true);
                 this.setVisible(false);
-            } else if (response == 1) {
+            } else if (response == 1) {                
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy - HH:mm");
                 int responseDel = JOptionPane.showConfirmDialog(null,
                         "Tem certeza quedeseja delatar e liberar o horario de "
-                        + attendanceRow.getStartDateTime().get(Calendar.DAY_OF_MONTH)
-                        + "/"
-                        + (attendanceRow.getStartDateTime().get(Calendar.MONTH) + 1)
-                        + " - "
-                        + attendanceRow.getStartDateTime().get(Calendar.HOUR_OF_DAY)
-                        + ":"
-                        + attendanceRow.getStartDateTime().get(Calendar.MINUTE)
+                        + simpleDateFormat.format(attendanceRow.getStartDateTime().getTime())
                         + " à "
-                        + attendanceRow.getEndDateTime().get(Calendar.DAY_OF_MONTH)
-                        + "/"
-                        + (attendanceRow.getEndDateTime().get(Calendar.MONTH) + 1)
-                        + " - "
-                        + attendanceRow.getEndDateTime().get(Calendar.HOUR_OF_DAY)
-                        + ":"
-                        + attendanceRow.getEndDateTime().get(Calendar.MINUTE),
+                        + simpleDateFormat.format(attendanceRow.getEndDateTime().getTime()),
                         "Exclusão solicitada!",
                         JOptionPane.YES_OPTION,
                         JOptionPane.QUESTION_MESSAGE);
