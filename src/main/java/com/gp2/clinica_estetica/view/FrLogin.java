@@ -189,8 +189,8 @@ public class FrLogin extends javax.swing.JFrame {
                     this.setVisible(false);
                 } else if (userLogged.getPeople().getPatient() != null) {
                     System.out.println("patient logged");
-                    // FrPatient patientScreen = new FrPatient();
-                    // patientScreen.setVisible(true);
+                    FrPatient patientScreen = new FrPatient(userLogged);
+                    patientScreen.setVisible(true);
                     this.setVisible(false);
                 } else {
                     System.out.println("attendant logged");

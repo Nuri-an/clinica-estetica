@@ -257,7 +257,7 @@ public class FrAttendantHome extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-        FrContract contractScreen = new FrContract(user.getPeople());
+        FrContract contractScreen = new FrContract(this, user.getPeople());
         this.setVisible(false);
         contractScreen.setVisible(true);
     }//GEN-LAST:event_jButton1ActionPerformed

@@ -16,4 +16,10 @@ public class ValidateContract {
         if (search == null) 
             throw new UserException("Error - Campo de pesquisa nulo.");  
     }
+    public void searchPerPetientValidate(String cpf, String search){         
+        if (cpf == null) 
+            throw new UserException("Error - Usuário nulo.");     
+        if (search == null) 
+            throw new UserException("Error - Campo de pesquisa nulo.");  
+    }
 }

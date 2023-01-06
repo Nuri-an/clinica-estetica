@@ -33,20 +33,20 @@ public class AttendanceController {
         ValidateAttendance validAttendance = new ValidateAttendance();
         validAttendance.scheduleValidate(startSection, endSection, null);
         validAttendance.saveValidate(startSection, endSection, finality);
-          
+
         try {
             repositorio.save(patient, doctor, procedure, type, startSection, endSection, finality);
         } catch (AttendanceException e) {
             throw new AttendanceException("Error - salvar atendimento.");
         }
     }
-    
+
     public void onEditSchedule(int id, Calendar startSection, Calendar endSection) {
         ValidateIDao validDao = new ValidateIDao();
         validDao.find(id);
         ValidateAttendance validAttendance = new ValidateAttendance();
         validAttendance.scheduleValidate(startSection, endSection, id);
-        
+
         try {
             repositorio.editSchedule(id, startSection, endSection);
         } catch (AttendanceException e) {
@@ -54,7 +54,7 @@ public class AttendanceController {
         }
     }
 
-    public List<Attendance> onFindAllAttendances() {        
+    public List<Attendance> onFindAllAttendances() {
         try {
             return repositorio.findAllAttendances();
         } catch (AttendanceException e) {
@@ -62,18 +62,31 @@ public class AttendanceController {
         }
     }
 
-    public void onFindAllAttendancesFilter(JTable grd, String type, String pacientName) {     
+    public void onFindAllByPatient(JTable grd, String type, String pacientName) {
         ValidateAttendance validAttendance = new ValidateAttendance();
         validAttendance.findTypeValidate(type);
         try {
-            List<Attendance> listAll = repositorio.findAllAttendancesFilter(type, pacientName);
+            List<Attendance> listAll = repositorio.findAllByPatient(type, pacientName);
             Util.jTableShow(grd, new TMListAttendance(listAll), null);
         } catch (AttendanceException e) {
             throw new AttendanceException("Error - erro buscar atendimentos.");
         }
     }
 
-    public List<Attendance> onFindAll() {        
+    public void onFindAllByProcedure(JTable grd, String cpf, String type, String procedureName) {
+        ValidateAttendance validAttendance = new ValidateAttendance();
+        validAttendance.findTypeValidate(type);
+        try {
+            List<Attendance> listAll = repositorio.findAllByProcedure(cpf, type, procedureName);
+            TMListAttendance TMList = new TMListAttendance(listAll);
+            TMList.putColumns(0, -100, 1);
+            Util.jTableShow(grd, TMList, null);
+        } catch (AttendanceException e) {
+            throw new AttendanceException("Error - erro buscar atendimentos.");
+        }
+    }
+
+    public List<Attendance> onFindAll() {
         try {
             return repositorio.findAll();
         } catch (AttendanceException e) {
@@ -81,7 +94,7 @@ public class AttendanceController {
         }
     }
 
-    public Attendance onFind(Integer id) { 
+    public Attendance onFind(Integer id) {
         ValidateIDao validDao = new ValidateIDao();
         validDao.find(id);
         try {
@@ -91,14 +104,14 @@ public class AttendanceController {
         }
     }
 
-    public boolean onDelete(Integer id) {   
+    public boolean onDelete(Integer id) {
         ValidateIDao validDao = new ValidateIDao();
-        validDao.find(id);     
+        validDao.find(id);
         try {
             return repositorio.delete(id);
         } catch (AttendanceException e) {
             throw new AttendanceException("Error - erro deletar atendimento.");
         }
     }
-    
+
 }

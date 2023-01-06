@@ -105,7 +105,7 @@ public class AttendanceDAO implements IDao {
         return lst;
     }
 
-    public List<Attendance> findAllAttendancesFilter(String type, String pacientName) {
+    public List<Attendance> findAllByPatient(String type, String pacientName) {
         sql = " SELECT a "
                 + " FROM Attendance a "
                 + " INNER JOIN a.patient pat "
@@ -116,6 +116,25 @@ public class AttendanceDAO implements IDao {
         qry = this.entityManager.createQuery(sql, Attendance.class);
         qry.setParameter("type", type);
         qry.setParameter("name", pacientName);
+
+        List<Attendance> lst = qry.getResultList();
+        return lst;
+    }
+
+    public List<Attendance> findAllByProcedure(String cpf, String type, String procedureName) {
+        sql = " SELECT a "
+                + " FROM Attendance a "
+                + " INNER JOIN a.patient pat "
+                + " INNER JOIN pat.people p "
+                + " INNER JOIN a.procedure proc "
+                + " WHERE a.type LIKE :type"
+                + " AND p.CPF LIKE :cpf"
+                + " AND proc.name LIKE CONCAT('%',CONCAT(:name, '%')) ";
+
+        qry = this.entityManager.createQuery(sql, Attendance.class);
+        qry.setParameter("type", type);
+        qry.setParameter("cpf", cpf);
+        qry.setParameter("name", procedureName);
 
         List<Attendance> lst = qry.getResultList();
         return lst;

@@ -18,12 +18,18 @@ public class TMListAttendance extends AbstractTableModel {
 
     private List<Attendance> lstAttendance;
 
-    private final int COL_DATA = 0;
-    private final int COL_PATIENT = 1;
-    private final int COL_PROCEDURE = 2;
+    private int COL_DATA = 0;
+    private int COL_PATIENT = 1;
+    private int COL_PROCEDURE = 2;
 
     public TMListAttendance(List<Attendance> lstPatient) {
         this.lstAttendance = lstPatient;
+    }
+
+    public void putColumns(int col_data, int col_patient, int col_procedure) {
+        this.COL_DATA = col_data;
+        this.COL_PATIENT = col_patient;
+        this.COL_PROCEDURE = col_procedure;
     }
 
     @Override
@@ -33,7 +39,18 @@ public class TMListAttendance extends AbstractTableModel {
 
     @Override
     public int getColumnCount() {
-        return 3;
+        int qtn = 0;
+        if (this.COL_DATA >= 0) {
+            qtn++;
+        }
+        if (this.COL_PATIENT >= 0) {
+            qtn++;
+        }
+        if (this.COL_PROCEDURE >= 0) {
+            qtn++;
+        }
+
+        return qtn;
     }
 
     @Override
@@ -53,18 +70,17 @@ public class TMListAttendance extends AbstractTableModel {
                     + ":"
                     + aux.getStartDateTime().get(Calendar.MINUTE);
 
-            switch (columnIndex) {
-                case -1:
-                    return aux;
-                case COL_DATA:
-                    return date;
-                case COL_PATIENT:
-                    return aux.getPatient().getPeople().getName();
-                case COL_PROCEDURE:
-                    return aux.getProcedure().getName();
-
-                default:
-                    break;
+            if (columnIndex == -1) {
+                return aux;
+            }
+            if (columnIndex == COL_DATA) {
+                return date;
+            }
+            if (columnIndex == COL_PATIENT) {
+                return aux.getPatient().getPeople().getName();
+            }
+            if (columnIndex == COL_PROCEDURE) {
+                return aux.getProcedure().getName();
             }
         }
         return aux;
@@ -78,16 +94,14 @@ public class TMListAttendance extends AbstractTableModel {
     @Override
     public String getColumnName(int column) {
 
-        switch (column) {
-            case COL_DATA:
-                return "Data";
-            case COL_PATIENT:
-                return "Paciente";
-            case COL_PROCEDURE:
-                return "Procedimento";
-
-            default:
-                break;
+        if (column == COL_DATA) {
+            return "Data";
+        }
+        if (column == COL_PATIENT) {
+            return "Paciente";
+        }
+        if (column == COL_PROCEDURE) {
+            return "Procedimento";
         }
 
         return "";

@@ -42,7 +42,7 @@ public class FrAttendanceList extends javax.swing.JFrame {
         this.user = user;
 
         groupOptType.setSelected(radioOptA.getModel(), true);
-        this.attendanceCon.onFindAllAttendancesFilter(grdAttendances, "Avaliacao", "");
+        this.attendanceCon.onFindAllByPatient(grdAttendances, "Avaliacao", "");
     }
 
     /**
@@ -232,7 +232,7 @@ public class FrAttendanceList extends javax.swing.JFrame {
         } else {
             type = "Consulta";
         }
-        this.attendanceCon.onFindAllAttendancesFilter(grdAttendances, type, fieldSearch.getText());
+        this.attendanceCon.onFindAllByPatient(grdAttendances, type, fieldSearch.getText());
     }//GEN-LAST:event_btnSearchActionPerformed
 
     private void grdAttendancesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_grdAttendancesMouseClicked
@@ -283,7 +283,7 @@ public class FrAttendanceList extends javax.swing.JFrame {
                 if (responseDel == JOptionPane.YES_OPTION) {
                     try {
                         attendanceCon.onDelete(attendanceRow.getId());
-                        attendanceCon.onFindAllAttendancesFilter(grdAttendances, type, fieldSearch.getText());
+                        attendanceCon.onFindAllByPatient(grdAttendances, type, fieldSearch.getText());
                     } catch (AttendanceException ex) {
                         JOptionPane.showMessageDialog(this, ex.getMessage());
                     }
@@ -295,12 +295,12 @@ public class FrAttendanceList extends javax.swing.JFrame {
 
     private void radioOptAActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radioOptAActionPerformed
         // TODO add your handling code here:
-        this.attendanceCon.onFindAllAttendancesFilter(grdAttendances, "Avaliacao", fieldSearch.getText());
+        this.attendanceCon.onFindAllByPatient(grdAttendances, "Avaliacao", fieldSearch.getText());
     }//GEN-LAST:event_radioOptAActionPerformed
 
     private void radioOptBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radioOptBActionPerformed
         // TODO add your handling code here:
-        this.attendanceCon.onFindAllAttendancesFilter(grdAttendances, "Consulta", fieldSearch.getText());
+        this.attendanceCon.onFindAllByPatient(grdAttendances, "Consulta", fieldSearch.getText());
     }//GEN-LAST:event_radioOptBActionPerformed
 
     /**

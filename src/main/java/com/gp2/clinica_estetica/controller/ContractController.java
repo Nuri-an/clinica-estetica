@@ -49,12 +49,48 @@ public class ContractController {
         }
     }
 
+    public void updateTableWithSigned(JTable grd, String cpf, String procedureName) {
+        ValidateContract validContract = new ValidateContract();
+        validContract.searchPerPetientValidate(cpf, procedureName);
+
+        try {
+            List<Contract> listAll = repositorio.findAllBySigned(cpf, procedureName);
+            Util.jTableShow(grd, new TMListContracts(listAll), null);
+        } catch (ContractException e) {
+            throw new ContractException(e.getMessage());
+        }
+    }
+
     public void updateTableWithUnsigned(JTable grd, String procedureName) {
         ValidateContract validContract = new ValidateContract();
         validContract.searchValidate(procedureName);
 
         try {
             List<Contract> listAll = repositorio.findAllByUnsigned(procedureName);
+            Util.jTableShow(grd, new TMListContracts(listAll), null);
+        } catch (ContractException e) {
+            throw new ContractException(e.getMessage());
+        }
+    }
+
+    public void updateTableWithUnsigned(JTable grd, String cpf, String procedureName) {
+        ValidateContract validContract = new ValidateContract();
+        validContract.searchPerPetientValidate(cpf, procedureName);
+
+        try {
+            List<Contract> listAll = repositorio.findAllByUnsigned(cpf, procedureName);
+            Util.jTableShow(grd, new TMListContracts(listAll), null);
+        } catch (ContractException e) {
+            throw new ContractException(e.getMessage());
+        }
+    }
+
+    public void updateTableWithExpired(JTable grd, String cpf, String procedureName) {
+        ValidateContract validContract = new ValidateContract();
+        validContract.searchPerPetientValidate(cpf, procedureName);
+
+        try {
+            List<Contract> listAll = repositorio.findAllByExpired(cpf, procedureName);
             Util.jTableShow(grd, new TMListContracts(listAll), null);
         } catch (ContractException e) {
             throw new ContractException(e.getMessage());
