@@ -11,11 +11,7 @@ import com.gp2.clinica_estetica.model.People;
 import com.gp2.clinica_estetica.model.exceptions.ContractException;
 import com.gp2.clinica_estetica.model.exceptions.ReportsException;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
@@ -72,24 +68,16 @@ public class FrContract extends javax.swing.JFrame {
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         this.setExtendedState(JFrame.MAXIMIZED_BOTH);
 
+        btnPrintAll.setOpaque(false);
+        btnPrintAll.setContentAreaFilled(false);
+        btnPrintAll.setBorderPainted(false);
+
         grupoEstadoContrato.setSelected(radioNovos.getModel(), true);
 
         this.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         this.setExtendedState(JFrame.MAXIMIZED_BOTH);
-    }
-
-    public static void saveFile(File fonte, File destino) throws IOException {
-        InputStream in = new FileInputStream(fonte);
-        OutputStream out = new FileOutputStream(destino);
-        byte[] buf = new byte[1024];
-        int len;
-        while ((len = in.read(buf)) > 0) {
-            out.write(buf, 0, len);
-        }
-        in.close();
-        out.close();
     }
 
     /**
@@ -286,16 +274,31 @@ public class FrContract extends javax.swing.JFrame {
     private void radioAssindosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radioAssindosActionPerformed
         // TODO add your handling code here:
         contractCon.updateTableWithSigned(table, this.people.getCPF(), fieldSearch.getText());
+        if (table.getRowCount() < 1) {
+            btnPrintAll.setEnabled(false);
+        } else {
+            btnPrintAll.setEnabled(true);
+        }
     }//GEN-LAST:event_radioAssindosActionPerformed
 
     private void radioNovosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radioNovosActionPerformed
         // TODO add your handling code here:
         contractCon.updateTableWithUnsigned(table, this.people.getCPF(), fieldSearch.getText());
+        if (table.getRowCount() < 1) {
+            btnPrintAll.setEnabled(false);
+        } else {
+            btnPrintAll.setEnabled(true);
+        }
     }//GEN-LAST:event_radioNovosActionPerformed
 
     private void radioExpirdosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radioExpirdosActionPerformed
         // TODO add your handling code here:
         contractCon.updateTableWithExpired(table, this.people.getCPF(), fieldSearch.getText());
+        if (table.getRowCount() < 1) {
+            btnPrintAll.setEnabled(false);
+        } else {
+            btnPrintAll.setEnabled(true);
+        }
     }//GEN-LAST:event_radioExpirdosActionPerformed
 
     private void tablePropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_tablePropertyChange
@@ -352,6 +355,10 @@ public class FrContract extends javax.swing.JFrame {
 
     private void btnPrintAllActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPrintAllActionPerformed
         // TODO add your handling code here:
+        if (table.getRowCount() < 1) {
+            return;
+        }
+
         int response = JOptionPane.showConfirmDialog(null,
                 "Baixar o relatório dessa listagem de contratos?",
                 "Relatório de listagem completa",
@@ -387,7 +394,11 @@ public class FrContract extends javax.swing.JFrame {
             contractCon.updateTableWithExpired(table, this.people.getCPF(), fieldSearch.getText());
         }
 
-        fieldSearch.setText("");
+        if (table.getRowCount() < 1) {
+            btnPrintAll.setEnabled(false);
+        } else {
+            btnPrintAll.setEnabled(true);
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void btnBack2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBack2ActionPerformed

@@ -355,6 +355,7 @@ public class FrAttendance extends javax.swing.JFrame {
         btnAddPatient.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/plus.png"))); // NOI18N
         btnAddPatient.setText("Cadastrar Paciente");
         btnAddPatient.setBorder(null);
+        btnAddPatient.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnAddPatient.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAddPatientActionPerformed(evt);
@@ -616,7 +617,7 @@ public class FrAttendance extends javax.swing.JFrame {
 
     private void btnAddPatientActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddPatientActionPerformed
         // TODO add your handling code here:       
-        FrRegister registerScreen = new FrRegister(this, this.user, "edit");
+        FrRegister registerScreen = new FrRegister(this, "PreRegister");
         registerScreen.setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_btnAddPatientActionPerformed

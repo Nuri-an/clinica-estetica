@@ -67,7 +67,9 @@ public class AttendanceController {
         validAttendance.findTypeValidate(type);
         try {
             List<Attendance> listAll = repositorio.findAllByPatient(type, pacientName);
-            Util.jTableShow(grd, new TMListAttendance(listAll), null);
+            TMListAttendance TMList = new TMListAttendance(listAll);
+            TMList.putColumns(0, 1, 2, -100);
+            Util.jTableShow(grd, TMList, null);
         } catch (AttendanceException e) {
             throw new AttendanceException("Error - erro buscar atendimentos.");
         }
@@ -79,7 +81,21 @@ public class AttendanceController {
         try {
             List<Attendance> listAll = repositorio.findAllByProcedure(cpf, type, procedureName);
             TMListAttendance TMList = new TMListAttendance(listAll);
-            TMList.putColumns(0, -100, 1);
+            TMList.putColumns(0, -100, 1, 2);
+            Util.jTableShow(grd, TMList, null);
+        } catch (AttendanceException e) {
+            throw new AttendanceException("Error - erro buscar atendimentos.");
+        }
+    }
+
+    public void onFindAllFilter(JTable grd, String cpf, String type, List<String> date, String procedureName, double price) {
+        try {
+            List<Attendance> listAll;
+            if(type.equals("Avaliacao"))
+                listAll = repositorio.findAllAttendancesFilter(cpf, date, procedureName, price);
+            else listAll = repositorio.findAllAppointmentsFilter(cpf, date, procedureName, price);
+            TMListAttendance TMList = new TMListAttendance(listAll);
+            TMList.putColumns(0, -100, 1, 2);
             Util.jTableShow(grd, TMList, null);
         } catch (AttendanceException e) {
             throw new AttendanceException("Error - erro buscar atendimentos.");

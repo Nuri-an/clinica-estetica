@@ -206,7 +206,7 @@ public class FrPatient extends javax.swing.JFrame {
     private void btnReportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReportActionPerformed
         // TODO add your handling code here:
 
-        FrRelatorio telaRelatorio = new FrRelatorio(this, "Paciente");
+        FrReport telaRelatorio = new FrReport(this, this.user);
         telaRelatorio.setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_btnReportActionPerformed

@@ -140,4 +140,98 @@ public class AttendanceDAO implements IDao {
         return lst;
     }
 
+    public List<Attendance> findAllAttendancesFilter(String cpf, List<String> date, String procedureName, double price) {
+        String type = "Avaliacao";
+        if (date != null) {
+            sql = " SELECT a.* "
+                    + " FROM Attendance AS a "
+                    + " INNER JOIN patient AS pat "
+                    + " INNER JOIN people AS p "
+                    + " INNER JOIN medicalProcedure AS proc "
+                    + " WHERE a.type LIKE :type "
+                    + " AND p.CPF LIKE :cpf "
+                    + " AND a.startDateTime >= :startDate "
+                    + " AND a.startDateTime < :endDate "
+                    + " AND proc.name LIKE CONCAT('%',:name,'%') "
+                    + " GROUP BY a.id ";
+
+            qry = this.entityManager.createNativeQuery(sql, Attendance.class);
+            qry.setParameter("type", type);
+            qry.setParameter("cpf", cpf);
+            qry.setParameter("startDate", date.get(0));
+            qry.setParameter("endDate", date.get(1));
+            qry.setParameter("name", procedureName);
+
+            List<Attendance> lst = qry.getResultList();
+            return lst;
+        }
+
+        sql = " SELECT a "
+                + " FROM Attendance a "
+                + " INNER JOIN a.patient pat "
+                + " INNER JOIN pat.people p "
+                + " INNER JOIN a.procedure proc "
+                + " WHERE a.type LIKE :type "
+                + " AND p.CPF LIKE :cpf "
+                + " AND proc.name LIKE CONCAT('%',CONCAT(:name, '%')) ";
+
+        qry = this.entityManager.createQuery(sql, Attendance.class);
+        qry.setParameter("type", type);
+        qry.setParameter("cpf", cpf);
+        qry.setParameter("name", procedureName);
+
+        List<Attendance> lst = qry.getResultList();
+        return lst;
+    }
+
+    public List<Attendance> findAllAppointmentsFilter(String cpf, List<String> date, String procedureName, double price) {
+        String type = "Consulta";
+        if (date != null) {
+            sql = " SELECT a.* "
+                    + " FROM Attendance a "
+                    + " INNER JOIN patient pat "
+                    + " INNER JOIN people p "
+                    + " INNER JOIN appointment app "
+                    + " INNER JOIN medicalProcedure proc "
+                    + " WHERE a.type LIKE :type "
+                    + " AND p.CPF LIKE :cpf "
+                    + " AND a.startDateTime >= :startDate "
+                    + " AND a.startDateTime < :endDate "
+                    + " AND proc.name LIKE CONCAT('%',:name,'%') "
+                    + " AND app.budget>=:price "
+                    + " GROUP BY a.id ";
+
+            qry = this.entityManager.createNativeQuery(sql, Attendance.class);
+            qry.setParameter("type", type);
+            qry.setParameter("cpf", cpf);
+            qry.setParameter("startDate", date.get(0));
+            qry.setParameter("endDate", date.get(1));
+            qry.setParameter("name", procedureName);
+            qry.setParameter("price", price);
+
+            List<Attendance> lst = qry.getResultList();
+            return lst;
+        }
+
+        sql = " SELECT a "
+                + " FROM Attendance a "
+                + " INNER JOIN a.patient pat "
+                + " INNER JOIN pat.people p "
+                + " INNER JOIN a.appointment app "
+                + " INNER JOIN a.procedure proc "
+                + " WHERE a.type LIKE :type "
+                + " AND p.CPF LIKE :cpf "
+                + " AND proc.name LIKE CONCAT('%',CONCAT(:name, '%')) "
+                + " AND app.budget>=:price ";
+
+        qry = this.entityManager.createQuery(sql, Attendance.class);
+        qry.setParameter("type", type);
+        qry.setParameter("cpf", cpf);
+        qry.setParameter("name", procedureName);
+        qry.setParameter("price", price);
+
+        List<Attendance> lst = qry.getResultList();
+        return lst;
+    }
+
 }

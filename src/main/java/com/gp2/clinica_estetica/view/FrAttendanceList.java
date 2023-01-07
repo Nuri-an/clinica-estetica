@@ -10,7 +10,6 @@ import com.gp2.clinica_estetica.model.Attendance;
 import com.gp2.clinica_estetica.model.User;
 import com.gp2.clinica_estetica.model.exceptions.AttendanceException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
@@ -32,6 +31,7 @@ public class FrAttendanceList extends javax.swing.JFrame {
 
     /**
      * Creates new form FrPatientsList
+     * @param user
      */
     public FrAttendanceList(User user) {
         initComponents();

@@ -7,7 +7,6 @@ package com.gp2.clinica_estetica.controller;
 
 import com.gp2.clinica_estetica.model.Attendance;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
 
@@ -22,15 +21,17 @@ public class TMListAttendance extends AbstractTableModel {
     private int COL_DATA = 0;
     private int COL_PATIENT = 1;
     private int COL_PROCEDURE = 2;
+    private int COL_PRICE = 3;
 
     public TMListAttendance(List<Attendance> lstPatient) {
         this.lstAttendance = lstPatient;
     }
 
-    public void putColumns(int col_data, int col_patient, int col_procedure) {
+    public void putColumns(int col_data, int col_patient, int col_procedure, int col_price) {
         this.COL_DATA = col_data;
         this.COL_PATIENT = col_patient;
         this.COL_PROCEDURE = col_procedure;
+        this.COL_PRICE = col_price;
     }
 
     @Override
@@ -48,6 +49,9 @@ public class TMListAttendance extends AbstractTableModel {
             qtn++;
         }
         if (this.COL_PROCEDURE >= 0) {
+            qtn++;
+        }
+        if (this.COL_PRICE >= 0) {
             qtn++;
         }
 
@@ -74,6 +78,12 @@ public class TMListAttendance extends AbstractTableModel {
             if (columnIndex == COL_PROCEDURE) {
                 return aux.getProcedure().getName();
             }
+            if (columnIndex == COL_PRICE) {
+                if(aux.getAppointment() == null)
+                    return "---";
+                else
+                    return "R$ " + ((Double) (Math.round(aux.getAppointment().getBudget() * 100.0) / 100.0)).toString().replaceAll("\\.", ",");
+            }
         }
         return aux;
     }
@@ -94,6 +104,9 @@ public class TMListAttendance extends AbstractTableModel {
         }
         if (column == COL_PROCEDURE) {
             return "Procedimento";
+        }
+        if (column == COL_PRICE) {
+            return "Valor";
         }
 
         return "";

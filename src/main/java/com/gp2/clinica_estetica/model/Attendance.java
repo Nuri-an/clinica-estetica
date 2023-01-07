@@ -5,6 +5,8 @@
  */
 package com.gp2.clinica_estetica.model;
 
+import com.gp2.clinica_estetica.model.dao.reports.DaoReports;
+import com.lowagie.text.Document;
 import java.io.Serializable;
 import java.util.Calendar;
 import javax.persistence.Column;
@@ -14,6 +16,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
+import javax.swing.JTable;
 
 /**
  *
@@ -21,7 +24,7 @@ import javax.persistence.OneToOne;
  */
 
 @Entity
-public class Attendance implements Serializable {
+public class Attendance extends DaoReports implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -61,6 +64,11 @@ public class Attendance implements Serializable {
         this.startDateTime = startDateTime;
         this.endDateTime = endDateTime;
         this.finality = finality;
+    }
+    
+    @Override
+    public Document generateTablePDF(String nameFile, String title, JTable table) {
+        return super.generateTablePDF(nameFile, title, table);
     }
     
 

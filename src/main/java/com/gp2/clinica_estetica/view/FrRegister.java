@@ -41,16 +41,21 @@ public class FrRegister extends javax.swing.JFrame {
      */
     public FrRegister(JFrame previusScreen, String userType) {
         initComponents();
+        this.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        this.setLocationRelativeTo(null);
+        this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        this.setExtendedState(JFrame.MAXIMIZED_BOTH);
         this.previusScreen = previusScreen;
         this.fieldsEnabled = true;
         this.userType = userType;
         this.setFieldsEnabled(this.fieldsEnabled);
         this.clearFields();
         this.setMasks();
-        this.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        this.setLocationRelativeTo(null);
-        this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        this.setExtendedState(JFrame.MAXIMIZED_BOTH);
+
+        if (userType.equals("PreRegister")) {
+            this.mode = "create";
+            textTitle.setText("Preencha os campos abaixo com os dados do paciente para cadastrá-lo");
+        }
     }
 
     /**
@@ -482,8 +487,8 @@ public class FrRegister extends javax.swing.JFrame {
                     houseNumber = Integer.parseInt(textFieldNumber.getText().replaceAll(" ", ""));
                 }
 
-                if (this.mode.equals("create")) {
-                    peopleCon.onBasicRegister(
+                if (this.mode.equals("edit")) {
+                    peopleCon.onBasicEdit(
                             textFieldName.getText(),
                             cpf,
                             textFieldBirthDate.getText().replaceAll(" ", "").replaceAll("\\/", ""),
@@ -495,7 +500,7 @@ public class FrRegister extends javax.swing.JFrame {
                             houseNumber
                     );
                 } else {
-                    peopleCon.onBasicEdit(
+                    peopleCon.onBasicRegister(
                             textFieldName.getText(),
                             cpf,
                             textFieldBirthDate.getText().replaceAll(" ", "").replaceAll("\\/", ""),
@@ -535,19 +540,7 @@ public class FrRegister extends javax.swing.JFrame {
             if (this.userType.equals("PreRegister")) {
                 this.setFieldsEnabled(false);
 
-                if (this.mode.equals("create")) {
-                    int response = JOptionPane.showConfirmDialog(null,
-                            "Voltar à tela anterior?",
-                            "Cadastro de paciente realizado com sucesso!",
-                            JOptionPane.OK_OPTION,
-                            JOptionPane.QUESTION_MESSAGE);
-
-                    if (response == JOptionPane.OK_OPTION) {
-                        this.clearFields();
-                        this.setVisible(false);
-                        previusScreen.setVisible(true);
-                    }
-                } else {
+                if (this.mode.equals("edit")) {
                     int response = JOptionPane.showConfirmDialog(null,
                             "Voltar para a listagem?",
                             "Paciente editado com sucesso!",
@@ -559,6 +552,19 @@ public class FrRegister extends javax.swing.JFrame {
                         FrPatientsList patientsScreen = new FrPatientsList(this.currentUser);
                         this.setVisible(false);
                         patientsScreen.setVisible(true);
+                    }
+
+                } else {
+                    int response = JOptionPane.showConfirmDialog(null,
+                            "Voltar à tela anterior?",
+                            "Cadastro de paciente realizado com sucesso!",
+                            JOptionPane.OK_OPTION,
+                            JOptionPane.QUESTION_MESSAGE);
+
+                    if (response == JOptionPane.OK_OPTION) {
+                        this.clearFields();
+                        this.setVisible(false);
+                        previusScreen.setVisible(true);
                     }
                 }
             } else {

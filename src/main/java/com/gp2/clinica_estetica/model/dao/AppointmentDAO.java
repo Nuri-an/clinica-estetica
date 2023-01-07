@@ -10,6 +10,7 @@ import com.gp2.clinica_estetica.model.Appointment;
 import com.gp2.clinica_estetica.model.Attendance;
 import com.gp2.clinica_estetica.model.Recipte;
 import com.gp2.clinica_estetica.model.exceptions.AppointmentException;
+import java.util.Calendar;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;

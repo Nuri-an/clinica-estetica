@@ -168,7 +168,7 @@ public class FrPatientsList extends javax.swing.JFrame {
 
     private void btnAddPatientActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddPatientActionPerformed
         // TODO add your handling code here:
-        FrRegister registerScreen = new FrRegister(this, this.user, "edit");
+        FrRegister registerScreen = new FrRegister(this, "PreRegister");
         registerScreen.setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_btnAddPatientActionPerformed
