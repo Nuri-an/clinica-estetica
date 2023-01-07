@@ -37,12 +37,9 @@ public class PatientDAO implements IDao {
             if (people != null) {
                 User user = new User(login, password, securityQuestion, securityAnswer, people);
                 people.setUser(user);
-                Patient patient = new Patient(people);
-                people.setPatient(patient);
 
                 this.entityManager.getTransaction().begin();
                 this.entityManager.persist(user);
-                this.entityManager.persist(patient);
                 this.entityManager.merge(people);
                 this.entityManager.getTransaction().commit();
             } else {

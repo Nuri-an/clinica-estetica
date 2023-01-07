@@ -54,6 +54,7 @@ public class FrRegister extends javax.swing.JFrame {
 
         if (userType.equals("PreRegister")) {
             this.mode = "create";
+            boxAccessData.setVisible(false);
             textTitle.setText("Preencha os campos abaixo com os dados do paciente para cadastrá-lo");
         }
     }

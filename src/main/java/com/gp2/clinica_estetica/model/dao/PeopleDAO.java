@@ -7,6 +7,7 @@ package com.gp2.clinica_estetica.model.dao;
 
 import com.gp2.clinica_estetica.factory.Database;
 import com.gp2.clinica_estetica.model.Address;
+import com.gp2.clinica_estetica.model.Patient;
 import com.gp2.clinica_estetica.model.People;
 import com.gp2.clinica_estetica.model.PhoneNumber;
 import com.gp2.clinica_estetica.model.exceptions.UserException;
@@ -56,11 +57,14 @@ public class PeopleDAO {
         PhoneNumber phoneNumber = new PhoneNumber(number, isWhatsapp);
         Address address = new Address(zipCode, street, neighborhood, houseNumber);
         People people = new People(name, CPF, birthDate, phoneNumber, address);
+        Patient patient = new Patient(people);
+        people.setPatient(patient);
 
         this.entityManager.getTransaction().begin();
         this.entityManager.persist(phoneNumber);
         this.entityManager.persist(address);
         this.entityManager.persist(people);
+        this.entityManager.persist(patient);
         this.entityManager.getTransaction().commit();
     }
 
