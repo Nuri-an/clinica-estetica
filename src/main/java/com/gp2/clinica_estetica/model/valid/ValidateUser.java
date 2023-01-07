@@ -67,7 +67,7 @@ public class ValidateUser {
             throw new UserException("Error - Campo vazio: 'senha'.");  
         
         if (!isValidPassword(password)) 
-            throw new UserException("Error - Informe ao menos 1 número para a senha e o menos 8 caracteres.");  
+            throw new UserException("Error - Informe ao menos 1 número para a senha e ao menos 8 caracteres.");  
         
     }
     
