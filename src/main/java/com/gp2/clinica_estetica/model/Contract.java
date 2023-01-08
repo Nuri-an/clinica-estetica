@@ -6,6 +6,7 @@
 package com.gp2.clinica_estetica.model;
 
 import com.gp2.clinica_estetica.model.dao.reports.DaoReports;
+import com.lowagie.text.Document;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
@@ -16,6 +17,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
+import javax.swing.JTable;
 
 /**
  *
@@ -43,6 +45,10 @@ public class Contract extends DaoReports implements Serializable {
     @OneToOne
     private Doctor doctor;
     
+    @JoinColumn(name = "appointment_id") // nome para coluna foreign key no banco
+    @OneToOne
+    private Appointment appointment;
+    
     
     public Contract() {
         this.id = -1;
@@ -60,6 +66,11 @@ public class Contract extends DaoReports implements Serializable {
     @Override
     public void saveFile(File source, File dest) throws IOException {
         super.saveFile(source, dest);
+    }
+    
+    @Override
+    public Document generateTablePDF(String nameFile, String title, JTable table) {
+        return super.generateTablePDF(nameFile, title, table);
     }
 
     /**
@@ -158,6 +169,20 @@ public class Contract extends DaoReports implements Serializable {
      */
     public void setDoctor(Doctor doctor) {
         this.doctor = doctor;
+    }
+
+    /**
+     * @return the appointment
+     */
+    public Appointment getAppointment() {
+        return appointment;
+    }
+
+    /**
+     * @param appointment the appointment to set
+     */
+    public void setAppointment(Appointment appointment) {
+        this.appointment = appointment;
     }
 
 }

@@ -17,14 +17,18 @@ public class ValidatePeople {
     public void basicRegisterValidate(String name, String CPF, String birthDate){ 
         PeopleDAO peopleDao = new PeopleDAO();
         
+        this.basicEditValidate(name, CPF, birthDate);
+        
+        if(peopleDao.hasPeopleWithCpf(CPF))
+            throw new UserException("Error - Este CPF já está sendo utilizdo por outra pessoa.");            
+    }
+    
+    public void basicEditValidate(String name, String CPF, String birthDate){         
         if (name.isEmpty()) 
             throw new UserException("Error - Campo vazio: 'nome'.");  
         
         if (CPF.isEmpty()) 
             throw new UserException("Error - Campo vazio: 'CPF'.");  
-        
-        if(peopleDao.hasPeopleWithCpf(CPF))
-            throw new UserException("Error - Este CPF já está sendo utilizdo por outra pessoa.");
         
         ValidatePF validCPF = new ValidatePF();
         if(!validCPF.verifyCPF(CPF))

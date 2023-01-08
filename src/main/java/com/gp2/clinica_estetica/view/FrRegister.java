@@ -8,6 +8,7 @@ import com.gp2.clinica_estetica.controller.PatientController;
 import com.gp2.clinica_estetica.controller.PeopleController;
 import com.gp2.clinica_estetica.controller.UserController;
 import com.gp2.clinica_estetica.model.People;
+import com.gp2.clinica_estetica.model.User;
 import com.gp2.clinica_estetica.model.exceptions.UserException;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -20,7 +21,10 @@ import javax.swing.text.MaskFormatter;
 public class FrRegister extends javax.swing.JFrame {
 
     private Boolean fieldsEnabled;
-    private String userType;
+    private String userType; // "Patient" | "Doctor" | "Attendant" | "PreRegister"
+    private User currentUser;
+    private String mode; // "create | "edit
+    private JFrame previusScreen;
 
     /**
      * Creates new form FrPatientManagement
@@ -29,13 +33,69 @@ public class FrRegister extends javax.swing.JFrame {
         initComponents();
     }
 
-    public FrRegister(String userType) {
+    /**
+     * Creates new form FrPatientManagement as user register
+     *
+     * @param previusScreen
+     * @param userType
+     */
+    public FrRegister(JFrame previusScreen, String userType) {
         initComponents();
+        this.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        this.setLocationRelativeTo(null);
+        this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        this.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        this.previusScreen = previusScreen;
         this.fieldsEnabled = true;
         this.userType = userType;
         this.setFieldsEnabled(this.fieldsEnabled);
         this.clearFields();
         this.setMasks();
+
+        if (userType.equals("PreRegister")) {
+            this.mode = "create";
+            boxAccessData.setVisible(false);
+            textTitle.setText("Preencha os campos abaixo com os dados do paciente para cadastrá-lo");
+        }
+    }
+
+    /**
+     * Creates new form FrPatientManagement as attendant registering/editing
+     *
+     * @param previusScreen
+     * @param user
+     * @param mode
+     */
+    public FrRegister(JFrame previusScreen, User user, String mode) {
+        initComponents();
+        this.previusScreen = previusScreen;
+        this.mode = mode;
+        boxAccessData.setVisible(false);
+        this.fieldsEnabled = true;
+        this.currentUser = user;
+        this.userType = "PreRegister";
+        this.setFieldsEnabled(this.fieldsEnabled);
+        this.clearFields();
+        this.setMasks();
+
+        People currentPeople = user.getPeople();
+
+        if (mode.equals("create")) {
+            textTitle.setText("Preencha os campos abaixo com os dados do paciente para cadastrá-lo");
+        } else {
+            textTitle.setText("Altere os campos abaixo com os dados do paciente para editá-lo");
+            textFieldName.setText(currentPeople.getName());
+            textFieldCpf.setText(currentPeople.getCPF());
+            textFieldBirthDate.setText(currentPeople.getBirthDate());
+            textFieldPhoneNumber.setText(currentPeople.getPhoneNumber().getNumber());
+            jCheckBoxIsWhatsapp.setSelected(currentPeople.getPhoneNumber().isIsWhatsapp());
+            textFieldZipCode.setText(currentPeople.getAddress().getZipCode());
+            textFieldStreet.setText(currentPeople.getAddress().getStreet());
+            textFieldNeighborhood.setText(currentPeople.getAddress().getNeighborhood());
+            textFieldNumber.setText(currentPeople.getAddress().getHouseNumber() + "");
+
+            textFieldCpf.setEnabled(false);
+        }
         this.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -152,7 +212,7 @@ public class FrRegister extends javax.swing.JFrame {
         textFieldSecAnswer = new javax.swing.JFormattedTextField();
         jPasswordField = new javax.swing.JPasswordField();
         jPasswordFieldConfirmation = new javax.swing.JPasswordField();
-        jLabel13 = new javax.swing.JLabel();
+        textTitle = new javax.swing.JLabel();
         disableFieldsFeedback = new javax.swing.JLabel();
         btnRegister = new javax.swing.JButton();
 
@@ -351,8 +411,8 @@ public class FrRegister extends javax.swing.JFrame {
                 .addContainerGap(20, Short.MAX_VALUE))
         );
 
-        jLabel13.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jLabel13.setText("Preencha os campos abaixo para realizar o cadastro");
+        textTitle.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        textTitle.setText("Preencha os campos abaixo para realizar o cadastro");
 
         disableFieldsFeedback.setFont(new java.awt.Font("Dialog", 2, 10)); // NOI18N
         disableFieldsFeedback.setText("** Informe seu CPF para preencher os campos desabilitados");
@@ -369,7 +429,7 @@ public class FrRegister extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(boxPersonalData, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
@@ -380,16 +440,16 @@ public class FrRegister extends javax.swing.JFrame {
                     .addComponent(boxAddress, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel13)
+                            .addComponent(textTitle)
                             .addComponent(disableFieldsFeedback))
                         .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(55, Short.MAX_VALUE)
-                .addComponent(jLabel13)
+                .addGap(55, 55, 55)
+                .addComponent(textTitle)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(disableFieldsFeedback)
                 .addGap(23, 23, 23)
@@ -402,10 +462,8 @@ public class FrRegister extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnBack)
                     .addComponent(btnRegister))
-                .addGap(53, 53, 53))
+                .addContainerGap(53, Short.MAX_VALUE))
         );
-
-        boxAccessData.getAccessibleContext().setAccessibleName("Dados de acesso");
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -422,6 +480,40 @@ public class FrRegister extends javax.swing.JFrame {
             if (this.userType.equals("Patient")) {
                 PatientController patienteCon = new PatientController();
                 patienteCon.onCompleteRegister(cpf, jPasswordField.getText(), textFieldSecQuestion.getText(), textFieldSecAnswer.getText());
+            } else if (this.userType.equals("PreRegister")) {
+                PeopleController peopleCon = new PeopleController();
+                Integer houseNumber = null;
+
+                if (!textFieldNumber.getText().replaceAll(" ", "").equals("")) {
+                    houseNumber = Integer.parseInt(textFieldNumber.getText().replaceAll(" ", ""));
+                }
+
+                if (this.mode.equals("edit")) {
+                    peopleCon.onBasicEdit(
+                            textFieldName.getText(),
+                            cpf,
+                            textFieldBirthDate.getText().replaceAll(" ", "").replaceAll("\\/", ""),
+                            textFieldPhoneNumber.getText().replaceAll(" ", "").replaceAll("\\(", "").replaceAll("\\)", "").replaceAll("-", ""),
+                            jCheckBoxIsWhatsapp.isSelected(),
+                            textFieldZipCode.getText().replaceAll(" ", "").replaceAll("-", ""),
+                            textFieldStreet.getText(),
+                            textFieldNeighborhood.getText(),
+                            houseNumber
+                    );
+                } else {
+                    peopleCon.onBasicRegister(
+                            textFieldName.getText(),
+                            cpf,
+                            textFieldBirthDate.getText().replaceAll(" ", "").replaceAll("\\/", ""),
+                            textFieldPhoneNumber.getText().replaceAll(" ", "").replaceAll("\\(", "").replaceAll("\\)", "").replaceAll("-", ""),
+                            jCheckBoxIsWhatsapp.isSelected(),
+                            textFieldZipCode.getText().replaceAll(" ", "").replaceAll("-", ""),
+                            textFieldStreet.getText(),
+                            textFieldNeighborhood.getText(),
+                            houseNumber
+                    );
+                }
+
             } else {
                 UserController userCon = new UserController();
                 Integer houseNumber = null;
@@ -446,20 +538,51 @@ public class FrRegister extends javax.swing.JFrame {
                         userType);
             }
 
-            this.setFieldsEnabled(false);
-            int response = JOptionPane.showConfirmDialog(null,
-                    "Ir para a tela de login?",
-                    "Cadastro realizado com sucesso!",
-                    JOptionPane.OK_OPTION,
-                    JOptionPane.QUESTION_MESSAGE);
+            if (this.userType.equals("PreRegister")) {
+                this.setFieldsEnabled(false);
 
-            if (response == JOptionPane.OK_OPTION) {
-                this.clearFields();
-                FrLogin loginScreen = new FrLogin();
-                this.setVisible(false);
-                loginScreen.setVisible(true);
+                if (this.mode.equals("edit")) {
+                    int response = JOptionPane.showConfirmDialog(null,
+                            "Voltar para a listagem?",
+                            "Paciente editado com sucesso!",
+                            JOptionPane.OK_OPTION,
+                            JOptionPane.QUESTION_MESSAGE);
+
+                    if (response == JOptionPane.OK_OPTION) {
+                        this.clearFields();
+                        FrPatientsList patientsScreen = new FrPatientsList(this.currentUser);
+                        this.setVisible(false);
+                        patientsScreen.setVisible(true);
+                    }
+
+                } else {
+                    int response = JOptionPane.showConfirmDialog(null,
+                            "Voltar à tela anterior?",
+                            "Cadastro de paciente realizado com sucesso!",
+                            JOptionPane.OK_OPTION,
+                            JOptionPane.QUESTION_MESSAGE);
+
+                    if (response == JOptionPane.OK_OPTION) {
+                        this.clearFields();
+                        this.setVisible(false);
+                        previusScreen.setVisible(true);
+                    }
+                }
+            } else {
+                this.setFieldsEnabled(false);
+                int response = JOptionPane.showConfirmDialog(null,
+                        "Ir para a tela de login?",
+                        "Cadastro realizado com sucesso!",
+                        JOptionPane.OK_OPTION,
+                        JOptionPane.QUESTION_MESSAGE);
+
+                if (response == JOptionPane.OK_OPTION) {
+                    this.clearFields();
+                    FrLogin loginScreen = new FrLogin();
+                    this.setVisible(false);
+                    loginScreen.setVisible(true);
+                }
             }
-
         } catch (UserException e) {
             JOptionPane.showMessageDialog(this, e.getMessage());
         }
@@ -520,9 +643,8 @@ public class FrRegister extends javax.swing.JFrame {
 
     private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
         // TODO add your handling code here:
+        this.previusScreen.setVisible(true);
         this.setVisible(false);
-        FrUserType userTypeScreen = new FrUserType();
-        userTypeScreen.setVisible(true);
     }//GEN-LAST:event_btnBackActionPerformed
 
     /**
@@ -581,7 +703,6 @@ public class FrRegister extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
-    private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -602,5 +723,6 @@ public class FrRegister extends javax.swing.JFrame {
     private javax.swing.JFormattedTextField textFieldSecQuestion;
     private javax.swing.JTextField textFieldStreet;
     private javax.swing.JFormattedTextField textFieldZipCode;
+    private javax.swing.JLabel textTitle;
     // End of variables declaration//GEN-END:variables
 }

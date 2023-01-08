@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -32,8 +33,7 @@ public class Appointment extends DaoReports implements Serializable {
     private int currentSession;
     private Double budget;
 
-    @OneToMany
-    @JoinColumn(name = "appointment_id")
+    @OneToMany(mappedBy = "appointment", cascade = CascadeType.ALL) // nome do atributo na outra classe que fará ligação com essa
     private List<Recipte> reciptes;
     
     @OneToOne
@@ -53,9 +53,16 @@ public class Appointment extends DaoReports implements Serializable {
 
     public Appointment(List<Recipte> recipte, int numberOfSessions, int currentSession, Double budget) {
         this.reciptes = recipte;
-        this.numberOfSessions = 0;
-        this.currentSession = 0;
-        this.budget = 0.0;
+        this.numberOfSessions = numberOfSessions;
+        this.currentSession = currentSession;
+        this.budget = budget;
+    }
+
+    public Appointment(Attendance attendance, int numberOfSessions, int currentSession, Double budget) {
+        this.attendance = attendance;
+        this.numberOfSessions = numberOfSessions;
+        this.currentSession = currentSession;
+        this.budget = budget;
     }
     
     @Override
@@ -101,7 +108,7 @@ public class Appointment extends DaoReports implements Serializable {
     /**
      * @return the numberOfSessions
      */
-    public int getNumberOfSessions() {
+    public Integer getNumberOfSessions() {
         return numberOfSessions;
     }
 

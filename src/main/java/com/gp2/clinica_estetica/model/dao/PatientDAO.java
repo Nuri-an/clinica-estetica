@@ -18,7 +18,7 @@ import javax.persistence.Query;
  *
  * @author nuria
  */
-public class PatientDAO {
+public class PatientDAO implements IDao {
 
     EntityManager entityManager;
 
@@ -37,12 +37,9 @@ public class PatientDAO {
             if (people != null) {
                 User user = new User(login, password, securityQuestion, securityAnswer, people);
                 people.setUser(user);
-                Patient patient = new Patient(people);
-                people.setPatient(patient);
 
                 this.entityManager.getTransaction().begin();
                 this.entityManager.persist(user);
-                this.entityManager.persist(patient);
                 this.entityManager.merge(people);
                 this.entityManager.getTransaction().commit();
             } else {
@@ -53,5 +50,48 @@ public class PatientDAO {
         } catch (UserException e) {
             System.err.println(e.getMessage());
         }
+    }
+
+    @Override
+    public void save(Object obj) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public boolean delete(int id) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object find(int id) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public List<People> findAllByCPF(String cpf) {
+        sql = " SELECT p "
+                + " FROM People p "
+                + " WHERE patient_id is not null "
+                + " AND CPF LIKE CONCAT('%',CONCAT(:cpf, '%')) ";
+
+        qry = this.entityManager.createQuery(sql, People.class);
+        qry.setParameter("cpf", cpf);
+
+        List<People> lst = qry.getResultList();
+        return lst;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public List<People> findAllPatients() {
+        sql = " SELECT p "
+                + " FROM People p "
+                + " WHERE patient_id is not null ";
+
+        qry = this.entityManager.createQuery(sql, People.class);
+
+        List<People> lst = qry.getResultList();
+        return lst;
     }
 }

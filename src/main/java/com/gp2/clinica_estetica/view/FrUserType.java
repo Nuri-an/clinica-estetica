@@ -111,14 +111,14 @@ public class FrUserType extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnAttendantActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAttendantActionPerformed
-        FrRegister registerScreen = new FrRegister("Attendant");
+        FrRegister registerScreen = new FrRegister(this, "Attendant");
         registerScreen.setLocationRelativeTo(null);
         this.setVisible(false);
         registerScreen.setVisible(true);
     }//GEN-LAST:event_btnAttendantActionPerformed
 
     private void btnDoctorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDoctorActionPerformed
-        FrRegister registerScreen = new FrRegister("Doctor");
+        FrRegister registerScreen = new FrRegister(this, "Doctor");
         registerScreen.setLocationRelativeTo(null);
         this.setVisible(false);
         registerScreen.setVisible(true);
@@ -126,7 +126,7 @@ public class FrUserType extends javax.swing.JFrame {
 
     private void btnPatientActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPatientActionPerformed
         // TODO add your handling code here:
-        FrRegister registerScreen = new FrRegister("Patient");
+        FrRegister registerScreen = new FrRegister(this, "Patient");
         registerScreen.setLocationRelativeTo(null);
         this.setVisible(false);
         registerScreen.setVisible(true);
