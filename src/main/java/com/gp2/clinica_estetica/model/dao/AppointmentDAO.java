@@ -78,6 +78,29 @@ public class AppointmentDAO implements IDao {
             return false;
         }
     }
+    
+
+    public List<Attendance> findAllByProcedure(String cpf, String procedureName) {
+        sql = " SELECT a "
+                + " FROM Attendance a "
+                + " INNER JOIN a.patient pat "
+                + " INNER JOIN pat.people p "
+                + " INNER JOIN a.procedure proc "
+                + " INNER JOIN a.appointment app "
+                + " WHERE a.type LIKE :type"
+                + " AND p.CPF LIKE :cpf"
+                + " AND app.contract IS NOT NULL"
+                + " AND proc.name LIKE CONCAT('%',CONCAT(:name, '%')) ";
+
+        qry = this.entityManager.createQuery(sql, Attendance.class);
+        qry.setParameter("type", "Consulta");
+        qry.setParameter("cpf", cpf);
+        qry.setParameter("name", procedureName);
+
+        List<Attendance> lst = qry.getResultList();
+        return lst;
+    }
+
 
     @Override
     public Appointment find(int id) {

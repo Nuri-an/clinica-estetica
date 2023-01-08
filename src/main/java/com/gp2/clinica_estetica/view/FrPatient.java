@@ -5,6 +5,7 @@
  */
 package com.gp2.clinica_estetica.view;
 
+import com.gp2.clinica_estetica.controller.AppointmentController;
 import com.gp2.clinica_estetica.controller.AttendanceController;
 import com.gp2.clinica_estetica.model.Attendance;
 import com.gp2.clinica_estetica.model.User;
@@ -16,7 +17,7 @@ import javax.swing.JFrame;
  */
 public class FrPatient extends javax.swing.JFrame {
     private User user;
-    private AttendanceController attendanceCon;
+    private AppointmentController appointmentCon;
 
     /**
      * Creates new form FrPaciente
@@ -46,8 +47,8 @@ public class FrPatient extends javax.swing.JFrame {
         btnExit.setContentAreaFilled(false);
         btnExit.setBorderPainted(false);
         
-        this.attendanceCon = new AttendanceController();
-        this.attendanceCon.onFindAllByProcedure(table, user.getPeople().getCPF(), "Consulta", "");        
+        this.appointmentCon = new AppointmentController();
+        this.appointmentCon.onFindAllByProcedure(table, user.getPeople().getCPF(), "");        
     }
     
     /**
@@ -220,7 +221,7 @@ public class FrPatient extends javax.swing.JFrame {
 
     private void btnPesquisarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPesquisarActionPerformed
         // TODO add your handling code here:
-        this.attendanceCon.onFindAllByProcedure(table, user.getPeople().getCPF(), "Consulta", fieldSearch.getText());
+        this.appointmentCon.onFindAllByProcedure(table, user.getPeople().getCPF(), fieldSearch.getText());
     }//GEN-LAST:event_btnPesquisarActionPerformed
 
     private void btnContractActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnContractActionPerformed

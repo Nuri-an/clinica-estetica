@@ -5,6 +5,8 @@
  */
 package com.gp2.clinica_estetica.view;
 
+import com.gp2.clinica_estetica.controller.AppointmentController;
+import com.gp2.clinica_estetica.model.Attendance;
 import com.gp2.clinica_estetica.model.User;
 import javax.swing.JFrame;
 
@@ -13,21 +15,45 @@ import javax.swing.JFrame;
  * @author nuria
  */
 public class FrDoctor extends javax.swing.JFrame {
+    private User user;
+    private AppointmentController appointmentCon;
 
     /**
-     * Creates new form FrMedico
+     * Creates new form FrDoctor2
      */
     public FrDoctor() {
-        initComponents();
-    }
+        initizalize();
+    }    
     
     /**
      * Creates new form FrMedico
      * @param currentUser
      */
     public FrDoctor(User currentUser) {
+        this.user = currentUser;
+        initizalize();
+    }    
+    
+
+    public void initizalize() {
         initComponents();
-        this.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        this.setLocationRelativeTo(null);
+        this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        this.setExtendedState(JFrame.MAXIMIZED_BOTH);        
+        
+        btnExit.setOpaque(false);
+        btnExit.setContentAreaFilled(false);
+        btnExit.setBorderPainted(false);
+        
+        textEmpty.setVisible(false);
+        
+        this.appointmentCon = new AppointmentController();
+        this.appointmentCon.onFindAllByDoctor(table, user.getPeople().getCPF(), "");    
+        
+        if(table.getRowCount() < 1) {
+            textEmpty.setVisible(true);
+            jScrollPane1.setVisible(false);
+        }
     }
 
     /**
@@ -39,64 +65,48 @@ public class FrDoctor extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLabel1 = new javax.swing.JLabel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        tableAppointment = new javax.swing.JTable();
-        inputSearch = new javax.swing.JTextField();
+        title = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        btnSearch = new javax.swing.JButton();
-        btnNewAppointment = new javax.swing.JButton();
-        btnExit = new javax.swing.JButton();
+        fieldSearch = new javax.swing.JTextField();
+        btnPesquisar = new javax.swing.JButton();
+        btnReport1 = new javax.swing.JButton();
         btnReport = new javax.swing.JButton();
+        btnExit = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        table = new javax.swing.JTable();
+        textEmpty = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jLabel1.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
-        jLabel1.setText("Médico");
+        title.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
+        title.setText("Médico");
 
-        tableAppointment.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {"123", "Ana", "Limpeza de Pele", "20/04/2022", "Avaliacao"},
-                {"456", "Luis", "Sombracelha", "06/04/2022", "Consulta"},
-                {null, null, null, null, null},
-                {null, null, null, null, null}
-            },
-            new String [] {
-                "ID", "Paciente", "Procedimento", "Dia", "Tipo"
-            }
-        ) {
-            Class[] types = new Class [] {
-                java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.String.class
-            };
+        jLabel2.setText("Pesquisar por procedimento:");
 
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
-            }
-        });
-        tableAppointment.setColumnSelectionAllowed(true);
-        tableAppointment.getTableHeader().setReorderingAllowed(false);
-        tableAppointment.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                tableAppointmentMouseClicked(evt);
-            }
-        });
-        jScrollPane1.setViewportView(tableAppointment);
-        tableAppointment.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-
-        inputSearch.addActionListener(new java.awt.event.ActionListener() {
+        fieldSearch.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                inputSearchActionPerformed(evt);
+                fieldSearchActionPerformed(evt);
             }
         });
 
-        jLabel2.setText("Pesquisar por nome de paciente:");
-
-        btnSearch.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/search.png"))); // NOI18N
-
-        btnNewAppointment.setText("Novo atendimento");
-        btnNewAppointment.addActionListener(new java.awt.event.ActionListener() {
+        btnPesquisar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/search.png"))); // NOI18N
+        btnPesquisar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnNewAppointmentActionPerformed(evt);
+                btnPesquisarActionPerformed(evt);
+            }
+        });
+
+        btnReport1.setText("Adicionar  contratos");
+        btnReport1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnReport1ActionPerformed(evt);
+            }
+        });
+
+        btnReport.setText("Relatórios");
+        btnReport.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnReportActionPerformed(evt);
             }
         });
 
@@ -109,91 +119,131 @@ public class FrDoctor extends javax.swing.JFrame {
             }
         });
 
-        btnReport.setText("Relatórios");
-        btnReport.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnReportActionPerformed(evt);
+        table.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {"20/04/2022", "Limpeza de Pele"},
+                {"06/04/2022", "Sombracelha"},
+                {null, null},
+                {null, null}
+            },
+            new String [] {
+                "Data", "Procedimento"
+            }
+        ));
+        table.setColumnSelectionAllowed(true);
+        table.getTableHeader().setReorderingAllowed(false);
+        table.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tableMouseClicked(evt);
             }
         });
+        jScrollPane1.setViewportView(table);
+
+        textEmpty.setFont(new java.awt.Font("Dialog", 2, 14)); // NOI18N
+        textEmpty.setText("Sem consultas formalizadas");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
+                .addContainerGap(21, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1)
-                            .addComponent(jLabel2)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(inputSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 233, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(title)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(fieldSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 233, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btnSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 140, Short.MAX_VALUE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(btnNewAppointment)
-                                .addGap(18, 18, 18)
-                                .addComponent(btnReport))
-                            .addComponent(btnExit, javax.swing.GroupLayout.Alignment.TRAILING))))
-                .addContainerGap())
+                                .addComponent(btnPesquisar, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 189, Short.MAX_VALUE)
+                                .addComponent(btnReport1)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(btnReport)
+                            .addComponent(btnExit)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel2)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(jScrollPane1))
+                .addContainerGap(24, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(textEmpty)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(34, 34, 34)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(btnExit, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(title, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(32, 32, 32)
+                .addComponent(jLabel2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1)
-                    .addComponent(btnExit))
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(21, 21, 21)
-                        .addComponent(jLabel2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(inputSearch)
-                            .addComponent(btnSearch, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(btnReport)
-                            .addComponent(btnNewAppointment))))
-                .addGap(18, 18, 18)
+                    .addComponent(fieldSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(btnReport1)
+                        .addComponent(btnReport))
+                    .addComponent(btnPesquisar))
+                .addGap(42, 42, 42)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 215, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(19, Short.MAX_VALUE))
+                .addGap(32, 32, 32)
+                .addComponent(textEmpty)
+                .addContainerGap(33, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void inputSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inputSearchActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_inputSearchActionPerformed
-
     private void btnExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExitActionPerformed
         // TODO add your handling code here:
-        // go main Frame
+        FrLogin loginScreen = new FrLogin();
+        loginScreen.setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_btnExitActionPerformed
 
     private void btnReportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReportActionPerformed
         // TODO add your handling code here:
 
-        // FrReport reportScreen = new FrReport(this, "Médico");
-        // reportScreen.setVisible(true);
+        FrReport reportScreen = new FrReport(this, this.user);
+        reportScreen.setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_btnReportActionPerformed
 
-    private void tableAppointmentMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableAppointmentMouseClicked
+    private void btnReport1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReport1ActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_tableAppointmentMouseClicked
+        FrAppWithoutContract appScreen = new FrAppWithoutContract(this, user);
+        this.setVisible(false);
+        appScreen.setVisible(true);
+        
+    }//GEN-LAST:event_btnReport1ActionPerformed
 
-    private void btnNewAppointmentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNewAppointmentActionPerformed
+    private void btnPesquisarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPesquisarActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_btnNewAppointmentActionPerformed
+        this.appointmentCon.onFindAllByDoctor(table, user.getPeople().getCPF(), fieldSearch.getText());
+    }//GEN-LAST:event_btnPesquisarActionPerformed
+
+    private void fieldSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fieldSearchActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_fieldSearchActionPerformed
+
+    private void tableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableMouseClicked
+        // TODO add your handling code here:
+
+        if (evt.getClickCount() > 1) {
+            int row = table.getSelectedRow();
+            Attendance attendanceRow = (Attendance) table.getValueAt(row, -1);
+
+            FrAppointment appointmentScreen = new FrAppointment(this, attendanceRow.getAppointment(), this.user.getPeople());
+            this.setVisible(false);
+            appointmentScreen.setVisible(true);
+        }
+    }//GEN-LAST:event_tableMouseClicked
 
     /**
      * @param args the command line arguments
@@ -233,13 +283,14 @@ public class FrDoctor extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnExit;
-    private javax.swing.JButton btnNewAppointment;
+    private javax.swing.JButton btnPesquisar;
     private javax.swing.JButton btnReport;
-    private javax.swing.JButton btnSearch;
-    private javax.swing.JTextField inputSearch;
-    private javax.swing.JLabel jLabel1;
+    private javax.swing.JButton btnReport1;
+    private javax.swing.JTextField fieldSearch;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable tableAppointment;
+    private javax.swing.JTable table;
+    private javax.swing.JLabel textEmpty;
+    private javax.swing.JLabel title;
     // End of variables declaration//GEN-END:variables
 }

@@ -73,19 +73,6 @@ public class AttendanceController {
         }
     }
 
-    public void onFindAllByProcedure(JTable grd, String cpf, String type, String procedureName) {
-        ValidateAttendance validAttendance = new ValidateAttendance();
-        validAttendance.findTypeValidate(type);
-        try {
-            List<Attendance> listAll = repositorio.findAllByProcedure(cpf, type, procedureName);
-            TMListAttendance TMList = new TMListAttendance(listAll);
-            TMList.putColumns(0, -100, 1, 2);
-            Util.jTableShow(grd, TMList, null);
-        } catch (AttendanceException e) {
-            throw new AttendanceException("Error - erro buscar atendimentos.");
-        }
-    }
-
     public void onFindAllFilter(JTable grd, String cpf, String type, List<String> date, String procedureName, double price) {
         try {
             List<Attendance> listAll;
