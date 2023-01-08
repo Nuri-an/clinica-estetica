@@ -82,6 +82,26 @@ public class ContractDAO implements IDao {
         return lst;
     }
 
+    public List<Contract> findAllBySigned(String cpf, String procedureName) {
+        sql = " SELECT c "
+                + " FROM Contract c "
+                + " INNER JOIN c.patient pat "
+                + " INNER JOIN pat.people p "
+                + " INNER JOIN c.procedure mp "
+                + " WHERE c.date>=:currentDate  "
+                + " AND c.signed IS TRUE "
+                + " AND p.CPF LIKE :cpf"
+                + " AND mp.name LIKE CONCAT('%',CONCAT(:name, '%')) ";
+
+        qry = this.entityManager.createQuery(sql, Contract.class);
+        qry.setParameter("currentDate", currentDate);
+        qry.setParameter("cpf", cpf);
+        qry.setParameter("name", procedureName);
+
+        List<Contract> lst = qry.getResultList();
+        return lst;
+    }
+
     public List<Contract> findAllByUnsigned(String procedureName) {
         sql = " SELECT c "
                 + " FROM Contract c "
@@ -92,6 +112,45 @@ public class ContractDAO implements IDao {
 
         qry = this.entityManager.createQuery(sql, Contract.class);
         qry.setParameter("currentDate", currentDate);
+        qry.setParameter("name", procedureName);
+
+        List<Contract> lst = qry.getResultList();
+        return lst;
+    }
+
+    public List<Contract> findAllByUnsigned(String cpf, String procedureName) {
+        sql = " SELECT c "
+                + " FROM Contract c "
+                + " INNER JOIN c.patient pat "
+                + " INNER JOIN pat.people p "
+                + " INNER JOIN c.procedure mp "
+                + " WHERE c.date>=:currentDate  "
+                + " AND c.signed IS FALSE"
+                + " AND p.CPF LIKE :cpf"
+                + " AND mp.name LIKE CONCAT('%',CONCAT(:name, '%')) ";
+
+        qry = this.entityManager.createQuery(sql, Contract.class);
+        qry.setParameter("currentDate", currentDate);
+        qry.setParameter("cpf", cpf);
+        qry.setParameter("name", procedureName);
+
+        List<Contract> lst = qry.getResultList();
+        return lst;
+    }
+
+    public List<Contract> findAllByExpired(String cpf, String procedureName) {
+        sql = " SELECT c "
+                + " FROM Contract c "
+                + " INNER JOIN c.patient pat "
+                + " INNER JOIN pat.people p "
+                + " INNER JOIN c.procedure mp "
+                + " WHERE c.date<:currentDate  "
+                + " AND p.CPF LIKE :cpf"
+                + " AND mp.name LIKE CONCAT('%',CONCAT(:name, '%')) ";
+
+        qry = this.entityManager.createQuery(sql, Contract.class);
+        qry.setParameter("currentDate", currentDate);
+        qry.setParameter("cpf", cpf);
         qry.setParameter("name", procedureName);
 
         List<Contract> lst = qry.getResultList();

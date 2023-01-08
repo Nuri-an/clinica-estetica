@@ -9,6 +9,7 @@ import com.gp2.clinica_estetica.controller.AppointmentController;
 import com.gp2.clinica_estetica.controller.AttendanceController;
 import com.gp2.clinica_estetica.controller.PeopleController;
 import com.gp2.clinica_estetica.controller.ProcedureController;
+import com.gp2.clinica_estetica.model.Appointment;
 import com.gp2.clinica_estetica.model.Attendance;
 import com.gp2.clinica_estetica.model.Doctor;
 import com.gp2.clinica_estetica.model.MedicalProcedure;
@@ -107,19 +108,35 @@ public class FrAttendance extends javax.swing.JFrame {
                 fieldStartSection.setEnabled(true);
                 fieldEndSection.setEnabled(true);
 
-                if (type.equals("Consulta")) {
+                if (type == null) {
                     fieldNumSections.setText(attendanceEdit.getAppointment().getNumberOfSessions().toString());
+                    fieldNumSections.setEnabled(false);
+                    semanalmente.setEnabled(false);
+                    quinzenalmente.setEnabled(false);
+                    mensalmente.setEnabled(false);
+                } else if (type.equals("Consulta")) {
+                    fieldNumSections.setText(attendanceEdit.getAppointment().getNumberOfSessions().toString());
+                    fieldNumSections.setEnabled(false);
+                    semanalmente.setEnabled(false);
+                    quinzenalmente.setEnabled(false);
+                    mensalmente.setEnabled(false);
                 }
             }
         }
 
-        if (type.equals("Avaliacao")) {
-            labelNumSections.setVisible(false);
-            fieldNumSections.setVisible(false);
-
-            groupAttendanceType.setSelected(optAttendanceTypeA.getModel(), true);
-        } else {
+        if (type == null) {
+            boxRecurrence.setVisible(true);
             groupAttendanceType.setSelected(optAttendanceTypeB.getModel(), true);
+        } else {
+            switch (type) {
+                case "Avaliacao":
+                    boxRecurrence.setVisible(false);
+                    groupAttendanceType.setSelected(optAttendanceTypeA.getModel(), true);
+                    break;
+                default:
+                    groupAttendanceType.setSelected(optAttendanceTypeB.getModel(), true);
+                    break;
+            }
         }
 
         this.mode = mode;
@@ -146,13 +163,19 @@ public class FrAttendance extends javax.swing.JFrame {
             this.setInitialDates(startDate, endDate);
         }
 
-        if (type.equals("Avaliacao")) {
-            labelNumSections.setVisible(false);
-            fieldNumSections.setVisible(false);
-
-            groupAttendanceType.setSelected(optAttendanceTypeA.getModel(), true);
-        } else {
+        if (type == null) {
+            boxRecurrence.setVisible(true);
             groupAttendanceType.setSelected(optAttendanceTypeB.getModel(), true);
+        } else {
+            switch (type) {
+                case "Avaliacao":
+                    boxRecurrence.setVisible(false);
+                    groupAttendanceType.setSelected(optAttendanceTypeA.getModel(), true);
+                    break;
+                default:
+                    groupAttendanceType.setSelected(optAttendanceTypeB.getModel(), true);
+                    break;
+            }
         }
 
         this.mode = mode;
@@ -176,6 +199,8 @@ public class FrAttendance extends javax.swing.JFrame {
         setMasks();
 
         this.type = "Avaliacao";
+        boxRecurrence.setVisible(false);
+        btnGroupRecurrency.setSelected(semanalmente.getModel(), true);
 
         fieldProcedurePrice.setEnabled(false);
 
@@ -316,6 +341,7 @@ public class FrAttendance extends javax.swing.JFrame {
     private void initComponents() {
 
         groupAttendanceType = new javax.swing.ButtonGroup();
+        btnGroupRecurrency = new javax.swing.ButtonGroup();
         jLabel1 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
@@ -336,8 +362,12 @@ public class FrAttendance extends javax.swing.JFrame {
         fieldFinally = new javax.swing.JTextArea();
         fieldProcedurePrice = new javax.swing.JFormattedTextField();
         labelNewProcedureFeedback = new javax.swing.JLabel();
+        boxRecurrence = new javax.swing.JPanel();
         labelNumSections = new javax.swing.JLabel();
         fieldNumSections = new javax.swing.JFormattedTextField();
+        semanalmente = new javax.swing.JRadioButton();
+        quinzenalmente = new javax.swing.JRadioButton();
+        mensalmente = new javax.swing.JRadioButton();
         optAttendanceTypeA = new javax.swing.JRadioButton();
         optAttendanceTypeB = new javax.swing.JRadioButton();
         btnBack = new javax.swing.JButton();
@@ -355,6 +385,7 @@ public class FrAttendance extends javax.swing.JFrame {
         btnAddPatient.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/plus.png"))); // NOI18N
         btnAddPatient.setText("Cadastrar Paciente");
         btnAddPatient.setBorder(null);
+        btnAddPatient.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnAddPatient.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAddPatientActionPerformed(evt);
@@ -427,7 +458,7 @@ public class FrAttendance extends javax.swing.JFrame {
 
         jLabel4.setText("Preço do procedimento:");
 
-        jLabel5.setText("Inicio da sessão:");
+        jLabel5.setText("Inicio da sessão (1°):");
 
         fieldStartSection.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -441,7 +472,7 @@ public class FrAttendance extends javax.swing.JFrame {
             }
         });
 
-        jLabel6.setText("Fim da sessão:");
+        jLabel6.setText("Fim da sessão (1°):");
 
         jComboProcedure.setEditable(true);
         jComboProcedure.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
@@ -477,6 +508,62 @@ public class FrAttendance extends javax.swing.JFrame {
 
         fieldNumSections.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
 
+        btnGroupRecurrency.add(semanalmente);
+        semanalmente.setText("semanalmente");
+        semanalmente.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                semanalmenteActionPerformed(evt);
+            }
+        });
+
+        btnGroupRecurrency.add(quinzenalmente);
+        quinzenalmente.setText("quinzenalmente");
+        quinzenalmente.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                quinzenalmenteActionPerformed(evt);
+            }
+        });
+
+        btnGroupRecurrency.add(mensalmente);
+        mensalmente.setText("mensalmente");
+        mensalmente.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mensalmenteActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout boxRecurrenceLayout = new javax.swing.GroupLayout(boxRecurrence);
+        boxRecurrence.setLayout(boxRecurrenceLayout);
+        boxRecurrenceLayout.setHorizontalGroup(
+            boxRecurrenceLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(boxRecurrenceLayout.createSequentialGroup()
+                .addGroup(boxRecurrenceLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, boxRecurrenceLayout.createSequentialGroup()
+                        .addGap(2, 2, 2)
+                        .addComponent(labelNumSections)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(fieldNumSections))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, boxRecurrenceLayout.createSequentialGroup()
+                        .addComponent(semanalmente)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(quinzenalmente)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(mensalmente)))
+                .addGap(0, 16, Short.MAX_VALUE))
+        );
+        boxRecurrenceLayout.setVerticalGroup(
+            boxRecurrenceLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(boxRecurrenceLayout.createSequentialGroup()
+                .addGroup(boxRecurrenceLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(fieldNumSections, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(labelNumSections))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(boxRecurrenceLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(semanalmente)
+                    .addComponent(quinzenalmente)
+                    .addComponent(mensalmente)))
+        );
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
@@ -488,7 +575,7 @@ public class FrAttendance extends javax.swing.JFrame {
                         .addComponent(jLabel5)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(fieldStartSection, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 54, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jLabel6)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(fieldEndSection, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -497,18 +584,16 @@ public class FrAttendance extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jScrollPane1))
                     .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addComponent(labelNewProcedureFeedback)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addComponent(jComboProcedure, javax.swing.GroupLayout.PREFERRED_SIZE, 222, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel4)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(fieldProcedurePrice, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(labelNumSections)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(fieldNumSections, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(labelNewProcedureFeedback)
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addComponent(jComboProcedure, javax.swing.GroupLayout.PREFERRED_SIZE, 222, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(jLabel4)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(fieldProcedurePrice, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(18, 18, 18)
+                        .addComponent(boxRecurrence, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
@@ -516,21 +601,25 @@ public class FrAttendance extends javax.swing.JFrame {
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jComboProcedure, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(fieldNumSections, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(labelNumSections))
-                    .addComponent(jLabel4)
-                    .addComponent(fieldProcedurePrice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(labelNewProcedureFeedback)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addComponent(jComboProcedure, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(labelNewProcedureFeedback))
+                            .addComponent(boxRecurrence, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(14, 14, 14))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel4)
+                            .addComponent(fieldProcedurePrice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
                     .addComponent(fieldStartSection, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel6)
                     .addComponent(fieldEndSection, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(26, 26, 26)
+                .addGap(18, 18, 18)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel8)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -572,22 +661,22 @@ public class FrAttendance extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(21, Short.MAX_VALUE)
+                .addContainerGap(18, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(optAttendanceTypeA)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(optAttendanceTypeB))
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addComponent(btnBack)
+                        .addGap(693, 693, 693)
+                        .addComponent(btnSchedule))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(jLabel1)
                         .addGroup(layout.createSequentialGroup()
-                            .addComponent(btnBack)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(btnSchedule))
+                            .addComponent(optAttendanceTypeA)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                            .addComponent(optAttendanceTypeB))
                         .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addContainerGap(21, Short.MAX_VALUE))
+                        .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addContainerGap(24, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -606,9 +695,9 @@ public class FrAttendance extends javax.swing.JFrame {
                 .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGap(46, 46, 46)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnBack)
-                    .addComponent(btnSchedule))
-                .addGap(36, 36, 36))
+                    .addComponent(btnSchedule)
+                    .addComponent(btnBack))
+                .addContainerGap(36, Short.MAX_VALUE))
         );
 
         pack();
@@ -616,19 +705,21 @@ public class FrAttendance extends javax.swing.JFrame {
 
     private void btnAddPatientActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddPatientActionPerformed
         // TODO add your handling code here:       
-        FrRegister registerScreen = new FrRegister(this, this.user, "edit");
+        FrRegister registerScreen = new FrRegister(this, "PreRegister");
         registerScreen.setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_btnAddPatientActionPerformed
 
     private void optAttendanceTypeAActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_optAttendanceTypeAActionPerformed
         // TODO add your handling code here:
-        this.type = "Consulta";
+        this.type = "Avaliacao";
+        boxRecurrence.setVisible(false);
     }//GEN-LAST:event_optAttendanceTypeAActionPerformed
 
     private void optAttendanceTypeBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_optAttendanceTypeBActionPerformed
         // TODO add your handling code here:
         this.type = "Consulta";
+        boxRecurrence.setVisible(true);
     }//GEN-LAST:event_optAttendanceTypeBActionPerformed
 
     private void fieldCpfPatientActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fieldCpfPatientActionPerformed
@@ -683,6 +774,20 @@ public class FrAttendance extends javax.swing.JFrame {
                 + ":"
                 + fieldEndSection.getText().substring(16, 18)
                 + "+0:0000";
+
+        int plusDays = 0;
+
+        if (this.type.equals("Consulta")) {
+            if (semanalmente.isSelected()) {
+                plusDays = 7;
+            }
+            if (quinzenalmente.isSelected()) {
+                plusDays = 15;
+            }
+            if (mensalmente.isSelected()) {
+                plusDays = 30;
+            }
+        }
 
         if (this.mode.equals("edit")) {
             try {
@@ -777,15 +882,36 @@ public class FrAttendance extends javax.swing.JFrame {
                     throw new AttendanceException(e.getMessage());
                 }
 
+                Attendance newAttendance = new Attendance(this.type, startSectionCalend, endSectionCalend, fieldFinally.getText());
+                newAttendance.setPatient(patient);
+                newAttendance.setDoctor(doctor);
+                newAttendance.setProcedure(procedure);
+
                 if (this.type.equals("Consulta")) {
-                    Attendance newAttendance = new Attendance("Consulta", startSectionCalend, endSectionCalend, fieldFinally.getText());
-                    newAttendance.setPatient(patient);
-                    newAttendance.setDoctor(doctor);
-                    newAttendance.setProcedure(procedure);
                     AppointmentController appointmentCon = new AppointmentController();
-                    appointmentCon.onSave(newAttendance, Integer.parseInt(fieldNumSections.getText()));
+                    int numSections = Integer.parseInt(fieldNumSections.getText());
+                    Appointment app = appointmentCon.onSave(newAttendance, numSections);
+
+                    if (numSections > 1) {
+                        for (int i = 0; i < (numSections - 1); i++) {
+                            Calendar start = Calendar.getInstance(TimeZone.getTimeZone("GMT-00:00"));
+                            start.setTime(startSectionCalend.getTime());
+                            Calendar end = Calendar.getInstance(TimeZone.getTimeZone("GMT-00:00"));
+                            end.setTime(endSectionCalend.getTime());
+                            start.add(Calendar.DAY_OF_MONTH, plusDays);
+                            end.add(Calendar.DAY_OF_MONTH, plusDays);
+                            Attendance newAttendanceRecurrence = new Attendance(null, start, end, fieldFinally.getText());
+                            newAttendanceRecurrence.setPatient(patient);
+                            newAttendanceRecurrence.setDoctor(doctor);
+                            newAttendanceRecurrence.setProcedure(procedure);
+                            newAttendanceRecurrence.setAppointment(app);
+                            attendanceCon.onSave(newAttendanceRecurrence);
+                            plusDays = plusDays * (i + 2);
+
+                        }
+                    }
                 } else {
-                    attendanceCon.onSave(patient, doctor, procedure, "Avaliacao", startSectionCalend, endSectionCalend, fieldFinally.getText());
+                    attendanceCon.onSave(newAttendance);
                 }
 
                 this.setFieldsEnabled(false);
@@ -839,6 +965,18 @@ public class FrAttendance extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_fieldFinallyKeyTyped
 
+    private void semanalmenteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_semanalmenteActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_semanalmenteActionPerformed
+
+    private void quinzenalmenteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_quinzenalmenteActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_quinzenalmenteActionPerformed
+
+    private void mensalmenteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mensalmenteActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_mensalmenteActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -875,8 +1013,10 @@ public class FrAttendance extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPanel boxRecurrence;
     private javax.swing.JButton btnAddPatient;
     private javax.swing.JButton btnBack;
+    private javax.swing.ButtonGroup btnGroupRecurrency;
     private javax.swing.JButton btnSchedule;
     private javax.swing.JFormattedTextField fieldCpfDoctor;
     private javax.swing.JFormattedTextField fieldCpfPatient;
@@ -900,7 +1040,10 @@ public class FrAttendance extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel labelNewProcedureFeedback;
     private javax.swing.JLabel labelNumSections;
+    private javax.swing.JRadioButton mensalmente;
     private javax.swing.JRadioButton optAttendanceTypeA;
     private javax.swing.JRadioButton optAttendanceTypeB;
+    private javax.swing.JRadioButton quinzenalmente;
+    private javax.swing.JRadioButton semanalmente;
     // End of variables declaration//GEN-END:variables
 }

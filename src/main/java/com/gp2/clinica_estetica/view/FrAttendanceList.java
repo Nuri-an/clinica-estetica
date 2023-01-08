@@ -9,7 +9,7 @@ import com.gp2.clinica_estetica.controller.AttendanceController;
 import com.gp2.clinica_estetica.model.Attendance;
 import com.gp2.clinica_estetica.model.User;
 import com.gp2.clinica_estetica.model.exceptions.AttendanceException;
-import java.util.Calendar;
+import java.text.SimpleDateFormat;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
@@ -31,6 +31,7 @@ public class FrAttendanceList extends javax.swing.JFrame {
 
     /**
      * Creates new form FrPatientsList
+     * @param user
      */
     public FrAttendanceList(User user) {
         initComponents();
@@ -42,7 +43,7 @@ public class FrAttendanceList extends javax.swing.JFrame {
         this.user = user;
 
         groupOptType.setSelected(radioOptA.getModel(), true);
-        this.attendanceCon.onFindAllAttendancesFilter(grdAttendances, "Avaliacao", "");
+        this.attendanceCon.onFindAllByPatient(grdAttendances, "Avaliacao", "");
     }
 
     /**
@@ -232,7 +233,7 @@ public class FrAttendanceList extends javax.swing.JFrame {
         } else {
             type = "Consulta";
         }
-        this.attendanceCon.onFindAllAttendancesFilter(grdAttendances, type, fieldSearch.getText());
+        this.attendanceCon.onFindAllByPatient(grdAttendances, type, fieldSearch.getText());
     }//GEN-LAST:event_btnSearchActionPerformed
 
     private void grdAttendancesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_grdAttendancesMouseClicked
@@ -258,24 +259,13 @@ public class FrAttendanceList extends javax.swing.JFrame {
                 FrAttendance attendanceScreen = new FrAttendance(this, "edit", attendanceRow.getType(), attendanceRow.getId(), this.user);
                 attendanceScreen.setVisible(true);
                 this.setVisible(false);
-            } else if (response == 1) {
+            } else if (response == 1) {                
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy - HH:mm");
                 int responseDel = JOptionPane.showConfirmDialog(null,
                         "Tem certeza quedeseja delatar e liberar o horario de "
-                        + attendanceRow.getStartDateTime().get(Calendar.DAY_OF_MONTH)
-                        + "/"
-                        + (attendanceRow.getStartDateTime().get(Calendar.MONTH) + 1)
-                        + " - "
-                        + attendanceRow.getStartDateTime().get(Calendar.HOUR_OF_DAY)
-                        + ":"
-                        + attendanceRow.getStartDateTime().get(Calendar.MINUTE)
+                        + simpleDateFormat.format(attendanceRow.getStartDateTime().getTime())
                         + " à "
-                        + attendanceRow.getEndDateTime().get(Calendar.DAY_OF_MONTH)
-                        + "/"
-                        + (attendanceRow.getEndDateTime().get(Calendar.MONTH) + 1)
-                        + " - "
-                        + attendanceRow.getEndDateTime().get(Calendar.HOUR_OF_DAY)
-                        + ":"
-                        + attendanceRow.getEndDateTime().get(Calendar.MINUTE),
+                        + simpleDateFormat.format(attendanceRow.getEndDateTime().getTime()),
                         "Exclusão solicitada!",
                         JOptionPane.YES_OPTION,
                         JOptionPane.QUESTION_MESSAGE);
@@ -283,7 +273,7 @@ public class FrAttendanceList extends javax.swing.JFrame {
                 if (responseDel == JOptionPane.YES_OPTION) {
                     try {
                         attendanceCon.onDelete(attendanceRow.getId());
-                        attendanceCon.onFindAllAttendancesFilter(grdAttendances, type, fieldSearch.getText());
+                        attendanceCon.onFindAllByPatient(grdAttendances, type, fieldSearch.getText());
                     } catch (AttendanceException ex) {
                         JOptionPane.showMessageDialog(this, ex.getMessage());
                     }
@@ -295,12 +285,12 @@ public class FrAttendanceList extends javax.swing.JFrame {
 
     private void radioOptAActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radioOptAActionPerformed
         // TODO add your handling code here:
-        this.attendanceCon.onFindAllAttendancesFilter(grdAttendances, "Avaliacao", fieldSearch.getText());
+        this.attendanceCon.onFindAllByPatient(grdAttendances, "Avaliacao", fieldSearch.getText());
     }//GEN-LAST:event_radioOptAActionPerformed
 
     private void radioOptBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radioOptBActionPerformed
         // TODO add your handling code here:
-        this.attendanceCon.onFindAllAttendancesFilter(grdAttendances, "Consulta", fieldSearch.getText());
+        this.attendanceCon.onFindAllByPatient(grdAttendances, "Consulta", fieldSearch.getText());
     }//GEN-LAST:event_radioOptBActionPerformed
 
     /**

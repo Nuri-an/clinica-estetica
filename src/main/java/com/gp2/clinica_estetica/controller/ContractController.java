@@ -49,6 +49,20 @@ public class ContractController {
         }
     }
 
+    public void updateTableWithSigned(JTable grd, String cpf, String procedureName) {
+        ValidateContract validContract = new ValidateContract();
+        validContract.searchPerPetientValidate(cpf, procedureName);
+
+        try {
+            List<Contract> listAll = repositorio.findAllBySigned(cpf, procedureName);
+            TMListContracts TMList = new TMListContracts(listAll);
+            TMList.putColumns(0, 1, -100, 2);
+            Util.jTableShow(grd, TMList, null);
+        } catch (ContractException e) {
+            throw new ContractException(e.getMessage());
+        }
+    }
+
     public void updateTableWithUnsigned(JTable grd, String procedureName) {
         ValidateContract validContract = new ValidateContract();
         validContract.searchValidate(procedureName);
@@ -56,6 +70,34 @@ public class ContractController {
         try {
             List<Contract> listAll = repositorio.findAllByUnsigned(procedureName);
             Util.jTableShow(grd, new TMListContracts(listAll), null);
+        } catch (ContractException e) {
+            throw new ContractException(e.getMessage());
+        }
+    }
+
+    public void updateTableWithUnsigned(JTable grd, String cpf, String procedureName) {
+        ValidateContract validContract = new ValidateContract();
+        validContract.searchPerPetientValidate(cpf, procedureName);
+
+        try {
+            List<Contract> listAll = repositorio.findAllByUnsigned(cpf, procedureName);
+            TMListContracts TMList = new TMListContracts(listAll);
+            TMList.putColumns(0, 1, -100, 2);
+            Util.jTableShow(grd, TMList, null);
+        } catch (ContractException e) {
+            throw new ContractException(e.getMessage());
+        }
+    }
+
+    public void updateTableWithExpired(JTable grd, String cpf, String procedureName) {
+        ValidateContract validContract = new ValidateContract();
+        validContract.searchPerPetientValidate(cpf, procedureName);
+
+        try {
+            List<Contract> listAll = repositorio.findAllByExpired(cpf, procedureName);
+            TMListContracts TMList = new TMListContracts(listAll);
+            TMList.putColumns(0, 1, -100, 2);
+            Util.jTableShow(grd, TMList, null);
         } catch (ContractException e) {
             throw new ContractException(e.getMessage());
         }

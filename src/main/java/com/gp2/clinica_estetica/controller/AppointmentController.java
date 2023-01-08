@@ -48,7 +48,7 @@ public class AppointmentController {
 
     }
 
-    public void onSave(Attendance attendance, int numberOfSessions) {
+    public Appointment onSave(Attendance attendance, int numberOfSessions) {
         Double budget = attendance.getProcedure().getPrice() * numberOfSessions;
         Appointment appointment = new Appointment(attendance, numberOfSessions, 1, budget);
         attendance.setAppointment(appointment);
@@ -60,7 +60,7 @@ public class AppointmentController {
         validAppointment.saveValidate(numberOfSessions, budget);
 
         try {
-            repositorio.save(appointment);
+            return repositorio.saveAppointement(appointment);
         } catch (AppointmentException e) {
             throw new AppointmentException("Error - Falha ao buscar atendimento.");
         }

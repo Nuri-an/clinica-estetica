@@ -9,6 +9,10 @@ import com.mindfusion.common.DateTime;
 import com.mindfusion.scheduling.Calendar;
 import java.awt.Color;
 import java.awt.GridLayout;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
 import javax.swing.JPanel;
 import javax.swing.JTextPane;
 
@@ -21,14 +25,28 @@ public abstract class CalendarBase extends JPanel {
     protected CalendarBase() {
         calendar = new Calendar();
         calendar.setCurrentTime(DateTime.now());
-        calendar.setDate(new DateTime(DateTime.today().getYear(), DateTime.today().getMonth(), DateTime.today().getDay()));
-        calendar.setEndDate(new DateTime(DateTime.today().getYear(), DateTime.today().getMonth(), DateTime.today().getDay() + 6));
 
+        LocalDate today = LocalDate.now();
+
+        // Go backward to get Sunday
+        LocalDate monday = today;
+        while (monday.getDayOfWeek() != DayOfWeek.MONDAY) {
+            monday = monday.minusDays(1);
+        }
+
+        // Go forward to get Saturday
+        LocalDate friday = today;
+        while (friday.getDayOfWeek() != DayOfWeek.FRIDAY) {
+            friday = friday.plusDays(1);
+        }
+        DateTime start = new DateTime(Date.from(monday.atStartOfDay(ZoneId.systemDefault()).toInstant()));
+        DateTime end = new DateTime(Date.from(friday.atStartOfDay(ZoneId.systemDefault()).toInstant()));
+        calendar.setDate(start);
+        calendar.setEndDate(end);
 
         content = new JPanel();
         content.setBackground(new Color(242, 242, 242));
         content.setLayout(new GridLayout(1, 1));
-
 
         this.add(content);
     }

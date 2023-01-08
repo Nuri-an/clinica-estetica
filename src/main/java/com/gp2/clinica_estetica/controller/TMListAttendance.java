@@ -6,7 +6,7 @@
 package com.gp2.clinica_estetica.controller;
 
 import com.gp2.clinica_estetica.model.Attendance;
-import java.util.Calendar;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
 
@@ -18,12 +18,20 @@ public class TMListAttendance extends AbstractTableModel {
 
     private List<Attendance> lstAttendance;
 
-    private final int COL_DATA = 0;
-    private final int COL_PATIENT = 1;
-    private final int COL_PROCEDURE = 2;
+    private int COL_DATA = 0;
+    private int COL_PATIENT = 1;
+    private int COL_PROCEDURE = 2;
+    private int COL_PRICE = 3;
 
     public TMListAttendance(List<Attendance> lstPatient) {
         this.lstAttendance = lstPatient;
+    }
+
+    public void putColumns(int col_data, int col_patient, int col_procedure, int col_price) {
+        this.COL_DATA = col_data;
+        this.COL_PATIENT = col_patient;
+        this.COL_PROCEDURE = col_procedure;
+        this.COL_PRICE = col_price;
     }
 
     @Override
@@ -33,7 +41,21 @@ public class TMListAttendance extends AbstractTableModel {
 
     @Override
     public int getColumnCount() {
-        return 3;
+        int qtn = 0;
+        if (this.COL_DATA >= 0) {
+            qtn++;
+        }
+        if (this.COL_PATIENT >= 0) {
+            qtn++;
+        }
+        if (this.COL_PROCEDURE >= 0) {
+            qtn++;
+        }
+        if (this.COL_PRICE >= 0) {
+            qtn++;
+        }
+
+        return qtn;
     }
 
     @Override
@@ -43,28 +65,24 @@ public class TMListAttendance extends AbstractTableModel {
             return aux;
         } else {
             aux = lstAttendance.get(rowIndex);
-            String date = aux.getStartDateTime().get(Calendar.DAY_OF_MONTH)
-                    + "/"
-                    + (aux.getStartDateTime().get(Calendar.MONTH) + 1)
-                    + "/"
-                    + aux.getStartDateTime().get(Calendar.YEAR)
-                    + " - "
-                    + aux.getStartDateTime().get(Calendar.HOUR_OF_DAY)
-                    + ":"
-                    + aux.getStartDateTime().get(Calendar.MINUTE);
-
-            switch (columnIndex) {
-                case -1:
-                    return aux;
-                case COL_DATA:
-                    return date;
-                case COL_PATIENT:
-                    return aux.getPatient().getPeople().getName();
-                case COL_PROCEDURE:
-                    return aux.getProcedure().getName();
-
-                default:
-                    break;
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy - HH:mm");
+            if (columnIndex == -1) {
+                return aux;
+            }
+            if (columnIndex == COL_DATA) {
+                return simpleDateFormat.format(aux.getStartDateTime().getTime());
+            }
+            if (columnIndex == COL_PATIENT) {
+                return aux.getPatient().getPeople().getName();
+            }
+            if (columnIndex == COL_PROCEDURE) {
+                return aux.getProcedure().getName();
+            }
+            if (columnIndex == COL_PRICE) {
+                if(aux.getAppointment() == null)
+                    return "---";
+                else
+                    return "R$ " + ((Double) (Math.round(aux.getAppointment().getBudget() * 100.0) / 100.0)).toString().replaceAll("\\.", ",");
             }
         }
         return aux;
@@ -78,16 +96,17 @@ public class TMListAttendance extends AbstractTableModel {
     @Override
     public String getColumnName(int column) {
 
-        switch (column) {
-            case COL_DATA:
-                return "Data";
-            case COL_PATIENT:
-                return "Paciente";
-            case COL_PROCEDURE:
-                return "Procedimento";
-
-            default:
-                break;
+        if (column == COL_DATA) {
+            return "Data";
+        }
+        if (column == COL_PATIENT) {
+            return "Paciente";
+        }
+        if (column == COL_PROCEDURE) {
+            return "Procedimento";
+        }
+        if (column == COL_PRICE) {
+            return "Valor";
         }
 
         return "";

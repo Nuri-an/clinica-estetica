@@ -10,6 +10,7 @@ import com.gp2.clinica_estetica.model.Appointment;
 import com.gp2.clinica_estetica.model.Attendance;
 import com.gp2.clinica_estetica.model.Recipte;
 import com.gp2.clinica_estetica.model.exceptions.AppointmentException;
+import java.util.Calendar;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
@@ -51,13 +52,14 @@ public class AppointmentDAO implements IDao {
     }
 
 
-    @Override
-    public void save(Object obj) {
+    public Appointment saveAppointement(Object obj) {
         Appointment app = (Appointment) obj;
         this.entityManager.getTransaction().begin();
         this.entityManager.persist(app.getAttendance());
         this.entityManager.persist(app);
         this.entityManager.getTransaction().commit();
+        
+        return app;
     }
 
     @Override
@@ -82,5 +84,10 @@ public class AppointmentDAO implements IDao {
         Appointment appointment = this.entityManager.find(Appointment.class, id);
 
         return appointment;
+    }
+
+    @Override
+    public void save(Object obj) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

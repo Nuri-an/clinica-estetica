@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -32,8 +33,7 @@ public class Appointment extends DaoReports implements Serializable {
     private int currentSession;
     private Double budget;
 
-    @OneToMany
-    @JoinColumn(name = "appointment_id")
+    @OneToMany(mappedBy = "appointment", cascade = CascadeType.ALL) // nome do atributo na outra classe que fará ligação com essa
     private List<Recipte> reciptes;
     
     @OneToOne

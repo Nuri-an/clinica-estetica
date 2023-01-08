@@ -10,6 +10,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 /**
  *
@@ -17,17 +19,21 @@ import javax.persistence.Id;
  */
 @Entity
 public class Recipte implements Serializable {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String src;
-    
-    public Recipte () {
+
+    @ManyToOne
+    @JoinColumn(name = "appointment_id")
+    private Appointment appointment;
+
+    public Recipte() {
         this.id = -1;
         this.src = "";
     }
-    
+
     public Recipte(String src) {
         this.src = src;
     }
@@ -59,5 +65,19 @@ public class Recipte implements Serializable {
     public void setSrc(String src) {
         this.src = src;
     }
-    
+
+    /**
+     * @return the appointment
+     */
+    public Appointment getAppointment() {
+        return appointment;
+    }
+
+    /**
+     * @param appointment the appointment to set
+     */
+    public void setAppointment(Appointment appointment) {
+        this.appointment = appointment;
+    }
+
 }
