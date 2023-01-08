@@ -6,9 +6,6 @@
 package com.gp2.clinica_estetica.controller;
 
 import com.gp2.clinica_estetica.model.Attendance;
-import com.gp2.clinica_estetica.model.Doctor;
-import com.gp2.clinica_estetica.model.MedicalProcedure;
-import com.gp2.clinica_estetica.model.Patient;
 import com.gp2.clinica_estetica.model.dao.AttendanceDAO;
 import com.gp2.clinica_estetica.model.exceptions.AttendanceException;
 import com.gp2.clinica_estetica.model.valid.ValidateAttendance;
@@ -29,13 +26,14 @@ public class AttendanceController {
         repositorio = new AttendanceDAO();
     }
 
-    public void onSave(Patient patient, Doctor doctor, MedicalProcedure procedure, String type, Calendar startSection, Calendar endSection, String finality) {
+    public void onSave(Object obj) {
+        Attendance att = (Attendance) obj;
         ValidateAttendance validAttendance = new ValidateAttendance();
-        validAttendance.scheduleValidate(startSection, endSection, null);
-        validAttendance.saveValidate(startSection, endSection, finality);
+        validAttendance.scheduleValidate(att.getStartDateTime(), att.getEndDateTime(), null);
+        validAttendance.saveValidate(att.getStartDateTime(), att.getEndDateTime(), att.getFinality());
 
         try {
-            repositorio.save(patient, doctor, procedure, type, startSection, endSection, finality);
+            repositorio.save(obj);
         } catch (AttendanceException e) {
             throw new AttendanceException("Error - salvar atendimento.");
         }

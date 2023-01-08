@@ -30,14 +30,9 @@ public class AttendanceDAO implements IDao {
         entityManager = Database.getInstance().getEntityManager();
     }
 
-    public void save(Patient patient, Doctor doctor, MedicalProcedure procedure, String type, Calendar startSection, Calendar endSection, String finality) {
-        Attendance attendance = new Attendance(type, startSection, endSection, finality);
-        Patient persistePatient = this.entityManager.find(Patient.class, patient.getId());
-        Doctor persisteDoctor = this.entityManager.find(Doctor.class, doctor.getId());
-        MedicalProcedure persisteProcedure = this.entityManager.find(MedicalProcedure.class, procedure.getId());
-        attendance.setPatient(persistePatient);
-        attendance.setDoctor(persisteDoctor);
-        attendance.setProcedure(persisteProcedure);
+    @Override
+    public void save(Object obj) {
+        Attendance attendance = (Attendance) obj;
 
         this.entityManager.getTransaction().begin();
         this.entityManager.persist(attendance);
@@ -54,10 +49,6 @@ public class AttendanceDAO implements IDao {
         this.entityManager.getTransaction().commit();
     }
 
-    @Override
-    public void save(Object obj) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
 
     @Override
     public boolean delete(int id) {

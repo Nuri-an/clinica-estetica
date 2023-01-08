@@ -23,7 +23,9 @@ public class ValidateAttendance {
         List<Attendance> attendances = attendanceDao.findAll();
 
         for (int i = 0; i < attendances.size(); i++) {
-            if (attendances.get(i).getStartDateTime().get(Calendar.DAY_OF_MONTH) == startSection.get(Calendar.DAY_OF_MONTH)) {
+            if (attendances.get(i).getStartDateTime().get(Calendar.DAY_OF_MONTH) == startSection.get(Calendar.DAY_OF_MONTH)
+                    && attendances.get(i).getStartDateTime().get(Calendar.MONTH) == startSection.get(Calendar.MONTH)
+                    && attendances.get(i).getStartDateTime().get(Calendar.YEAR) == startSection.get(Calendar.YEAR)) {
                 DateTime dt_start = new DateTime(
                         attendances.get(i).getStartDateTime().get(Calendar.YEAR),
                         attendances.get(i).getStartDateTime().get(Calendar.MONTH) + 1,
@@ -54,7 +56,7 @@ public class ValidateAttendance {
                         && DateTime.op_GreaterThan(dt_end, dt2_end);
 
                 System.out.println(sameEvent + ", " + starOfEvent + ", " + endOfEvent + ", " + middleOfEvent + ", " + outOfEvent);
-                if (sameEvent || starOfEvent || endOfEvent || middleOfEvent || outOfEvent) {                    
+                if (sameEvent || starOfEvent || endOfEvent || middleOfEvent || outOfEvent) {
                     if (attendances.get(i).getId() == id) {
                         return;
                     }
@@ -75,12 +77,11 @@ public class ValidateAttendance {
             throw new AttendanceException("Error - Informe a finalidade do procedimento.");
         }
     }
-    
 
     public void findTypeValidate(String type) {
         if (type.isEmpty()) {
             throw new AttendanceException("Error - Informe o tipo do agendamento.");
         }
-        
+
     }
 }

@@ -121,7 +121,7 @@ public class WeekCalendar extends CalendarBase {
         calendar.getTimetableSettings().setColumnBandSize(0);
         calendar.getTimetableSettings().setVisibleColumns(5);
 
-        LocalDate today = LocalDate.now();
+        LocalDate today = LocalDate.now(ZoneId.of("GMT-03:00"));
 
         // Go backward to get Sunday
         LocalDate monday = today;
@@ -409,7 +409,11 @@ public class WeekCalendar extends CalendarBase {
                         JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[2]);
 
                 if (response == 0) {
-                    FrAttendance attendanceScreen = new FrAttendance(this.frame, "edit", item.getTag().toString(), Integer.parseInt(item.getId()), this.user);
+                    String tag = null;
+                    if(item.getTag() != null) {
+                        tag = item.getTag().toString();
+                    }
+                    FrAttendance attendanceScreen = new FrAttendance(this.frame, "edit", tag, Integer.parseInt(item.getId()), this.user);
                     attendanceScreen.setVisible(true);
                     this.frame.setVisible(false);
                 } else if (response == 1) {
@@ -748,6 +752,10 @@ public class WeekCalendar extends CalendarBase {
         appointment.setEndTime(endDate);
         appointment.setId(id);
         appointment.setTag(type);
+        System.out.println(id + " ; " + type);
+        if(type == null) {
+            appointment.setDescriptionText("Recorrência - " + title);
+        }
 
         // configs
         appointment.setAllowMove(false);
@@ -755,7 +763,8 @@ public class WeekCalendar extends CalendarBase {
         appointment.setAllowChangeEnd(false);
         appointment.setLocked(true);
         calendar.getSchedule().getItems().add(appointment);
-
+        
+        // recurrence avaliacao e consulta de cor diferente
     }
 
     public void resizeCalendar(Dimension size) {
