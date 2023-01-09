@@ -25,16 +25,10 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" attributes="0">
               <EmptySpace pref="21" max="32767" attributes="0"/>
-              <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                  <Group type="102" alignment="0" attributes="0">
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" alignment="0" attributes="0">
-                              <Component id="textTitle" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace pref="89" max="-2" attributes="0"/>
-                          </Group>
-                          <Component id="textSubtitle" alignment="0" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace min="-2" pref="207" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="102" attributes="0">
+                      <Component id="textSubtitle" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="32767" attributes="0"/>
                       <Component id="btnRecipte" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <Group type="102" attributes="0">
@@ -42,17 +36,34 @@
                           <Component id="textDate" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="textPrice" alignment="0" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace min="-2" pref="149" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="textQtnReciptes" min="-2" max="-2" attributes="0"/>
-                          <Component id="textQtnSessions" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace pref="149" max="32767" attributes="0"/>
+                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                          <Group type="102" attributes="0">
+                              <Component id="textQtnReciptes" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace pref="232" max="32767" attributes="0"/>
+                          </Group>
+                          <Group type="102" attributes="0">
+                              <Component id="textQtnSessions" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace pref="78" max="32767" attributes="0"/>
+                              <Component id="btnPutSection" min="-2" max="-2" attributes="0"/>
+                          </Group>
                       </Group>
                   </Group>
-                  <Component id="fileSelector" min="-2" max="-2" attributes="0"/>
-                  <Component id="btnBack" alignment="0" min="-2" max="-2" attributes="0"/>
-                  <Component id="jSeparator1" alignment="0" max="32767" attributes="0"/>
+                  <Group type="102" attributes="0">
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="textTitle" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="btnBack" alignment="0" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                  </Group>
               </Group>
-              <EmptySpace pref="20" max="32767" attributes="0"/>
+              <EmptySpace pref="21" max="32767" attributes="0"/>
+          </Group>
+          <Component id="jSeparator1" alignment="1" max="32767" attributes="0"/>
+          <Group type="102" alignment="0" attributes="0">
+              <EmptySpace max="32767" attributes="0"/>
+              <Component id="fileSelector" min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -72,8 +83,9 @@
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="textDate" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="textQtnSessions" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="btnPutSection" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace min="-2" pref="38" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="33" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="textPrice" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="textQtnReciptes" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -82,7 +94,7 @@
               <Component id="fileSelector" min="-2" max="-2" attributes="0"/>
               <EmptySpace type="separate" max="-2" attributes="0"/>
               <Component id="btnBack" min="-2" max="-2" attributes="0"/>
-              <EmptySpace pref="44" max="32767" attributes="0"/>
+              <EmptySpace pref="39" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -110,6 +122,9 @@
       </Events>
     </Component>
     <Component class="javax.swing.JFileChooser" name="fileSelector">
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="fileSelectorActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JLabel" name="textDate">
       <Properties>
@@ -139,6 +154,14 @@
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnBackActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JButton" name="btnPutSection">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Marcar sess&#xe3;o x como conclu&#xed;da"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnPutSectionActionPerformed"/>
       </Events>
     </Component>
   </SubComponents>

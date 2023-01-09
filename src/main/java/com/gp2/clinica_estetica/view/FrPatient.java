@@ -6,7 +6,6 @@
 package com.gp2.clinica_estetica.view;
 
 import com.gp2.clinica_estetica.controller.AppointmentController;
-import com.gp2.clinica_estetica.controller.AttendanceController;
 import com.gp2.clinica_estetica.model.Attendance;
 import com.gp2.clinica_estetica.model.User;
 import javax.swing.JFrame;
@@ -48,7 +47,7 @@ public class FrPatient extends javax.swing.JFrame {
         btnExit.setBorderPainted(false);
         
         this.appointmentCon = new AppointmentController();
-        this.appointmentCon.onFindAllByProcedure(table, user.getPeople().getCPF(), "");        
+        this.appointmentCon.onFindAllByPatient(table, user.getPeople().getCPF(), "");        
     }
     
     /**
@@ -221,7 +220,7 @@ public class FrPatient extends javax.swing.JFrame {
 
     private void btnPesquisarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPesquisarActionPerformed
         // TODO add your handling code here:
-        this.appointmentCon.onFindAllByProcedure(table, user.getPeople().getCPF(), fieldSearch.getText());
+        this.appointmentCon.onFindAllByPatient(table, user.getPeople().getCPF(), fieldSearch.getText());
     }//GEN-LAST:event_btnPesquisarActionPerformed
 
     private void btnContractActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnContractActionPerformed

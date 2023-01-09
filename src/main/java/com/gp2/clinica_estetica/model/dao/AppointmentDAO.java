@@ -8,9 +8,10 @@ package com.gp2.clinica_estetica.model.dao;
 import com.gp2.clinica_estetica.factory.Database;
 import com.gp2.clinica_estetica.model.Appointment;
 import com.gp2.clinica_estetica.model.Attendance;
+import com.gp2.clinica_estetica.model.Contract;
 import com.gp2.clinica_estetica.model.Recipte;
 import com.gp2.clinica_estetica.model.exceptions.AppointmentException;
-import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
@@ -37,7 +38,54 @@ public class AppointmentDAO implements IDao {
 
             if (appointment != null) {
                 Recipte recipteObj = new Recipte(recipte);
+                recipteObj.setAppointment(appointment);
                 appointment.addRecipte(recipteObj);
+
+                this.entityManager.getTransaction().begin();
+                this.entityManager.persist(recipteObj);
+                this.entityManager.merge(appointment);
+                this.entityManager.getTransaction().commit();
+            } else {
+                throw new AppointmentException("Não foi possível encontrar esse atendimento!");
+            }
+        } catch (AppointmentException e) {
+            System.err.println("atendimento " + e.getMessage());
+        }
+
+    }
+    public void sendContract(Integer id, String contract) {
+        try {
+
+            Appointment appointment = this.find(id);
+
+            if (appointment != null) {
+                Contract contractObj = new Contract(new Date(), false, contract);
+                contractObj.setAppointment(appointment);
+                contractObj.setDoctor(appointment.getAttendance().getDoctor());
+                contractObj.setPatient(appointment.getAttendance().getPatient());
+                contractObj.setProcedure(appointment.getAttendance().getProcedure());
+                appointment.setContract(contractObj);
+
+                this.entityManager.getTransaction().begin();
+                this.entityManager.persist(contractObj);
+                this.entityManager.merge(appointment);
+                this.entityManager.getTransaction().commit();
+            } else {
+                throw new AppointmentException("Não foi possível encontrar esse atendimento!");
+            }
+        } catch (AppointmentException e) {
+            System.err.println("atendimento " + e.getMessage());
+        }
+
+    }
+    
+    public void putSection(Integer id, int numSction) {
+        try {
+
+            Appointment appointment = this.find(id);
+
+            if (appointment != null) {
+                appointment.setCurrentSession(numSction);
 
                 this.entityManager.getTransaction().begin();
                 this.entityManager.merge(appointment);
@@ -80,7 +128,7 @@ public class AppointmentDAO implements IDao {
     }
     
 
-    public List<Attendance> findAllByProcedure(String cpf, String procedureName) {
+    public List<Attendance> findAllByPatient(String cpf, String procedureName) {
         sql = " SELECT a "
                 + " FROM Attendance a "
                 + " INNER JOIN a.patient pat "
@@ -90,6 +138,48 @@ public class AppointmentDAO implements IDao {
                 + " WHERE a.type LIKE :type"
                 + " AND p.CPF LIKE :cpf"
                 + " AND app.contract IS NOT NULL"
+                + " AND proc.name LIKE CONCAT('%',CONCAT(:name, '%')) ";
+
+        qry = this.entityManager.createQuery(sql, Attendance.class);
+        qry.setParameter("type", "Consulta");
+        qry.setParameter("cpf", cpf);
+        qry.setParameter("name", procedureName);
+
+        List<Attendance> lst = qry.getResultList();
+        return lst;
+    }
+
+    public List<Attendance> findAllByDoctor(String cpf, String procedureName) {
+        sql = " SELECT a "
+                + " FROM Attendance a "
+                + " INNER JOIN a.doctor doc "
+                + " INNER JOIN doc.people p "
+                + " INNER JOIN a.procedure proc "
+                + " INNER JOIN a.appointment app "
+                + " WHERE a.type LIKE :type"
+                + " AND p.CPF LIKE :cpf"
+                + " AND app.contract IS NOT NULL"
+                + " AND proc.name LIKE CONCAT('%',CONCAT(:name, '%')) ";
+
+        qry = this.entityManager.createQuery(sql, Attendance.class);
+        qry.setParameter("type", "Consulta");
+        qry.setParameter("cpf", cpf);
+        qry.setParameter("name", procedureName);
+
+        List<Attendance> lst = qry.getResultList();
+        return lst;
+    }
+
+    public List<Attendance> findAllWithoutContract(String cpf, String procedureName) {
+        sql = " SELECT a "
+                + " FROM Attendance a "
+                + " INNER JOIN a.doctor doc "
+                + " INNER JOIN doc.people p "
+                + " INNER JOIN a.procedure proc "
+                + " INNER JOIN a.appointment app "
+                + " WHERE a.type LIKE :type"
+                + " AND p.CPF LIKE :cpf"
+                + " AND app.contract IS NULL"
                 + " AND proc.name LIKE CONCAT('%',CONCAT(:name, '%')) ";
 
         qry = this.entityManager.createQuery(sql, Attendance.class);

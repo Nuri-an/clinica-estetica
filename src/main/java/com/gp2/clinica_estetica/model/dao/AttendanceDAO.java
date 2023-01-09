@@ -117,11 +117,10 @@ public class AttendanceDAO implements IDao {
         if (date != null) {
             sql = " SELECT a.* "
                     + " FROM Attendance AS a "
-                    + " INNER JOIN patient AS pat "
                     + " INNER JOIN people AS p "
                     + " INNER JOIN medicalProcedure AS proc "
                     + " WHERE a.type LIKE :type "
-                    + " AND p.CPF LIKE :cpf "
+                    + " AND p.CPF LIKE :cpf"
                     + " AND a.startDateTime >= :startDate "
                     + " AND a.startDateTime < :endDate "
                     + " AND proc.name LIKE CONCAT('%',:name,'%') "
@@ -141,10 +140,12 @@ public class AttendanceDAO implements IDao {
         sql = " SELECT a "
                 + " FROM Attendance a "
                 + " INNER JOIN a.patient pat "
-                + " INNER JOIN pat.people p "
+                + " INNER JOIN a.doctor doc "
+                + " INNER JOIN pat.people p_pat "
+                + " INNER JOIN doc.people p_doc "
                 + " INNER JOIN a.procedure proc "
                 + " WHERE a.type LIKE :type "
-                + " AND p.CPF LIKE :cpf "
+                + " AND (p_pat.CPF LIKE :cpf OR p_doc.CPF LIKE :cpf)"
                 + " AND proc.name LIKE CONCAT('%',CONCAT(:name, '%')) ";
 
         qry = this.entityManager.createQuery(sql, Attendance.class);
@@ -161,7 +162,6 @@ public class AttendanceDAO implements IDao {
         if (date != null) {
             sql = " SELECT a.* "
                     + " FROM Attendance a "
-                    + " INNER JOIN patient pat "
                     + " INNER JOIN people p "
                     + " INNER JOIN appointment app "
                     + " INNER JOIN medicalProcedure proc "
@@ -188,11 +188,13 @@ public class AttendanceDAO implements IDao {
         sql = " SELECT a "
                 + " FROM Attendance a "
                 + " INNER JOIN a.patient pat "
-                + " INNER JOIN pat.people p "
+                + " INNER JOIN a.doctor doc "
+                + " INNER JOIN pat.people p_pat "
+                + " INNER JOIN doc.people p_doc "
                 + " INNER JOIN a.appointment app "
                 + " INNER JOIN a.procedure proc "
                 + " WHERE a.type LIKE :type "
-                + " AND p.CPF LIKE :cpf "
+                + " AND (p_pat.CPF LIKE :cpf OR p_doc.CPF LIKE :cpf)"
                 + " AND proc.name LIKE CONCAT('%',CONCAT(:name, '%')) "
                 + " AND app.budget>=:price ";
 

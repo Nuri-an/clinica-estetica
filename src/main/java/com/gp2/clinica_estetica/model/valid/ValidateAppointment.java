@@ -13,12 +13,12 @@ import com.gp2.clinica_estetica.model.exceptions.AppointmentException;
  */
 public class ValidateAppointment {
     
-    public void sendRecipteValidate(Integer id, String recipte){       
+    public void sendDocValidate(Integer id, String recipte){       
         if (id.toString().isEmpty()) 
             throw new AppointmentException("Error - Atendimento sem referência.");  
         
         if (recipte.isEmpty()) 
-            throw new AppointmentException("Error - Selecione uma receita."); 
+            throw new AppointmentException("Error - Selecione um arquivo."); 
         
     }
     

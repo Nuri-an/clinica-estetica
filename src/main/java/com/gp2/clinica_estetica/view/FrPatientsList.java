@@ -29,6 +29,7 @@ public class FrPatientsList extends javax.swing.JFrame {
 
     /**
      * Creates new form FrPatientsList
+     * @param user
      */
     public FrPatientsList(User user) {
         initComponents();

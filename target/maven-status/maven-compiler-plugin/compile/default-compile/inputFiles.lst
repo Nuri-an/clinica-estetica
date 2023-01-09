@@ -18,6 +18,8 @@ C:\Users\nuria\Documents\NetBeansProjects\clinica_estetica\src\main\java\com\gp2
 C:\Users\nuria\Documents\NetBeansProjects\clinica_estetica\src\main\java\com\gp2\clinica_estetica\model\dao\DoctorDAO.java
 C:\Users\nuria\Documents\NetBeansProjects\clinica_estetica\src\main\java\com\gp2\clinica_estetica\model\Recipte.java
 C:\Users\nuria\Documents\NetBeansProjects\clinica_estetica\src\main\java\com\gp2\clinica_estetica\model\valid\ValidateAttendance.java
+C:\Users\nuria\Documents\NetBeansProjects\clinica_estetica\src\main\java\com\gp2\clinica_estetica\view\FrDoctor.java
+C:\Users\nuria\Documents\NetBeansProjects\clinica_estetica\src\main\java\com\gp2\clinica_estetica\view\FrReport.java
 C:\Users\nuria\Documents\NetBeansProjects\clinica_estetica\src\main\java\com\gp2\clinica_estetica\controller\TMListAttendance.java
 C:\Users\nuria\Documents\NetBeansProjects\clinica_estetica\src\main\java\com\gp2\clinica_estetica\model\dao\PatientDAO.java
 C:\Users\nuria\Documents\NetBeansProjects\clinica_estetica\src\main\java\com\gp2\clinica_estetica\model\dao\PeopleDAO.java
@@ -26,6 +28,7 @@ C:\Users\nuria\Documents\NetBeansProjects\clinica_estetica\src\main\java\com\gp2
 C:\Users\nuria\Documents\NetBeansProjects\clinica_estetica\src\main\java\com\gp2\clinica_estetica\model\valid\ValidateUser.java
 C:\Users\nuria\Documents\NetBeansProjects\clinica_estetica\src\main\java\com\gp2\clinica_estetica\controller\ContractController.java
 C:\Users\nuria\Documents\NetBeansProjects\clinica_estetica\src\main\java\com\gp2\clinica_estetica\factory\Database.java
+C:\Users\nuria\Documents\NetBeansProjects\clinica_estetica\src\main\java\com\gp2\clinica_estetica\view\FrAppWithoutContract.java
 C:\Users\nuria\Documents\NetBeansProjects\clinica_estetica\src\main\java\com\gp2\clinica_estetica\controller\DoctorController.java
 C:\Users\nuria\Documents\NetBeansProjects\clinica_estetica\src\main\java\com\gp2\clinica_estetica\model\dao\ProcedureDAO.java
 C:\Users\nuria\Documents\NetBeansProjects\clinica_estetica\src\main\java\com\gp2\clinica_estetica\view\FrAttendanceList.java
@@ -56,7 +59,6 @@ C:\Users\nuria\Documents\NetBeansProjects\clinica_estetica\src\main\java\com\gp2
 C:\Users\nuria\Documents\NetBeansProjects\clinica_estetica\src\main\java\com\gp2\clinica_estetica\view\FrResetPassword.java
 C:\Users\nuria\Documents\NetBeansProjects\clinica_estetica\src\main\java\com\gp2\clinica_estetica\model\User.java
 C:\Users\nuria\Documents\NetBeansProjects\clinica_estetica\src\main\java\com\gp2\clinica_estetica\model\Doctor.java
-C:\Users\nuria\Documents\NetBeansProjects\clinica_estetica\src\main\java\com\gp2\clinica_estetica\view\FrRelatorio.java
 C:\Users\nuria\Documents\NetBeansProjects\clinica_estetica\src\main\java\com\gp2\clinica_estetica\model\dao\AttendanceDAO.java
 C:\Users\nuria\Documents\NetBeansProjects\clinica_estetica\src\main\java\com\gp2\clinica_estetica\model\valid\ValidateProcedure.java
 C:\Users\nuria\Documents\NetBeansProjects\clinica_estetica\src\main\java\com\gp2\clinica_estetica\model\exceptions\AppointmentException.java
