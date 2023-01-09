@@ -266,16 +266,17 @@ public class FrAppointment extends javax.swing.JFrame {
         if (this.typeUser.equals("Doctor")) {
             fileSelector.setVisible(true);
         } else if (this.typeUser.equals("Patient")) {
-            for (int i = 0; i < this.appointment.getRecipte().size(); i++) {
-                String nameFile = this.appointment.getRecipte().get(i).getSrc();
-                File src = new File("src/main/resources/receitas/" + nameFile);
-                File dest = new File(nameFile);
-                try {
+            try {
+                for (int i = 0; i < this.appointment.getRecipte().size(); i++) {
+                    String nameFile = this.appointment.getRecipte().get(i).getSrc();
+                    File src = new File("src/main/resources/receitas/" + nameFile);
+                    File dest = new File(nameFile);
                     this.appointment.saveFile(src, dest);
-                    JOptionPane.showMessageDialog(this, "(" + this.appointment.getRecipte().size() + ") receitas salvas!");
-                } catch (IOException ex) {
-                    JOptionPane.showMessageDialog(this, "Erro ao salvar receita " + nameFile);
+
                 }
+                JOptionPane.showMessageDialog(this, "(" + this.appointment.getRecipte().size() + ") receitas salvas!");
+            } catch (IOException ex) {
+                JOptionPane.showMessageDialog(this, "Erro ao salvar receita ");
             }
 
         }

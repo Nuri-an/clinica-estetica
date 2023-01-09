@@ -51,12 +51,6 @@
             <version>2.2.1</version>
         </dependency>
         
-        <!-- combo box autocomplete -->
-        <dependency>
-            <groupId>org.jdesktop.swingx</groupId>
-            <artifactId>autocomplete</artifactId>
-            <version>1.6.4</version>
-        </dependency>
     </dependencies>
     
     <build>
