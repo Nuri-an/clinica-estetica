@@ -174,8 +174,8 @@ public class FrLogin extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
-        UserController userController = new UserController();
         try {
+            UserController userController = new UserController();
             String login = jTextLogin.getText().replaceAll("\\.", "").replaceAll("\\-", "");
             String password = jPassword.getText();
             System.out.println("login: " + login);
@@ -184,8 +184,8 @@ public class FrLogin extends javax.swing.JFrame {
                 User userLogged = userController.onLogin(login, password);
                 if (userLogged.getPeople().getDoctor() != null) {
                     System.out.println("doctor logged");
-                    // FrDoctor doctorScreen = new FrDoctor();
-                    // doctorScreen.setVisible(true);
+                    FrDoctor doctorScreen = new FrDoctor(userLogged);
+                    doctorScreen.setVisible(true);
                     this.setVisible(false);
                 } else if (userLogged.getPeople().getPatient() != null) {
                     System.out.println("patient logged");
@@ -204,6 +204,7 @@ public class FrLogin extends javax.swing.JFrame {
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, e.getMessage());
         }
+
     }//GEN-LAST:event_btnLoginActionPerformed
 
     private void btnForgotPasswordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnForgotPasswordActionPerformed

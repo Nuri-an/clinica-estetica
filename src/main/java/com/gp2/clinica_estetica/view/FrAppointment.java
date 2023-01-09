@@ -8,6 +8,7 @@ package com.gp2.clinica_estetica.view;
 import com.gp2.clinica_estetica.controller.AppointmentController;
 import com.gp2.clinica_estetica.model.Appointment;
 import com.gp2.clinica_estetica.model.People;
+import com.gp2.clinica_estetica.model.exceptions.AppointmentException;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -42,12 +43,13 @@ public class FrAppointment extends javax.swing.JFrame {
      */
     public FrAppointment(JFrame previusScreen, Appointment appointment, People people) {
         initizalize();
-        
+
         this.previusScreen = previusScreen;
         this.appointment = appointment;
         this.currentPeople = people;
         this.appointmentCon = new AppointmentController();
         this.dt = new SimpleDateFormat("dd/MM/yyyy");
+        btnPutSection.setVisible(false);
 
         if (people.getDoctor() != null) {
             this.typeUser = "Doctor";
@@ -58,36 +60,50 @@ public class FrAppointment extends javax.swing.JFrame {
 
         this.reloadComponents();
 
+        String name = "";
         if (this.typeUser.equals("Doctor")) {
             this.btnRecipte.setText("Adicionar Receita");
+            name = appointment.getAttendance().getDoctor().getPeople().getName();
         } else if (this.typeUser.equals("Patient")) {
             this.btnRecipte.setText("Baixar Receitas");
 
             if (appointment.getRecipte().size() < 1) {
+                name = appointment.getAttendance().getPatient().getPeople().getName();
                 btnRecipte.setEnabled(false);
                 btnRecipte.setText("Nenhuma receita");
             }
         }
+        textSubtitle.setText(appointment.getAttendance().getType() + " - " + name);
     }
-    
+
     public void initizalize() {
         initComponents();
         this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        this.setExtendedState(JFrame.MAXIMIZED_BOTH);  
-        
+        this.setExtendedState(JFrame.MAXIMIZED_BOTH);
+
         fileSelector.setVisible(false);
-        fileSelector.setFileFilter(filter);        
+        fileSelector.setFileFilter(filter);
     }
 
     public void reloadComponents() {
         String date = dt.format(appointment.getAttendance().getStartDateTime().getTime());
         textTitle.setText(appointment.getAttendance().getProcedure().getName());
-        textSubtitle.setText(appointment.getAttendance().getType() + " - " + appointment.getAttendance().getPatient().getPeople().getName());
         textDate.setText(date);
         textQtnSessions.setText(appointment.getCurrentSession() + " de " + appointment.getNumberOfSessions() + " sessões");
         textQtnReciptes.setText(appointment.getRecipte().size() + " reaceitas geradas");
         textPrice.setText("R$ " + ((Double) (Math.round(appointment.getBudget() * 100.0) / 100.0)).toString().replaceAll("\\.", ","));
+
+        if (this.typeUser.equals("Doctor")) {
+            btnPutSection.setVisible(true);
+            if (appointment.getCurrentSession() < appointment.getNumberOfSessions()) {
+                btnPutSection.setText("Marcar sessão " + (appointment.getCurrentSession() + 1) + " como concluída");
+            } else {
+                btnPutSection.setText("Todas as sessões concluídas");
+                btnPutSection.setEnabled(false);
+            }
+        }
+
     }
 
     FileFilter filter = new FileFilter() {
@@ -126,6 +142,7 @@ public class FrAppointment extends javax.swing.JFrame {
         textPrice = new javax.swing.JLabel();
         jSeparator1 = new javax.swing.JSeparator();
         btnBack = new javax.swing.JButton();
+        btnPutSection = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -138,6 +155,12 @@ public class FrAppointment extends javax.swing.JFrame {
         btnRecipte.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnRecipteActionPerformed(evt);
+            }
+        });
+
+        fileSelector.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                fileSelectorActionPerformed(evt);
             }
         });
 
@@ -156,33 +179,48 @@ public class FrAppointment extends javax.swing.JFrame {
             }
         });
 
+        btnPutSection.setText("Marcar sessão x como concluída");
+        btnPutSection.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPutSectionActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap(21, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(textTitle)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 89, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(textSubtitle))
-                        .addGap(207, 207, 207)
+                        .addComponent(textSubtitle)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(btnRecipte))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(textDate)
                             .addComponent(textPrice))
-                        .addGap(149, 149, 149)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 149, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(textQtnReciptes)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 232, Short.MAX_VALUE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(textQtnSessions)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 78, Short.MAX_VALUE)
+                                .addComponent(btnPutSection))))
+                    .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(textQtnReciptes)
-                            .addComponent(textQtnSessions)))
-                    .addComponent(fileSelector, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnBack)
-                    .addComponent(jSeparator1))
-                .addContainerGap(20, Short.MAX_VALUE))
+                            .addComponent(textTitle)
+                            .addComponent(btnBack))
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap(21, Short.MAX_VALUE))
+            .addComponent(jSeparator1, javax.swing.GroupLayout.Alignment.TRAILING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(fileSelector, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -198,8 +236,9 @@ public class FrAppointment extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(textDate)
-                    .addComponent(textQtnSessions))
-                .addGap(38, 38, 38)
+                    .addComponent(textQtnSessions)
+                    .addComponent(btnPutSection))
+                .addGap(33, 33, 33)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(textPrice)
                     .addComponent(textQtnReciptes))
@@ -207,7 +246,7 @@ public class FrAppointment extends javax.swing.JFrame {
                 .addComponent(fileSelector, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(btnBack)
-                .addContainerGap(44, Short.MAX_VALUE))
+                .addContainerGap(39, Short.MAX_VALUE))
         );
 
         pack();
@@ -288,6 +327,16 @@ public class FrAppointment extends javax.swing.JFrame {
         this.setVisible(false);
     }//GEN-LAST:event_btnBackActionPerformed
 
+    private void btnPutSectionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPutSectionActionPerformed
+        // TODO add your handling code here:
+        try {
+            appointmentCon.onPutSection(appointment.getId(), appointment.getCurrentSession() + 1);
+            this.reloadComponents();
+        } catch (AppointmentException e) {
+            JOptionPane.showMessageDialog(this, e.getMessage());
+        }
+    }//GEN-LAST:event_btnPutSectionActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -326,6 +375,7 @@ public class FrAppointment extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBack;
+    private javax.swing.JButton btnPutSection;
     private javax.swing.JButton btnRecipte;
     private javax.swing.JFileChooser fileSelector;
     private javax.swing.JSeparator jSeparator1;

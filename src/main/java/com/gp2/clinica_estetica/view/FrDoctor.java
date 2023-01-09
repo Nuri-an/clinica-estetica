@@ -14,27 +14,26 @@ import javax.swing.JFrame;
  *
  * @author nuria
  */
-public class FrPatient extends javax.swing.JFrame {
+public class FrDoctor extends javax.swing.JFrame {
     private User user;
     private AppointmentController appointmentCon;
 
     /**
-     * Creates new form FrPaciente
+     * Creates new form FrDoctor2
      */
-    public FrPatient() {
+    public FrDoctor() {
         initizalize();
-    }
+    }    
     
     /**
-     * Creates new form FrPaciente
-     * @param user
+     * Creates new form FrMedico
+     * @param currentUser
      */
-    public FrPatient(User user) {
-        this.user = user;
+    public FrDoctor(User currentUser) {
+        this.user = currentUser;
         initizalize();
-
-        title.setText("Agendamentos - " + user.getPeople().getName());
-    }
+    }    
+    
 
     public void initizalize() {
         initComponents();
@@ -46,10 +45,17 @@ public class FrPatient extends javax.swing.JFrame {
         btnExit.setContentAreaFilled(false);
         btnExit.setBorderPainted(false);
         
+        textEmpty.setVisible(false);
+        
         this.appointmentCon = new AppointmentController();
-        this.appointmentCon.onFindAllByPatient(table, user.getPeople().getCPF(), "");        
+        this.appointmentCon.onFindAllByDoctor(table, user.getPeople().getCPF(), "");    
+        
+        if(table.getRowCount() < 1) {
+            textEmpty.setVisible(true);
+            jScrollPane1.setVisible(false);
+        }
     }
-    
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -63,16 +69,17 @@ public class FrPatient extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         fieldSearch = new javax.swing.JTextField();
         btnPesquisar = new javax.swing.JButton();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        table = new javax.swing.JTable();
+        btnReport1 = new javax.swing.JButton();
         btnReport = new javax.swing.JButton();
         btnExit = new javax.swing.JButton();
-        btnContract = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        table = new javax.swing.JTable();
+        textEmpty = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         title.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
-        title.setText("Paciente");
+        title.setText("Médico");
 
         jLabel2.setText("Pesquisar por procedimento:");
 
@@ -86,6 +93,29 @@ public class FrPatient extends javax.swing.JFrame {
         btnPesquisar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnPesquisarActionPerformed(evt);
+            }
+        });
+
+        btnReport1.setText("Adicionar  contratos");
+        btnReport1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnReport1ActionPerformed(evt);
+            }
+        });
+
+        btnReport.setText("Relatórios");
+        btnReport.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnReportActionPerformed(evt);
+            }
+        });
+
+        btnExit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/exit.png"))); // NOI18N
+        btnExit.setBorder(null);
+        btnExit.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnExit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnExitActionPerformed(evt);
             }
         });
 
@@ -108,108 +138,67 @@ public class FrPatient extends javax.swing.JFrame {
             }
         });
         jScrollPane1.setViewportView(table);
-        table.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_INTERVAL_SELECTION);
 
-        btnReport.setText("Relatórios");
-        btnReport.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnReportActionPerformed(evt);
-            }
-        });
-
-        btnExit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/exit.png"))); // NOI18N
-        btnExit.setBorder(null);
-        btnExit.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        btnExit.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnExitActionPerformed(evt);
-            }
-        });
-
-        btnContract.setText("Contratos");
-        btnContract.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnContractActionPerformed(evt);
-            }
-        });
+        textEmpty.setFont(new java.awt.Font("Dialog", 2, 14)); // NOI18N
+        textEmpty.setText("Sem consultas formalizadas");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(22, Short.MAX_VALUE)
+                .addContainerGap(21, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(title)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnExit))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel2)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(title)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(fieldSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 233, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btnPesquisar, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 222, Short.MAX_VALUE)
-                        .addComponent(btnContract)
-                        .addGap(18, 18, 18)
-                        .addComponent(btnReport))
+                                .addComponent(btnPesquisar, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 189, Short.MAX_VALUE)
+                                .addComponent(btnReport1)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(btnReport)
+                            .addComponent(btnExit)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel2)
+                        .addGap(0, 0, Short.MAX_VALUE))
                     .addComponent(jScrollPane1))
-                .addContainerGap(23, Short.MAX_VALUE))
+                .addContainerGap(24, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(textEmpty)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(34, 34, 34)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(btnExit, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(title, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(32, 32, 32)
+                .addComponent(jLabel2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnExit)
-                    .addComponent(title))
-                .addGap(31, 31, 31)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(30, 30, 30)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(btnContract)
-                            .addComponent(btnReport)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(btnPesquisar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(fieldSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addGap(35, 35, 35)
+                    .addComponent(fieldSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(btnReport1)
+                        .addComponent(btnReport))
+                    .addComponent(btnPesquisar))
+                .addGap(42, 42, 42)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 215, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(36, Short.MAX_VALUE))
+                .addGap(32, 32, 32)
+                .addComponent(textEmpty)
+                .addContainerGap(33, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void fieldSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fieldSearchActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_fieldSearchActionPerformed
-
-    private void tableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableMouseClicked
-        // TODO add your handling code here:
-        
-        if (evt.getClickCount() > 1) {
-            int row = table.getSelectedRow();
-            Attendance attendanceRow = (Attendance) table.getValueAt(row, -1);
-            
-            FrAppointment appointmentScreen = new FrAppointment(this, attendanceRow.getAppointment(), this.user.getPeople());
-            this.setVisible(false);
-            appointmentScreen.setVisible(true);
-        }
-    }//GEN-LAST:event_tableMouseClicked
-
-    private void btnReportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReportActionPerformed
-        // TODO add your handling code here:
-
-        FrReport telaRelatorio = new FrReport(this, this.user);
-        telaRelatorio.setVisible(true);
-        this.setVisible(false);
-    }//GEN-LAST:event_btnReportActionPerformed
 
     private void btnExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExitActionPerformed
         // TODO add your handling code here:
@@ -218,17 +207,43 @@ public class FrPatient extends javax.swing.JFrame {
         this.setVisible(false);
     }//GEN-LAST:event_btnExitActionPerformed
 
+    private void btnReportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReportActionPerformed
+        // TODO add your handling code here:
+
+        FrReport reportScreen = new FrReport(this, this.user);
+        reportScreen.setVisible(true);
+        this.setVisible(false);
+    }//GEN-LAST:event_btnReportActionPerformed
+
+    private void btnReport1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReport1ActionPerformed
+        // TODO add your handling code here:
+        FrAppWithoutContract appScreen = new FrAppWithoutContract(this, user);
+        this.setVisible(false);
+        appScreen.setVisible(true);
+        
+    }//GEN-LAST:event_btnReport1ActionPerformed
+
     private void btnPesquisarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPesquisarActionPerformed
         // TODO add your handling code here:
-        this.appointmentCon.onFindAllByPatient(table, user.getPeople().getCPF(), fieldSearch.getText());
+        this.appointmentCon.onFindAllByDoctor(table, user.getPeople().getCPF(), fieldSearch.getText());
     }//GEN-LAST:event_btnPesquisarActionPerformed
 
-    private void btnContractActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnContractActionPerformed
+    private void fieldSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fieldSearchActionPerformed
         // TODO add your handling code here:
-        FrContract contractScreen = new FrContract(this, this.user.getPeople());
-        this.setVisible(false);
-        contractScreen.setVisible(true);
-    }//GEN-LAST:event_btnContractActionPerformed
+    }//GEN-LAST:event_fieldSearchActionPerformed
+
+    private void tableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableMouseClicked
+        // TODO add your handling code here:
+
+        if (evt.getClickCount() > 1) {
+            int row = table.getSelectedRow();
+            Attendance attendanceRow = (Attendance) table.getValueAt(row, -1);
+
+            FrAppointment appointmentScreen = new FrAppointment(this, attendanceRow.getAppointment(), this.user.getPeople());
+            this.setVisible(false);
+            appointmentScreen.setVisible(true);
+        }
+    }//GEN-LAST:event_tableMouseClicked
 
     /**
      * @param args the command line arguments
@@ -247,13 +262,13 @@ public class FrPatient extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(FrPatient.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FrDoctor.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(FrPatient.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FrDoctor.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(FrPatient.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FrDoctor.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(FrPatient.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FrDoctor.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
         //</editor-fold>
@@ -261,20 +276,21 @@ public class FrPatient extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new FrPatient().setVisible(true);
+                new FrDoctor().setVisible(true);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnContract;
     private javax.swing.JButton btnExit;
     private javax.swing.JButton btnPesquisar;
     private javax.swing.JButton btnReport;
+    private javax.swing.JButton btnReport1;
     private javax.swing.JTextField fieldSearch;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable table;
+    private javax.swing.JLabel textEmpty;
     private javax.swing.JLabel title;
     // End of variables declaration//GEN-END:variables
 }
