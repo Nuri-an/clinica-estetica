@@ -7,7 +7,6 @@ package com.gp2.clinica_estetica.model;
 
 import com.gp2.clinica_estetica.model.dao.reports.DaoReports;
 import java.io.Serializable;
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
