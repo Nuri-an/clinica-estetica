@@ -271,6 +271,7 @@ public class FrAppWithoutContract extends javax.swing.JFrame {
 
         if (evt.getActionCommand().equals("CancelSelection")) {
             fileSelector.setVisible(false);
+            panelTable.setVisible(true);
             return;
         }
 

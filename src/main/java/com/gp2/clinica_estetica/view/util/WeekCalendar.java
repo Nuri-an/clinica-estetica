@@ -317,7 +317,7 @@ public class WeekCalendar extends CalendarBase {
         int response = JOptionPane.showOptionDialog(null, "Deseja criar esse agendamento?",
                 "Selecione a ação",
                 JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[2]);
-
+        System.out.println("fechar: " + response);
         if (response == 0 || response == 1) {
             String type;
             if (response == 0) {
@@ -334,7 +334,7 @@ public class WeekCalendar extends CalendarBase {
                     this.user);
             attendanceScreen.setVisible(true);
             this.frame.setVisible(false);
-        } else if (response == 2) {
+        } else if (response == 2 || response == -1) {
             calendar.getSchedule().getAllItems().remove(e.getItem());
         }
 
@@ -355,7 +355,7 @@ public class WeekCalendar extends CalendarBase {
 
     private void onCalendarItemModifying(ItemModifyConfirmEvent e) {
 
-        //Point p = new Point(e.getItem().getgetX(), e.getY());
+        //verifica se já não tem um agendamento
         ItemList items = calendar.getSchedule().getAllItems();
         for (int i = 0; i < items.size(); i++) {
             if (!items.get(i).getId().equals(e.getItem().getId())
@@ -391,6 +391,7 @@ public class WeekCalendar extends CalendarBase {
         }
     }
 
+    
     private void onCalendarDoubleClicked(MouseEvent e) {
         System.out.println("double click");
         // If the click is within the currently displayed info box, do
@@ -459,7 +460,7 @@ public class WeekCalendar extends CalendarBase {
 
     }
 
-    // verify
+    // não usa
     private void onCalendarHiddenItemClick(DateEvent e) {
         // Find the index of the column
         System.out.println("hidden item click");
@@ -496,7 +497,7 @@ public class WeekCalendar extends CalendarBase {
         ignoreNextClick = true;
     }
 
-    // verify
+    // não usa
     private void onCalendarPaintComponent(Graphics e) {
         System.out.println("paint");
         // Creating a cascading style over Calendar.ItemSettings.Style.
@@ -563,6 +564,7 @@ public class WeekCalendar extends CalendarBase {
         }
     }
 
+    // não usa
     private void onCalendarSizeChanged(ComponentEvent e) {
         currentColumnBounds = null;
         infoColumn = -1;
