@@ -1,8 +1,6 @@
 
 package com.gp2.clinica_estetica.model.dao;
 
-import java.util.List;
-
 /**
  *
  * @author jose

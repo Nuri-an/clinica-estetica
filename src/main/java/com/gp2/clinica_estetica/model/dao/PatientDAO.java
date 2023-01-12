@@ -6,7 +6,6 @@
 package com.gp2.clinica_estetica.model.dao;
 
 import com.gp2.clinica_estetica.factory.Database;
-import com.gp2.clinica_estetica.model.Patient;
 import com.gp2.clinica_estetica.model.People;
 import com.gp2.clinica_estetica.model.User;
 import com.gp2.clinica_estetica.model.exceptions.UserException;
@@ -18,7 +17,7 @@ import javax.persistence.Query;
  *
  * @author nuria
  */
-public class PatientDAO implements IDao {
+public class PatientDAO {
 
     EntityManager entityManager;
 
@@ -50,21 +49,6 @@ public class PatientDAO implements IDao {
         } catch (UserException e) {
             System.err.println(e.getMessage());
         }
-    }
-
-    @Override
-    public void save(Object obj) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public boolean delete(int id) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public Object find(int id) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     public List<People> findAllByCPF(String cpf) {
