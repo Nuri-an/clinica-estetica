@@ -94,8 +94,6 @@ public class FrAttendantHome extends javax.swing.JFrame {
                     currentAttendance.getType());         
         }
         boxCalendar.add(calendar);
-        System.out.println(boxCalendar.getPreferredSize());
-        System.out.println(boxCalendar.getSize() + " w: " + boxCalendar.getWidth());
         boxCalendar.setBackground(Color.red);
     }
 
@@ -123,6 +121,7 @@ public class FrAttendantHome extends javax.swing.JFrame {
 
         btnExit.setForeground(new java.awt.Color(25, 25, 25));
         btnExit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/exit.png"))); // NOI18N
+        btnExit.setToolTipText("Sair");
         btnExit.setBorder(null);
         btnExit.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnExit.addActionListener(new java.awt.event.ActionListener() {
@@ -164,7 +163,7 @@ public class FrAttendantHome extends javax.swing.JFrame {
             .addGap(0, 530, Short.MAX_VALUE)
         );
 
-        jButton1.setText("Contratos");
+        jButton1.setText("Contratos Pendentes de Assinatura");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
@@ -185,7 +184,7 @@ public class FrAttendantHome extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(22, Short.MAX_VALUE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel2)
@@ -204,9 +203,9 @@ public class FrAttendantHome extends javax.swing.JFrame {
                                 .addComponent(btnPatientsList)
                                 .addGap(18, 18, 18)
                                 .addComponent(jButton1)
-                                .addGap(0, 705, Short.MAX_VALUE))
+                                .addGap(0, 602, Short.MAX_VALUE))
                             .addComponent(boxCalendar, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addContainerGap(24, Short.MAX_VALUE))))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -264,7 +263,6 @@ public class FrAttendantHome extends javax.swing.JFrame {
 
     private void boxCalendarComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_boxCalendarComponentResized
         // TODO add your handling code here:
-        System.out.println("resize: " + evt.getComponent().getSize());
         calendar.resizeCalendar(evt.getComponent().getSize());
     }//GEN-LAST:event_boxCalendarComponentResized
 
@@ -275,41 +273,6 @@ public class FrAttendantHome extends javax.swing.JFrame {
         attendanceListScreen.setVisible(true);
     }//GEN-LAST:event_jLabel2MouseClicked
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(FrAttendantHome.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(FrAttendantHome.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(FrAttendantHome.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(FrAttendantHome.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new FrAttendantHome().setVisible(true);
-            }
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel boxCalendar;
