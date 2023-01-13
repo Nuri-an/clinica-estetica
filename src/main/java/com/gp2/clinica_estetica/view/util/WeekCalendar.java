@@ -129,7 +129,6 @@ public class WeekCalendar extends CalendarBase {
             monday = monday.minusDays(1);
         }
         DateTime start = new DateTime(Date.from(monday.atStartOfDay(ZoneId.systemDefault()).toInstant()));
-        System.out.println("mon: " + monday.getDayOfMonth() + "\ntoday:" + today.getDayOfMonth());
         if (monday.getDayOfMonth() != today.getDayOfMonth()) {
             calendar.getTimetableSettings().getDates().add(start);
         }
@@ -219,7 +218,6 @@ public class WeekCalendar extends CalendarBase {
             @Override
             public void itemModifying(ItemModifyConfirmEvent e
             ) {
-                System.out.println("type: " + e.getItem().getDescriptionText());
                 //e.setConfirm(false);
                 onCalendarItemModifying(e);
             }
@@ -309,7 +307,6 @@ public class WeekCalendar extends CalendarBase {
         e.getItem().setAllowMove(false);
         e.getItem().setAllowChangeStart(false);
         e.getItem().setAllowChangeEnd(false);
-        System.out.println("create");
         //calendar.startInplaceEdit(e.getItem());
 
         // go to create appointment screen
@@ -317,7 +314,6 @@ public class WeekCalendar extends CalendarBase {
         int response = JOptionPane.showOptionDialog(null, "Deseja criar esse agendamento?",
                 "Selecione a ação",
                 JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[2]);
-        System.out.println("fechar: " + response);
         if (response == 0 || response == 1) {
             String type;
             if (response == 0) {
@@ -341,7 +337,6 @@ public class WeekCalendar extends CalendarBase {
     }
 
     private void onCalendarItemSelecting(ItemConfirmEvent e) {
-        System.out.println("Selecionou: " + e.getItem().getHeaderText());
         if (infoColumn != -1) {
             e.setConfirm(false);
         }
@@ -375,7 +370,6 @@ public class WeekCalendar extends CalendarBase {
                 boolean outOfEvent = DateTime.op_LessThanOrEqual(items.get(i).getStartTime(), e.getItem().getStartTime())
                         && DateTime.op_GreaterThanOrEqual(items.get(i).getEndTime(), e.getItem().getEndTime());
 
-                System.out.println(starOfEvent + ", " + endOfEvent + ", " + middleOfEvent);
                 if (starOfEvent || endOfEvent || middleOfEvent || outOfEvent) {
                     e.setConfirm(false);
                 }
@@ -757,7 +751,6 @@ public class WeekCalendar extends CalendarBase {
         appointment.setEndTime(endDate);
         appointment.setId(id);
         appointment.setTag(type);
-        System.out.println(id + " ; " + type);
         if (type == null) {
             appointment.setDescriptionText("Recorrência - " + title);
         }
